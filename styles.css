@@ -1,0 +1,135 @@
+body {
+    font-family: 'Roboto Mono', monospace;
+    background-color: #000000; /* Black */
+    background-image: 
+        linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.03) 75%, rgba(255, 255, 255, 0.03)),
+        linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.03) 75%, rgba(255, 255, 255, 0.03));
+    background-size: 6px 6px;
+}
+
+.font-display {
+    font-family: 'Changa', sans-serif;
+}
+
+::-webkit-scrollbar { 
+    width: 8px; 
+}
+
+::-webkit-scrollbar-track { 
+    background: #1F2937; 
+}
+
+::-webkit-scrollbar-thumb { 
+    background: #4B5563; 
+    border-radius: 4px; 
+}
+
+::-webkit-scrollbar-thumb:hover { 
+    background: #6B7280; 
+}
+
+.completed-card { 
+    opacity: 0.6; 
+    border-left-color: #4ADE80; 
+    background-color: #030712; 
+}
+
+.progress-bar-glow { 
+    box-shadow: 0 0 8px #A3E635, 0 0 16px #A3E635; 
+}
+
+.text-glow { 
+    text-shadow: 0 0 8px rgba(163, 230, 53, 0.7); 
+}
+
+.chevron-icon, .tools-icon { 
+    transition: transform 0.3s ease-in-out; 
+}
+
+.rotate-180 { 
+    transform: rotate(180deg); 
+}
+
+.typewriter-cursor::after { 
+    content: '▋'; 
+    animation: blink 1s step-end infinite; 
+}
+
+@keyframes blink { 
+    50% { 
+        color: #A3E635; 
+    } 
+}
+
+.complete-glow {
+    animation: glow-animation 0.5s ease-out;
+}
+
+@keyframes glow-animation {
+    0% { 
+        box-shadow: 0 0 0px #4ADE80; 
+    }
+    50% { 
+        box-shadow: 0 0 20px #4ADE80; 
+    }
+    100% { 
+        box-shadow: 0 0 0px #4ADE80; 
+    }
+}
+
+.pillar {
+    opacity: 0;
+    animation: carePackageDrop 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.pillar-separator {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in both;
+    animation-delay: 1.2s;
+}
+
+@keyframes carePackageDrop {
+    0% {
+        transform: translateY(-80px) scale(1.5);
+        opacity: 0;
+        text-shadow: none;
+    }
+    50% {
+        opacity: 1;
+    }
+    80% {
+        transform: translateY(5px) scale(0.9);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        text-shadow: 0 0 15px rgba(163, 230, 53, 0.6); /* Dust puff/glow effect on landing */
+    }
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+    }
+    to { 
+        opacity: 1; 
+    }
+}
+
+#exercise-modal-content ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#exercise-modal-content li {
+    position: relative;
+    padding-left: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+#exercise-modal-content li::before {
+    content: '»';
+    position: absolute;
+    left: 0;
+    color: #A3E635;
+}
