@@ -147,7 +147,7 @@ const forceTestPrepProgram = {
                 { day: "Thu", focus: "Interval Run", details: "1km Warm-up<br>8x400m Sprints<br>1km Cool-down", icon: "run" }, 
                 { day: "Fri", focus: "Component Practice", details: "Practice your second weakest event for 20-30 minutes.", icon: "circuit" }, 
                 { day: "Sat", focus: "Long Run", details: "8km Steady Pace", icon: "run" }, 
-                { day: "Sun", "focus": "Recovery", "details": "Active recovery walk and mobility.", "icon": "recovery" } 
+                { day: "Sun", focus: "Recovery", details: "Active recovery walk and mobility.", icon: "recovery" } 
             ] } 
         ] },
         { phase: "Phase 4: Taper & Test", weeks: [ 
@@ -725,7 +725,7 @@ const parseExercises = (details) => {
                     name: cleanLine,
                     description: "Log your time/reps",
                     sets: [{ reps: '', weight: '', completed: false}]
-                 })
+                 });
             }
         }
     });
@@ -1343,7 +1343,7 @@ function toggleNotifications() {
             }
         });
     } else {
-    if (confirm('⚠️ WARNING: Changing your difficulty/program will reset ALL current progress and workout data. This action cannot be undone.\n\nAre you sure you want to continue?')) {
+        settings.enabled = false;
         saveNotificationSettings(settings);
         updateNotificationSettingsDisplay();
     }
@@ -1461,7 +1461,7 @@ const timeStringToSeconds = (timeStr) => {
     if (!timeStr || !timeStr.includes(':')) return parseFloat(timeStr) || 0; // It might just be a rep count
     const parts = timeStr.split(':');
     return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-}
+};
 
 const renderChart = (exerciseName) => {
     const ctx = document.getElementById('progress-chart').getContext('2d');
