@@ -1417,7 +1417,7 @@ function updateReminderTime() {
 // --- Chart Functions ---
 const openProgressModal = () => {
     document.getElementById('progress-modal').classList.remove('hidden');
-    populateExerciseSelect();
+    populateExerciseChart();
 };
 
 const closeProgressModal = () => {
