@@ -27,11 +27,11 @@
 
     <div class="container mx-auto max-w-4xl p-4 sm:p-6">
         
-        <div id="welcome-screen" class="text-center flex flex-col justify-center" style="min-height: calc(100vh - 3rem);">
+        <div id="welcome-screen" class="text-center flex flex-col justify-center fade-in" style="min-height: calc(100vh - 3rem);">
             <div>
                  <div class="pt-10">
-                    <h3 class="font-display text-lime-400 text-4xl sm:text-5xl md:text-6xl uppercase text-glow whitespace-nowrap" style="letter-spacing: 0.1em;">[HYBRID OPS]</h3>
-                    <div class="flex justify-center items-center space-x-4 mt-6 text-gray-200 font-bold tracking-widest text-xs sm:text-sm max-w-md mx-auto">
+                    <h3 class="font-display text-lime-400 text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase text-glow" style="letter-spacing: 0.1em; word-break: break-word;">[HYBRID OPS]</h3>
+                    <div class="flex flex-wrap justify-center items-center space-x-2 sm:space-x-4 mt-6 text-gray-200 font-bold tracking-widest text-xs sm:text-sm max-w-md mx-auto">
                         <p class="pillar" style="animation-delay: 0.2s;">[STRENGTH]</p>
                         <p class="pillar-separator text-lime-400">-</p>
                         <p class="pillar" style="animation-delay: 0.4s;">[ENDURANCE]</p>
@@ -41,57 +41,60 @@
                 </div>
                 <p id="welcome-note" class="text-gray-400 my-16 px-4 min-h-[72px]"></p>
                 <div class="pb-4">
-                    <button onclick="showGoalScreen()" class="w-full max-w-sm mx-auto p-2 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-base font-display uppercase tracking-widest rounded-lg transition-colors text-glow progress-bar-glow">Get Started</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="goal-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh]">
-            <div>
-                <h2 class="text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">What is your primary objective?</h2>
-                <div class="space-y-4 max-w-sm mx-auto">
-                    <button onclick="selectGoal('hybridAthlete')" class="w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 transition-colors">
-                        <h3 class="text-xl font-bold font-display text-white uppercase tracking-widest">Hybrid Athlete</h3>
-                        <p class="text-sm text-gray-400">Build a well-rounded base of strength and endurance.</p>
-                    </button>
-                    <button onclick="selectGoal('tacticalAthlete')" class="w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 transition-colors">
-                        <h3 class="text-xl font-bold font-display text-white uppercase tracking-widest">Tactical Athlete</h3>
-                        <p class="text-sm text-gray-400">Develop the functional fitness required for demanding roles.</p>
-                    </button>
-                    <button onclick="selectGoal('forceTestPrep')" class="w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 transition-colors">
-                        <h3 class="text-xl font-bold font-display text-white uppercase tracking-widest">Force Test Prep</h3>
-                        <p class="text-sm text-gray-400">Prepare for the specific physical demands of a fitness test.</p>
+                    <button onclick="showGoalScreen()" class="btn-primary w-full max-w-sm mx-auto p-3 sm:p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-base font-display uppercase tracking-widest rounded-lg text-glow progress-bar-glow clickable">
+                        <span id="get-started-text">Get Started</span>
+                        <span id="get-started-loading" class="hidden"><span class="loading-spinner"></span>Loading...</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="difficulty-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh]">
+        <div id="goal-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
             <div>
-                <h2 class="text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">Choose Your Experience Level</h2>
+                <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">What is your primary objective?</h2>
                 <div class="space-y-4 max-w-sm mx-auto">
-                    <button onclick="selectDifficulty('beginner')" class="w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 transition-colors">
-                        <h3 class="text-xl font-bold font-display text-white uppercase tracking-widest">Beginner</h3>
-                        <p class="text-sm text-gray-400">New to structured strength & endurance training.</p>
+                    <button onclick="selectGoal('hybridAthlete')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up">
+                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Hybrid Athlete</h3>
+                        <p class="text-sm text-gray-400 mt-2">Build a well-rounded base of strength and endurance.</p>
                     </button>
-                    <button onclick="selectDifficulty('intermediate')" class="w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 transition-colors">
-                        <h3 class="text-xl font-bold font-display text-white uppercase tracking-widest">Intermediate</h3>
-                        <p class="text-sm text-gray-400">Comfortable with main lifts & consistent running.</p>
+                    <button onclick="selectGoal('tacticalAthlete')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up" style="animation-delay: 0.1s;">
+                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Tactical Athlete</h3>
+                        <p class="text-sm text-gray-400 mt-2">Develop the functional fitness required for demanding roles.</p>
                     </button>
-                    <button onclick="selectDifficulty('advanced')" class="w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 transition-colors">
-                        <h3 class="text-xl font-bold font-display text-white uppercase tracking-widest">Advanced</h3>
-                        <p class="text-sm text-gray-400">Highly experienced in both lifting & running.</p>
+                    <button onclick="selectGoal('forceTestPrep')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up" style="animation-delay: 0.2s;">
+                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Force Test Prep</h3>
+                        <p class="text-sm text-gray-400 mt-2">Prepare for the specific physical demands of a fitness test.</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="difficulty-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">Choose Your Experience Level</h2>
+                <div class="space-y-4 max-w-sm mx-auto">
+                    <button onclick="selectDifficulty('beginner')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in">
+                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Beginner</h3>
+                        <p class="text-sm text-gray-400 mt-2">New to structured strength & endurance training.</p>
+                    </button>
+                    <button onclick="selectDifficulty('intermediate')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.1s;">
+                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Intermediate</h3>
+                        <p class="text-sm text-gray-400 mt-2">Comfortable with main lifts & consistent running.</p>
+                    </button>
+                    <button onclick="selectDifficulty('advanced')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.2s;">
+                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Advanced</h3>
+                        <p class="text-sm text-gray-400 mt-2">Highly experienced in both lifting & running.</p>
                     </button>
                 </div>
                 <p class="text-xs text-gray-500 mt-6">This can be changed later in the program.</p>
             </div>
         </div>
 
-        <div id="app-content" class="hidden">
+        <div id="app-content" class="hidden fade-in">
              <header class="text-center mb-8 border-b-2 border-gray-800 pb-4">
                 <div>
-                    <h1 class="text-4xl sm:text-5xl font-bold tracking-widest text-lime-400 font-display uppercase text-glow">[HYBRID OPS]</h1>
-                     <div class="flex justify-center items-center space-x-2 mt-2 text-gray-400 font-bold tracking-wider text-xs">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-widest text-lime-400 font-display uppercase text-glow">[HYBRID OPS]</h1>
+                     <div class="flex flex-wrap justify-center items-center space-x-2 mt-2 text-gray-400 font-bold tracking-wider text-xs">
                         <p>[STRENGTH]</p>
                         <p class="text-lime-400">-</p>
                         <p>[ENDURANCE]</p>
@@ -99,15 +102,30 @@
                         <p>[MOBILITY]</p>
                     </div>
                 </div>
-                <p id="program-subtitle" class="text-lg text-gray-400 mt-4 tracking-wider">8-Week Training Program</p>
+                <p id="program-subtitle" class="text-base sm:text-lg text-gray-400 mt-4 tracking-wider">8-Week Training Program</p>
             </header>
 
             <div class="mb-10 text-center">
-                <h2 class="text-xl font-semibold mb-3 text-gray-200 tracking-wider font-display">Mission Progress</h2>
+                <h2 class="text-lg sm:text-xl font-semibold mb-3 text-gray-200 tracking-wider font-display">Mission Progress</h2>
                 <div class="w-full bg-black/50 rounded-full h-4 border border-gray-700">
                     <div id="overall-progress-bar" class="bg-lime-400 h-full rounded-full transition-all duration-500 ease-in-out progress-bar-glow" style="width: 0%;"></div>
                 </div>
                 <p id="overall-progress-text" class="text-center text-sm mt-2 text-gray-400 font-mono">0% Complete</p>
+            </div>
+
+            <!-- Loading State for Program -->
+            <div id="program-loading" class="hidden space-y-6">
+                <div class="skeleton skeleton-title mx-auto"></div>
+                <div class="space-y-4">
+                    <div class="skeleton skeleton-button"></div>
+                    <div class="skeleton skeleton-button"></div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+                <div class="space-y-2">
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-text w-3/4"></div>
+                </div>
             </div>
 
             <main id="program-container" class="space-y-6">
@@ -115,14 +133,14 @@
 
             <footer class="text-center mt-12">
                 <p class="font-display tracking-widest text-lime-400 text-glow">Stay Hybrid. Stay Relentless.</p>
-                <div class="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <div class="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-6">
                     <button id="install-button" class="hidden text-sm text-lime-400 hover:text-lime-300 transition-colors underline">Install App</button>
-                    <button onclick="openProgressModal()" class="text-sm text-gray-500 hover:text-lime-400 transition-colors underline">View Analytics</button>
-                    <button onclick="openNotificationSettings()" class="text-sm text-gray-500 hover:text-lime-400 transition-colors underline">Notifications</button>
-                    <button onclick="resetProgram()" class="text-sm text-gray-500 hover:text-red-500 transition-colors underline">Change Difficulty / Program</button>
+                    <button onclick="openProgressModal()" class="text-sm text-gray-500 hover:text-lime-400 transition-colors underline clickable">View Analytics</button>
+                    <button onclick="openNotificationSettings()" class="text-sm text-gray-500 hover:text-lime-400 transition-colors underline clickable">Notifications</button>
+                    <button onclick="resetProgram()" class="text-sm text-gray-500 hover:text-red-500 transition-colors underline clickable">Change Difficulty / Program</button>
                 </div>
                 <p class="text-xs text-gray-600 mt-6">Made by Vinodh with <span class="text-lime-400">♥</span></p>
-                <div class="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 text-xs text-gray-500">
+                <div class="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 text-xs text-gray-500 flex-wrap-mobile">
                     <a href="privacy.html" class="hover:underline hover:text-gray-400 transition-colors">Privacy Policy</a>
                     <span class="text-gray-600 hidden sm:inline">|</span>
                     <a href="terms.html" class="hover:underline hover:text-gray-400 transition-colors">Terms of Service</a>
@@ -134,60 +152,60 @@
     </div>
     
     <!-- Progress Chart Modal -->
-    <div id="progress-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-gray-900 border border-gray-700 rounded-lg max-w-3xl w-full p-6 relative">
+    <div id="progress-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden scale-in">
+        <div class="modal-content bg-gray-900 border border-gray-700 rounded-lg max-w-3xl w-full p-4 sm:p-6 relative">
             <button onclick="closeProgressModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-            <h2 class="text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">Performance Analytics</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">Performance Analytics</h2>
             
             <div class="mb-4">
                 <label for="chart-exercise-select" class="block text-sm font-medium text-gray-400 mb-2">Select Exercise to Track:</label>
-                <select id="chart-exercise-select" class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-2 focus:border-lime-500 focus:ring-lime-500">
+                <select id="chart-exercise-select" class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-3 focus:border-lime-500 focus:ring-lime-500 text-base">
                     <!-- Options will be populated by JS -->
                 </select>
             </div>
             
-            <div>
+            <div class="overflow-x-auto">
                 <canvas id="progress-chart"></canvas>
             </div>
         </div>
     </div>
     
     <!-- Weekly Debrief Modal -->
-    <div id="debrief-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-gray-900 border border-lime-500 rounded-lg max-w-lg w-full p-6 relative text-center">
-             <h2 class="text-3xl font-bold text-lime-400 mb-2 font-display uppercase tracking-wider text-glow">Mission Debrief</h2>
+    <div id="debrief-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden bounce-in">
+        <div class="modal-content bg-gray-900 border border-lime-500 rounded-lg max-w-lg w-full p-4 sm:p-6 relative text-center">
+             <h2 class="text-2xl sm:text-3xl font-bold text-lime-400 mb-2 font-display uppercase tracking-wider text-glow">Mission Debrief</h2>
              <p class="text-gray-400 mb-6">Week <span id="debrief-week-number">X</span> Complete. Well done.</p>
              
-             <div class="grid grid-cols-2 gap-4 text-left mb-8">
-                 <div class="bg-gray-800/50 p-4 rounded-lg">
+             <div class="grid grid-cols-2 gap-2 sm:gap-4 text-left mb-8">
+                 <div class="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
                      <p class="text-sm text-gray-400">Workouts Completed</p>
-                     <p id="debrief-workouts" class="text-2xl font-bold text-white">0</p>
+                     <p id="debrief-workouts" class="text-xl sm:text-2xl font-bold text-white">0</p>
                  </div>
-                 <div class="bg-gray-800/50 p-4 rounded-lg">
+                 <div class="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
                      <p class="text-sm text-gray-400">Total Reps</p>
-                     <p id="debrief-reps" class="text-2xl font-bold text-white">0</p>
+                     <p id="debrief-reps" class="text-xl sm:text-2xl font-bold text-white">0</p>
                  </div>
-                 <div class="bg-gray-800/50 p-4 rounded-lg">
+                 <div class="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
                      <p class="text-sm text-gray-400">Total Volume</p>
-                     <p id="debrief-volume" class="text-2xl font-bold text-white">0 lbs</p>
+                     <p id="debrief-volume" class="text-xl sm:text-2xl font-bold text-white">0 lbs</p>
                  </div>
-                  <div class="bg-gray-800/50 p-4 rounded-lg">
+                  <div class="bg-gray-800/50 p-3 sm:p-4 rounded-lg">
                      <p class="text-sm text-gray-400">Total Distance</p>
-                     <p id="debrief-distance" class="text-2xl font-bold text-white">0 km</p>
+                     <p id="debrief-distance" class="text-xl sm:text-2xl font-bold text-white">0 km</p>
                  </div>
              </div>
              
-             <button onclick="closeDebriefModal()" class="w-full max-w-sm mx-auto p-3 bg-lime-500 hover:bg-lime-600 text-black font-bold text-lg font-display uppercase tracking-widest rounded-lg transition-colors">Continue</button>
+             <button onclick="closeDebriefModal()" class="btn-primary w-full max-w-sm mx-auto p-3 bg-lime-500 hover:bg-lime-600 text-black font-bold text-base sm:text-lg font-display uppercase tracking-widest rounded-lg clickable">Continue</button>
         </div>
     </div>
     
     <!-- Exercise Library Modal -->
-    <div id="exercise-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-gray-900 border border-gray-700 rounded-lg max-w-3xl w-full p-6 relative max-h-[80vh] overflow-y-auto">
+    <div id="exercise-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden scale-in">
+        <div class="modal-content bg-gray-900 border border-gray-700 rounded-lg max-w-3xl w-full p-4 sm:p-6 relative">
             <button onclick="closeExerciseModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -200,20 +218,20 @@
     </div>
     
     <!-- Notification Settings Modal -->
-    <div id="notification-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-gray-900 border border-gray-700 rounded-lg max-w-md w-full p-6 relative">
+    <div id="notification-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden scale-in">
+        <div class="modal-content bg-gray-900 border border-gray-700 rounded-lg max-w-md w-full p-4 sm:p-6 relative">
             <button onclick="closeNotificationSettings()" class="absolute top-4 right-4 text-gray-500 hover:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-            <h2 class="text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">Notification Settings</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">Notification Settings</h2>
             
             <div id="notification-settings">
                 <!-- Content will be populated by JS -->
             </div>
             
-            <div class="mt-6 p-4 bg-gray-800/50 rounded-lg">
+            <div class="mt-6 p-3 sm:p-4 bg-gray-800/50 rounded-lg">
                 <p class="text-xs text-gray-400 mb-2">📱 <strong>Mobile Tip:</strong></p>
                 <p class="text-xs text-gray-400">For best results, add HYBRID OPS to your home screen and enable notifications in your device settings.</p>
             </div>

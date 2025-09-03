@@ -42,6 +42,216 @@ body {
     text-shadow: 0 0 8px rgba(163, 230, 53, 0.7); 
 }
 
+/* Loading States */
+.loading-spinner {
+    border: 3px solid rgba(163, 230, 53, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid #A3E635;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #374151 25%, #4B5563 50%, #374151 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-title {
+    height: 1.5rem;
+    width: 60%;
+    margin-bottom: 1rem;
+}
+
+.skeleton-button {
+    height: 2.5rem;
+    width: 100%;
+    border-radius: 0.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Enhanced Animations */
+.fade-in {
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+.fade-in-delay {
+    animation: fadeInUp 0.6s ease-out both;
+    animation-delay: 0.2s;
+}
+
+.slide-up {
+    animation: slideUp 0.4s ease-out both;
+}
+
+.bounce-in {
+    animation: bounceIn 0.6s ease-out both;
+}
+
+.scale-in {
+    animation: scaleIn 0.3s ease-out both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Button Hover Enhancements */
+.btn-primary {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(163, 230, 53, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    transition: all 0.1s;
+}
+
+/* Card Hover Effects */
+.workout-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.workout-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Larger touch targets */
+    button, .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Better spacing on mobile */
+    .space-y-6 > * + * {
+        margin-top: 1rem;
+    }
+    
+    /* Responsive text sizes */
+    .text-4xl {
+        font-size: 2rem;
+    }
+    
+    .text-5xl {
+        font-size: 2.5rem;
+    }
+    
+    /* Modal improvements for mobile */
+    .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+    
+    /* Better form elements on mobile */
+    input, select, textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small screens */
+    .text-xs {
+        font-size: 0.7rem;
+    }
+    
+    .p-4 {
+        padding: 0.75rem;
+    }
+    
+    .space-x-4 > * + * {
+        margin-left: 0.5rem;
+    }
+    
+    /* Stack elements vertically on very small screens */
+    .flex-wrap-mobile {
+        flex-direction: column;
+    }
+    
+    .flex-wrap-mobile > * {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
 .chevron-icon, .tools-icon { 
     transition: transform 0.3s ease-in-out; 
 }
