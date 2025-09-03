@@ -1217,6 +1217,9 @@ const showWelcomeMessage = () => {
         welcomeNote.innerHTML = ''; // Clear previous message
         
         const type = () => {
+                
+                // Schedule reminder for next workout
+                scheduleWorkoutReminder(dayId, dayData);
             if (i < message.length) {
                 welcomeNote.innerHTML += message.charAt(i);
                 i++;
