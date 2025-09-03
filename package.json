@@ -1,7 +1,7 @@
 {
   "name": "hybrid-ops-pwa",
   "version": "1.0.0",
-  "description": "HYBRID OPS - 8 Week Training Program Progressive Web App",
+  "description": "HYBRID OPS - Hybrid Fitness Training",
   "main": "index.html",
   "scripts": {
     "dev": "python3 -m http.server 3000",
