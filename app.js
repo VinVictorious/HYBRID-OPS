@@ -1217,9 +1217,6 @@ const showWelcomeMessage = () => {
         welcomeNote.innerHTML = ''; // Clear previous message
         
         const type = () => {
-                
-                // Schedule reminder for next workout
-                scheduleWorkoutReminder(dayId, dayData);
             if (i < message.length) {
                 welcomeNote.innerHTML += message.charAt(i);
                 i++;
@@ -1278,6 +1275,16 @@ const initializeApp = () => {
     appContent.classList.add('hidden');
     showWelcomeMessage();
 };
+
+// Notification Settings Functions
+function openNotificationSettings() {
+    document.getElementById('notification-modal').classList.remove('hidden');
+    updateNotificationSettings();
+}
+
+function closeNotificationSettings() {
+    document.getElementById('notification-modal').classList.add('hidden');
+}
 
 // --- Chart Functions ---
 const openProgressModal = () => {
