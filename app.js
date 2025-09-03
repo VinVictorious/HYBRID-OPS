@@ -1343,7 +1343,7 @@ function toggleNotifications() {
             }
         });
     } else {
-        settings.enabled = false;
+    if (confirm('⚠️ WARNING: Changing your difficulty/program will reset ALL current progress and workout data. This action cannot be undone.\n\nAre you sure you want to continue?')) {
         saveNotificationSettings(settings);
         updateNotificationSettingsDisplay();
     }
