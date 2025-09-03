@@ -4,7 +4,6 @@
   "description": "HYBRID OPS - Hybrid Fitness Training",
   "main": "index.html",
   "scripts": {
-    "dev": "python3 -m http.server 3000",
     "dev": "http-server . -p 3000 -c-1",
     "build": "echo 'Static files ready'",
     "preview": "http-server . -p 4173 -c-1"
@@ -18,5 +17,8 @@
   ],
   "author": "Vinodh",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
 }
