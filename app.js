@@ -863,27 +863,28 @@ const renderExercises = (dayId) => {
                         </div>
                         
                     <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <input 
-                                    type="text" 
-                                    value="${set.weight}" 
-                                    onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'weight', this.value)"
-                                    class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
+                        <div>
                             <label class="block text-xs text-gray-400 mb-2 font-medium">Score / Weight (LBS)</label>
-                            <input type="number" step="0.5"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Reps</label>
-                                <input 
-                                    type="number" 
-                            <label class="block text-xs text-gray-400 mb-2 font-medium">Reps</label>
-                                    onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'reps', this.value)"
-                                    class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
-                                    placeholder="Reps"
-                                />
-                            </div>
+                            <input
+                                type="number"
+                                step="0.5"
+                                value="${set.weight}"
+                                onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'weight', this.value)"
+                                class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
+                                placeholder="Weight"
+                            />
                         </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-2 font-medium">Reps</label>
+                            <input
+                                type="number"
+                                value="${set.reps}"
+                                onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'reps', this.value)"
+                                class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
+                                placeholder="Reps"
+                            />
+                        </div>
+                    </div>
                     </div>
                 `}).join('')}
             </div>
