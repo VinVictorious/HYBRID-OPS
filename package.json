@@ -1,0 +1,22 @@
+{
+  "name": "hybrid-ops-pwa",
+  "version": "1.0.0",
+  "description": "HYBRID OPS - 8 Week Training Program Progressive Web App",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "start": "python3 -m http.server 3000",
+    "build": "echo 'No build step required for static HTML project'",
+    "preview": "python3 -m http.server 4173"
+  },
+  "keywords": [
+    "fitness",
+    "training",
+    "pwa",
+    "workout",
+    "hybrid"
+  ],
+  "author": "Vinodh",
+  "license": "MIT",
+  "type": "module"
+}
