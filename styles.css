@@ -347,3 +347,34 @@ body {
 .nav-icon {
     filter: none;
 }
+
+/* Workout Complete Toast */
+#workout-complete-modal {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#workout-complete-modal.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    animation: toast-glow 0.6s ease-out;
+}
+
+#workout-complete-modal.show .checkmark {
+    animation: checkmark-pop 0.6s ease-out;
+}
+
+@keyframes toast-glow {
+    0% { box-shadow: 0 0 0px #4ADE80; }
+    50% { box-shadow: 0 0 15px #4ADE80; }
+    100% { box-shadow: 0 0 0px #4ADE80; }
+}
+
+@keyframes checkmark-pop {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
