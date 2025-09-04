@@ -1791,7 +1791,6 @@ window.closeExerciseModal = () => {
 };
 
 // --- PWA Install Prompt ---
-let deferredPrompt;
 const iosPrompt = document.getElementById('ios-pwa-prompt');
 const iosPromptDismiss = document.getElementById('ios-pwa-dismiss');
 
