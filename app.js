@@ -1696,6 +1696,8 @@ const closeResetModal = () => {
 // --- PWA Install Prompt ---
 let deferredPrompt;
 const installButton = document.getElementById('install-button');
+const iosPrompt = document.getElementById('ios-pwa-prompt');
+const iosPromptDismiss = document.getElementById('ios-pwa-dismiss');
 
 window.addEventListener('beforeinstallprompt', (e) => {
   // Prevent the mini-infobar from appearing on mobile
@@ -1723,5 +1725,29 @@ window.addEventListener('appinstalled', () => {
   installButton.classList.add('hidden');
 });
 
-// Initialize the app when the page loads
-document.addEventListener('DOMContentLoaded', initializeApp);
+function checkIosInstallPrompt() {
+  const ua = window.navigator.userAgent.toLowerCase();
+  const isIOS = /iphone|ipad|ipod/.test(ua);
+  const isStandalone = window.navigator.standalone === true;
+  const isSafari = isIOS && /safari/.test(ua) && !/crios|fxios|edgios/.test(ua);
+  const dismissed = localStorage.getItem('iosPwaPromptDismissed');
+
+  if (isIOS && isSafari && !isStandalone && !dismissed) {
+    iosPrompt.classList.remove('hidden');
+  }
+}
+
+function dismissIosInstallPrompt() {
+  iosPrompt.classList.add('hidden');
+  localStorage.setItem('iosPwaPromptDismissed', 'true');
+}
+
+if (iosPromptDismiss) {
+  iosPromptDismiss.addEventListener('click', dismissIosInstallPrompt);
+}
+
+// Initialize the app and check iOS prompt when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  initializeApp();
+  checkIosInstallPrompt();
+});
