@@ -587,7 +587,11 @@ const loadData = () => {
 const selectDifficulty = (level) => {
     localStorage.setItem('hybridDifficulty', level);
     currentDifficulty = level;
-    initializeApp();
+    difficultySelectionScreen.classList.add('hidden');
+    switchView('setup-screen');
+    if (deferredPrompt) {
+        installButton.classList.remove('hidden');
+    }
 };
 
 const selectWeightUnit = (unit) => {
@@ -1681,6 +1685,7 @@ const closeResetModal = () => {
 // --- PWA Install Prompt ---
 let deferredPrompt;
 const installButton = document.getElementById('install-button');
+const continueButton = document.getElementById('continue-button');
 const iosPrompt = document.getElementById('ios-pwa-prompt');
 const iosPromptDismiss = document.getElementById('ios-pwa-dismiss');
 
@@ -1708,6 +1713,15 @@ installButton.addEventListener('click', async () => {
 // Hide the install button if the app is installed
 window.addEventListener('appinstalled', () => {
   installButton.classList.add('hidden');
+});
+
+continueButton.addEventListener('click', () => {
+  const settings = getNotificationSettings();
+  saveNotificationSettings(settings);
+  document.getElementById('setup-screen').classList.add('hidden');
+  initializeApp();
+  switchView('home');
+  bottomNav.classList.remove('hidden');
 });
 
 function checkIosInstallPrompt() {
