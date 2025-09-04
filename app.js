@@ -1611,12 +1611,8 @@ const calculateWeeklyTotals = () => {
         const currentWeek = getCurrentWeekNumber();
         weeks = weeks.filter(w => w === currentWeek);
     }
-    const labels = weeks.map(w => `Week ${w}`);
-    const workouts = [];
-    const volume = [];
-    const distance = [];
 
-    weeks.forEach(weekNum => {
+    return weeks.map(weekNum => {
         const weekData = currentProgramData.flatMap(p => p.weeks).find(w => w.week === parseInt(weekNum));
         let weekWorkouts = 0;
         let weekVolume = 0;
@@ -1649,12 +1645,8 @@ const calculateWeeklyTotals = () => {
             });
         }
 
-        workouts.push(weekWorkouts);
-        volume.push(weekVolume);
-        distance.push(weekDistance);
+        return { week: weekNum, workouts: weekWorkouts, volume: weekVolume, distance: weekDistance };
     });
-
-    return { labels, workouts, volume, distance };
 };
 
 const renderWorkoutsChart = (labels, data) => {
@@ -1767,11 +1759,32 @@ const renderDistanceChart = (labels, data) => {
     });
 };
 
+const updateDeltaIndicator = (elementId, data, formatter) => {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    if (data.length < 2) {
+        el.textContent = '';
+        return;
+    }
+    const delta = data[data.length - 1] - data[data.length - 2];
+    const sign = delta >= 0 ? '+' : '';
+    el.textContent = `${sign}${formatter(delta)} vs last week`;
+};
+
 const renderWeeklyCharts = () => {
-    const { labels, workouts, volume, distance } = calculateWeeklyTotals();
+    const totals = calculateWeeklyTotals();
+    const labels = totals.map(t => `Week ${t.week}`);
+    const workouts = totals.map(t => t.workouts);
+    const volume = totals.map(t => t.volume);
+    const distance = totals.map(t => t.distance);
+
     renderWorkoutsChart(labels, workouts);
     renderVolumeChart(labels, volume);
     renderDistanceChart(labels, distance);
+
+    updateDeltaIndicator('workouts-delta', workouts, d => `${d} workouts`);
+    updateDeltaIndicator('volume-delta', volume, d => `${d.toLocaleString()} ${weightUnit}`);
+    updateDeltaIndicator('distance-delta', distance, d => `${d.toFixed(1)} km`);
 };
 
 const calculate1RM = (dayId) => {
