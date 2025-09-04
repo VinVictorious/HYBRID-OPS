@@ -1365,7 +1365,7 @@ function updateNotificationSettingsDisplay() {
         <div class="space-y-4">
             <div class="flex items-center justify-between py-1">
                 <label class="text-white font-medium text-sm">Enable Notifications</label>
-                <button onclick="toggleNotifications()" class="w-10 h-5 rounded-full transition-colors ${settings.enabled ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                <button id="toggle-notifications" class="w-10 h-5 rounded-full transition-colors ${settings.enabled ? 'bg-lime-500' : 'bg-gray-600'} relative">
                     <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.enabled ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                 </button>
             </div>
@@ -1374,40 +1374,40 @@ function updateNotificationSettingsDisplay() {
                 <div class="space-y-3 pl-4 border-l-2 border-lime-500">
                     <div class="flex items-center justify-between py-1">
                         <label class="text-gray-300 text-sm">Workout Reminders</label>
-                        <button onclick="toggleNotificationSetting('workoutReminders')" class="w-10 h-5 rounded-full transition-colors ${settings.workoutReminders ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                        <button id="toggle-workoutReminders" class="w-10 h-5 rounded-full transition-colors ${settings.workoutReminders ? 'bg-lime-500' : 'bg-gray-600'} relative">
                             <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.workoutReminders ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                         </button>
                     </div>
 
                     <div class="flex items-center justify-between py-1">
                         <label class="text-gray-300 text-sm">Completion Celebrations</label>
-                        <button onclick="toggleNotificationSetting('completionCelebrations')" class="w-10 h-5 rounded-full transition-colors ${settings.completionCelebrations ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                        <button id="toggle-completionCelebrations" class="w-10 h-5 rounded-full transition-colors ${settings.completionCelebrations ? 'bg-lime-500' : 'bg-gray-600'} relative">
                             <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.completionCelebrations ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                         </button>
                     </div>
 
                     <div class="flex items-center justify-between py-1">
                         <label class="text-gray-300 text-sm">Weekly Progress</label>
-                        <button onclick="toggleNotificationSetting('weeklyProgress')" class="w-10 h-5 rounded-full transition-colors ${settings.weeklyProgress ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                        <button id="toggle-weeklyProgress" class="w-10 h-5 rounded-full transition-colors ${settings.weeklyProgress ? 'bg-lime-500' : 'bg-gray-600'} relative">
                             <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.weeklyProgress ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                         </button>
                     </div>
 
                     <div class="flex items-center justify-between py-1">
                         <label class="text-gray-300 text-sm">Motivational Messages</label>
-                        <button onclick="toggleNotificationSetting('motivationalMessages')" class="w-10 h-5 rounded-full transition-colors ${settings.motivationalMessages ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                        <button id="toggle-motivationalMessages" class="w-10 h-5 rounded-full transition-colors ${settings.motivationalMessages ? 'bg-lime-500' : 'bg-gray-600'} relative">
                             <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.motivationalMessages ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                         </button>
                     </div>
 
                     <div class="py-1">
                         <label class="text-gray-300 block mb-2 text-sm">Daily Notification Time</label>
-                        <input type="time" value="${settings.reminderTime}" onchange="updateReminderTime(this.value)" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
+                        <input id="notification-reminder-time" type="time" value="${settings.reminderTime}" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
                     </div>
 
                     <div class="py-1">
                         <label class="text-gray-300 block mb-2 text-sm">Notification Type</label>
-                        <select onchange="updateNotificationType(this.value)" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
+                        <select id="notification-type" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
                             <option value="push" ${settings.notificationType === 'push' ? 'selected' : ''}>Push</option>
                             <option value="email" ${settings.notificationType === 'email' ? 'selected' : ''}>Email</option>
                             <option value="sms" ${settings.notificationType === 'sms' ? 'selected' : ''}>SMS</option>
@@ -1417,6 +1417,24 @@ function updateNotificationSettingsDisplay() {
             ` : ''}
         </div>
     `;
+
+    bindNotificationSettingsEvents();
+}
+
+function bindNotificationSettingsEvents() {
+    const mainToggle = document.getElementById('toggle-notifications');
+    if (mainToggle) mainToggle.addEventListener('click', toggleNotifications);
+
+    ['workoutReminders', 'completionCelebrations', 'weeklyProgress', 'motivationalMessages'].forEach(type => {
+        const btn = document.getElementById(`toggle-${type}`);
+        if (btn) btn.addEventListener('click', () => toggleNotificationSetting(type));
+    });
+
+    const timeInput = document.getElementById('notification-reminder-time');
+    if (timeInput) timeInput.addEventListener('change', e => updateReminderTime(e.target.value));
+
+    const typeSelect = document.getElementById('notification-type');
+    if (typeSelect) typeSelect.addEventListener('change', e => updateNotificationType(e.target.value));
 }
 
 function toggleNotifications() {
