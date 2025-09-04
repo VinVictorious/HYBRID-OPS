@@ -1757,7 +1757,6 @@ let onboardingStep = 0;
 let onboardingGoal = null;
 let onboardingDifficulty = null;
 let onboardingNotifications = null;
-let onboardingReplay = false;
 
 function renderOnboardingGoal() {
   return `
@@ -1870,16 +1869,13 @@ function showOnboardingStep() {
 function finishOnboarding() {
   onboardingModal.classList.add('hidden');
   localStorage.setItem('hasSeenOnboarding','true');
-  if (!onboardingReplay) {
-    if (onboardingGoal) localStorage.setItem('hybridGoal', onboardingGoal);
-    if (onboardingDifficulty) localStorage.setItem('hybridDifficulty', onboardingDifficulty);
-    initializeApp();
-    checkIosInstallPrompt();
-  }
+  if (onboardingGoal) localStorage.setItem('hybridGoal', onboardingGoal);
+  if (onboardingDifficulty) localStorage.setItem('hybridDifficulty', onboardingDifficulty);
+  initializeApp();
+  checkIosInstallPrompt();
 }
 
-function startOnboarding(replay = false) {
-  onboardingReplay = replay;
+function startOnboarding() {
   onboardingStep = 0;
   onboardingGoal = null;
   onboardingDifficulty = null;
@@ -1891,7 +1887,7 @@ function startOnboarding(replay = false) {
 onboardingNext.addEventListener('click', () => {
   if (onboardingStep === 0 && !onboardingGoal) return;
   if (onboardingStep === 1 && !onboardingDifficulty) return;
-  if (onboardingStep === 1 && !onboardingReplay) {
+  if (onboardingStep === 1) {
     if (onboardingGoal) localStorage.setItem('hybridGoal', onboardingGoal);
     if (onboardingDifficulty) localStorage.setItem('hybridDifficulty', onboardingDifficulty);
     initializeApp();
