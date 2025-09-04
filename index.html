@@ -137,6 +137,7 @@
                     <button id="install-button" class="hidden text-sm text-lime-400 hover:text-lime-300 transition-colors underline">Install App</button>
                     <button onclick="openProgressModal()" class="text-sm text-gray-500 hover:text-lime-400 transition-colors underline clickable">View Analytics</button>
                     <button onclick="openNotificationSettings()" class="text-sm text-gray-500 hover:text-lime-400 transition-colors underline clickable">Notifications</button>
+                    <button onclick="startOnboarding(true)" class="text-sm text-gray-500 hover:text-lime-400 transition-colors underline clickable">Replay Walkthrough</button>
                     <button onclick="openResetModal()" class="text-sm text-gray-500 hover:text-red-500 transition-colors underline clickable">Change Difficulty / Program</button>
                 </div>
                 <p class="text-xs text-gray-600 mt-6">Made by Vinodh with <span class="text-lime-400">♥</span></p>
@@ -261,6 +262,20 @@
             <div class="flex justify-center space-x-4">
                 <button onclick="resetProgram(); closeResetModal();" class="bg-red-600 hover:bg-red-700 text-black px-4 py-2 rounded font-bold clickable">Proceed</button>
                 <button onclick="closeResetModal()" class="bg-gray-700 hover:bg-gray-600 text-gray-300 px-4 py-2 rounded font-bold clickable">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Walkthrough Modal -->
+    <div id="onboarding-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="modal-content bg-gray-900 border border-gray-700 rounded-lg max-w-md w-full p-6 relative" role="dialog" aria-modal="true">
+            <div id="onboarding-content"></div>
+            <div class="flex justify-between mt-6">
+                <button id="onboarding-back" class="px-4 py-2 bg-gray-700 text-gray-300 rounded disabled:opacity-50">Back</button>
+                <div class="space-x-2">
+                    <button id="onboarding-skip" class="text-sm text-gray-400 hover:text-lime-400 underline">Skip</button>
+                    <button id="onboarding-next" class="px-4 py-2 bg-lime-500 text-black font-bold rounded disabled:opacity-50">Next</button>
+                </div>
             </div>
         </div>
     </div>
