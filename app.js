@@ -1331,6 +1331,16 @@ function requestNotificationPermission() {
     });
 }
 
+function triggerNotificationPermission() {
+    if (localStorage.getItem('notificationsEnabled') === 'true') {
+        requestNotificationPermission().then(granted => {
+            if (!granted) {
+                localStorage.setItem('notificationsEnabled', 'false');
+            }
+        });
+    }
+}
+
 function openNotificationSettings() {
     document.getElementById('notification-modal').classList.remove('hidden');
     updateNotificationSettingsDisplay();
@@ -1721,6 +1731,7 @@ continueButton.addEventListener('click', () => {
   document.getElementById('setup-screen').classList.add('hidden');
   initializeApp();
   switchView('home');
+  triggerNotificationPermission();
   bottomNav.classList.remove('hidden');
 });
 
@@ -1798,12 +1809,8 @@ function showOnboardingStep() {
         btn.classList.remove('bg-gray-700','text-gray-300');
         btn.classList.add('bg-lime-500','text-black');
         onboardingNext.disabled = false;
-        if (onboardingNotifications && 'Notification' in window) {
-          Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-              localStorage.setItem('notificationsEnabled','true');
-            }
-          });
+        if (onboardingNotifications) {
+          localStorage.setItem('notificationsEnabled','true');
         } else {
           localStorage.setItem('notificationsEnabled','false');
         }
@@ -1824,6 +1831,8 @@ function finishOnboarding() {
   onboardingModal.classList.add('hidden');
   localStorage.setItem('hasSeenOnboarding','true');
   initializeApp();
+  switchView('home');
+  triggerNotificationPermission();
   checkIosInstallPrompt();
 }
 
@@ -1887,4 +1896,5 @@ document.addEventListener('DOMContentLoaded', () => {
     startOnboarding();
   }
   switchView('home');
+  triggerNotificationPermission();
 });
