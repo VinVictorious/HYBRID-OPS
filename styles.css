@@ -44,11 +44,7 @@ body {
 
 /* Reusable badge styling for beta labels */
 .beta-badge {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    margin-left: 0;
-    z-index: 1000;
+    margin-left: 0.5rem; /* ml-2 */
     padding: 0.25rem 0.5rem; /* py-1 px-2 */
     font-size: 0.75rem; /* text-xs */
     background-color: #84CC16; /* bg-lime-500 */
