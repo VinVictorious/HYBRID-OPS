@@ -1380,57 +1380,6 @@ function updateReminderTime(time) {
     saveNotificationSettings(settings);
 }
 
-// Initialize app when DOM is loaded
-function openNotificationSettings() {
-    document.getElementById('notification-modal').classList.remove('hidden');
-    populateNotificationSettings();
-}
-
-function closeNotificationSettings() {
-    document.getElementById('notification-modal').classList.add('hidden');
-}
-
-function populateNotificationSettings() {
-    const notificationSettings = document.getElementById('notification-settings');
-    const notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
-    const reminderTime = localStorage.getItem('reminderTime') || '09:00';
-    
-    notificationSettings.innerHTML = `
-        <div class="space-y-4">
-            <div class="flex items-center justify-between">
-                <label class="text-gray-300">Enable Notifications</label>
-                <input type="checkbox" id="notifications-toggle" ${notificationsEnabled ? 'checked' : ''} 
-                       onchange="toggleNotifications()" class="w-5 h-5 text-lime-500 bg-gray-800 border-gray-600 rounded focus:ring-lime-500">
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <label class="text-gray-300">Daily Reminder Time</label>
-                <input type="time" id="reminder-time" value="${reminderTime}" 
-                       onchange="updateReminderTime()" class="bg-gray-800 border border-gray-600 text-white rounded px-2 py-1 focus:border-lime-500">
-            </div>
-            
-            <div class="text-xs text-gray-400 mt-4">
-                <p>• Get reminded about your daily workouts</p>
-                <p>• Receive motivational messages</p>
-                <p>• Track your progress milestones</p>
-            </div>
-        </div>
-    `;
-}
-
-function toggleNotifications() {
-    const toggle = document.getElementById('notifications-toggle');
-    localStorage.setItem('notificationsEnabled', toggle.checked);
-    
-    if (toggle.checked && 'Notification' in window) {
-        Notification.requestPermission();
-    }
-}
-
-function updateReminderTime() {
-    const timeInput = document.getElementById('reminder-time');
-    localStorage.setItem('reminderTime', timeInput.value);
-}
 
 // --- Chart Functions ---
 const openProgressModal = () => {
