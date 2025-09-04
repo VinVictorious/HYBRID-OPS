@@ -1790,7 +1790,6 @@ window.closeExerciseModal = () => {
     document.getElementById('exercise-modal').classList.add('hidden');
 };
 
-// --- PWA Install Prompt ---
 let deferredPrompt;
 const iosPrompt = document.getElementById('ios-pwa-prompt');
 const iosPromptDismiss = document.getElementById('ios-pwa-dismiss');
