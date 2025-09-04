@@ -1684,6 +1684,15 @@ const closeExerciseModal = () => {
     document.getElementById('exercise-modal').classList.add('hidden');
 };
 
+// --- Reset Confirmation Modal ---
+const openResetModal = () => {
+    document.getElementById('reset-modal').classList.remove('hidden');
+};
+
+const closeResetModal = () => {
+    document.getElementById('reset-modal').classList.add('hidden');
+};
+
 // --- PWA Install Prompt ---
 let deferredPrompt;
 const installButton = document.getElementById('install-button');
