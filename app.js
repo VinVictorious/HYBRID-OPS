@@ -1355,15 +1355,6 @@ function triggerNotificationPermission() {
     }
 }
 
-function openNotificationSettings() {
-    document.getElementById('notification-modal').classList.remove('hidden');
-    updateNotificationSettingsDisplay();
-}
-
-function closeNotificationSettings() {
-    document.getElementById('notification-modal').classList.add('hidden');
-}
-
 function updateNotificationSettingsDisplay() {
     const settings = getNotificationSettings();
     const container = document.getElementById('notification-settings');
@@ -2059,6 +2050,8 @@ function switchView(viewId) {
 
 // Initialize the app or onboarding when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+  if (!document.getElementById('bottom-nav')) return;
+
   if (localStorage.getItem('hasSeenOnboarding') === 'true') {
     initializeApp();
     checkIosInstallPrompt();
