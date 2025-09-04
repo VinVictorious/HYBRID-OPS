@@ -32,7 +32,7 @@ function triggerInstallPrompt() {
         if (btn) btn.classList.add('hidden');
         if (instructions) instructions.classList.remove('hidden');
         return;
-            deferredPrompt = null;
+    }
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choice) => {
         console.log(`User choice: ${choice.outcome}`);
