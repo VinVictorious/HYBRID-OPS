@@ -1457,6 +1457,16 @@ const populateExerciseSelect = () => {
             });
         }
     });
+    const emptyMessage = document.getElementById('analytics-empty-message');
+    const analyticsContent = document.getElementById('analytics-content');
+    if (trackedExercises.size === 0) {
+        emptyMessage.classList.remove('hidden');
+        analyticsContent.classList.add('hidden');
+        return;
+    } else {
+        emptyMessage.classList.add('hidden');
+        analyticsContent.classList.remove('hidden');
+    }
 
     trackedExercises.forEach(exName => {
         const option = document.createElement('option');
@@ -1464,7 +1474,7 @@ const populateExerciseSelect = () => {
         option.textContent = exName;
         select.appendChild(option);
     });
-    
+
     // Automatically render chart for the first exercise
     if (trackedExercises.size > 0) {
         renderChart(trackedExercises.values().next().value);
