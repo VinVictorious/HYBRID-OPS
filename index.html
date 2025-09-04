@@ -265,6 +265,20 @@
         </div>
     </div>
 
+    <!-- Onboarding Walkthrough Modal -->
+    <div id="onboarding-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="modal-content bg-gray-900 border border-gray-700 rounded-lg max-w-md w-full p-6 relative" role="dialog" aria-modal="true">
+            <div id="onboarding-content"></div>
+            <div class="flex justify-between mt-6">
+                <button id="onboarding-back" class="px-4 py-2 bg-gray-700 text-gray-300 rounded disabled:opacity-50">Back</button>
+                <div class="space-x-2">
+                    <button id="onboarding-skip" class="text-sm text-gray-400 hover:text-lime-400 underline">Skip</button>
+                    <button id="onboarding-next" class="px-4 py-2 bg-lime-500 text-black font-bold rounded disabled:opacity-50">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- iOS Install Prompt -->
     <div id="ios-pwa-prompt" class="fixed bottom-4 left-1/2 -translate-x-1/2 transform bg-gray-900 border border-lime-500 text-gray-200 p-4 rounded-lg shadow-lg text-center hidden z-50">
         <p class="text-sm mb-2">Tap <span class="font-bold">Share</span> → <span class="font-bold">Add to Home Screen</span></p>

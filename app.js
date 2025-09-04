@@ -1746,8 +1746,120 @@ if (iosPromptDismiss) {
   iosPromptDismiss.addEventListener('click', dismissIosInstallPrompt);
 }
 
-// Initialize the app and check iOS prompt when the page loads
-document.addEventListener('DOMContentLoaded', () => {
+// --- Onboarding Walkthrough ---
+const onboardingModal = document.getElementById('onboarding-modal');
+const onboardingContent = document.getElementById('onboarding-content');
+const onboardingBack = document.getElementById('onboarding-back');
+const onboardingNext = document.getElementById('onboarding-next');
+const onboardingSkip = document.getElementById('onboarding-skip');
+
+let onboardingStep = 0;
+let onboardingNotifications = null;
+
+function renderOnboardingNotifications() {
+  const selected = onboardingNotifications;
+  return `
+    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Notifications</h2>
+    <p class="text-sm text-gray-400 mb-4 text-center">Enable reminders to stay on track.</p>
+    <div class="flex justify-center space-x-4">
+      <button class="onboarding-notif px-4 py-2 rounded ${selected === true ? 'bg-lime-500 text-black' : 'bg-gray-700 text-gray-300'}" data-enable="true">Enable</button>
+      <button class="onboarding-notif px-4 py-2 rounded ${selected === false ? 'bg-lime-500 text-black' : 'bg-gray-700 text-gray-300'}" data-enable="false">Disable</button>
+    </div>
+  `;
+}
+
+function renderOnboardingInstall() {
+  const installAction = deferredPrompt ? '<button id="onboarding-install" class="btn-primary w-full p-3 mt-4 bg-lime-500 hover:bg-lime-600 text-black font-bold rounded">Install App</button>' : '<p class="text-sm text-gray-400 mt-4 text-center">Use your browser\'s menu to add this app to your home screen.</p>';
+  return `
+    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Add to Home Screen</h2>
+    <p class="text-sm text-gray-400 text-center">Install HYBRID OPS for a full-screen experience.</p>
+    ${installAction}
+  `;
+}
+
+function showOnboardingStep() {
+  onboardingBack.disabled = onboardingStep === 0;
+  onboardingNext.textContent = onboardingStep === 1 ? 'Finish' : 'Next';
+
+  let html = onboardingStep === 0 ? renderOnboardingNotifications() : renderOnboardingInstall();
+  onboardingContent.innerHTML = html;
+
+  onboardingNext.disabled = (onboardingStep === 0 && onboardingNotifications === null);
+
+  if (onboardingStep === 0) {
+    onboardingModal.querySelectorAll('.onboarding-notif').forEach(btn => {
+      btn.addEventListener('click', () => {
+        onboardingNotifications = btn.dataset.enable === 'true';
+        onboardingModal.querySelectorAll('.onboarding-notif').forEach(b => {
+          b.classList.remove('bg-lime-500','text-black');
+          b.classList.add('bg-gray-700','text-gray-300');
+        });
+        btn.classList.remove('bg-gray-700','text-gray-300');
+        btn.classList.add('bg-lime-500','text-black');
+        onboardingNext.disabled = false;
+        if (onboardingNotifications && 'Notification' in window) {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              localStorage.setItem('notificationsEnabled','true');
+            }
+          });
+        } else {
+          localStorage.setItem('notificationsEnabled','false');
+        }
+      });
+    });
+  } else if (onboardingStep === 1) {
+    const installBtn = onboardingModal.querySelector('#onboarding-install');
+    if (installBtn) {
+      installBtn.addEventListener('click', () => installButton.click());
+    }
+  }
+
+  const focusable = onboardingModal.querySelector('button');
+  if (focusable) focusable.focus();
+}
+
+function finishOnboarding() {
+  onboardingModal.classList.add('hidden');
+  localStorage.setItem('hasSeenOnboarding','true');
   initializeApp();
   checkIosInstallPrompt();
+}
+
+function startOnboarding() {
+  onboardingStep = 0;
+  onboardingNotifications = null;
+  onboardingModal.classList.remove('hidden');
+  showOnboardingStep();
+}
+
+onboardingNext.addEventListener('click', () => {
+  if (onboardingStep === 0 && onboardingNotifications === null) return;
+  if (onboardingStep >= 1) {
+    finishOnboarding();
+  } else {
+    onboardingStep++;
+    showOnboardingStep();
+  }
+});
+
+onboardingBack.addEventListener('click', () => {
+  if (onboardingStep > 0) {
+    onboardingStep--;
+    showOnboardingStep();
+  }
+});
+
+onboardingSkip.addEventListener('click', () => {
+  finishOnboarding();
+});
+
+// Initialize the app or onboarding when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('hasSeenOnboarding') === 'true') {
+    initializeApp();
+    checkIosInstallPrompt();
+  } else {
+    startOnboarding();
+  }
 });
