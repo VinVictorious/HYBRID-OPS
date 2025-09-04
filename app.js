@@ -1,47 +1,8 @@
-import {
-    formatTime,
-    createTimerState,
-    startTimer as startTimerUtil,
-    stopTimer as stopTimerUtil,
-    resetTimer as resetTimerUtil,
-    setCountdownTime as setCountdownTimeUtil,
-} from './src/utils/timer.js';
-
 // PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
         .then(r => console.log('ServiceWorker registration successful.'))
         .catch(e => console.log('ServiceWorker registration failed:', e));
-}
-
-let deferredPrompt = null;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const btn = document.getElementById('install-app-btn');
-    const instructions = document.getElementById('install-instructions');
-    if (btn) btn.classList.remove('hidden');
-    if (instructions) instructions.classList.add('hidden');
-});
-
-function triggerInstallPrompt() {
-    if (!deferredPrompt) {
-        const btn = document.getElementById('install-app-btn');
-        const instructions = document.getElementById('install-instructions');
-        if (btn) btn.classList.add('hidden');
-        if (instructions) instructions.classList.remove('hidden');
-        return;
-            deferredPrompt = null;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choice) => {
-        console.log(`User choice: ${choice.outcome}`);
-        const btn = document.getElementById('install-app-btn');
-        const instructions = document.getElementById('install-instructions');
-        if (btn) btn.classList.add('hidden');
-        if (choice.outcome === 'dismissed' && instructions) instructions.classList.remove('hidden');
-        deferredPrompt = null;
-    });
 }
 
 const icons = {
@@ -52,14 +13,6 @@ const icons = {
     recovery: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
     test: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`
 };
-
-const completionMessages = [
-    "Mission complete! Excellent work.",
-    "Workout complete—stay relentless.",
-    "Great job! Training session accomplished.",
-    "You crushed it. Keep the momentum.",
-    "Workout done. Victory in sight."
-];
 
 const baselinePhase = {
     phase: "Baseline Assessment",
@@ -600,11 +553,7 @@ const programContainer = document.getElementById('program-container');
 const difficultySelectionScreen = document.getElementById('difficulty-selection');
 const appContent = document.getElementById('app-content');
 const goalSelectionScreen = document.getElementById('goal-selection');
-const bottomNav = document.getElementById('bottom-nav');
 let progressChart = null;
-let workoutsChart = null;
-let volumeChart = null;
-let distanceChart = null;
 
 let completionStatus = {};
 let workoutDetails = {};
@@ -617,7 +566,6 @@ let weightUnit = 'lbs';
 let currentGoal = null;
 let currentDifficulty = null;
 let currentProgramData = [];
-let activeWorkoutDayId = null;
 
 const saveData = () => {
     localStorage.setItem(`hybridData_${currentGoal}_${currentDifficulty}`, JSON.stringify({
@@ -634,19 +582,29 @@ const loadData = () => {
     weightUnit = data?.unit || 'lbs';
 };
 
-window.selectDifficulty = (level) => {
+const selectDifficulty = (level) => {
     localStorage.setItem('hybridDifficulty', level);
     currentDifficulty = level;
-    difficultySelectionScreen.classList.add('hidden');
     initializeApp();
-    switchView('home');
-    bottomNav.classList.remove('hidden');
 };
 
-window.selectWeightUnit = (unit) => {
+const selectWeightUnit = (unit) => {
     weightUnit = unit;
     saveData();
     renderProgram();
+};
+
+const resetProgram = () => {
+    localStorage.removeItem('hybridGoal');
+    localStorage.removeItem('hybridDifficulty');
+    localStorage.removeItem(`hybridData_${currentGoal}_${currentDifficulty}`);
+    completionStatus = {};
+    workoutDetails = {};
+    openWeeks = new Set();
+    openTools = new Set();
+    currentGoal = null;
+    currentDifficulty = null;
+    initializeApp();
 };
 
 const updateOverallProgress = () => {
@@ -659,7 +617,7 @@ const updateOverallProgress = () => {
     document.getElementById('overall-progress-text').textContent = `[ ${completedDays}/${totalDays} MISSIONS COMPLETE ] - ${Math.round(percentage)}%`;
 };
 
-window.toggleDayCompletion = (dayId) => {
+const toggleDayCompletion = (dayId) => {
     completionStatus[dayId] = !completionStatus[dayId];
     saveData();
 
@@ -686,50 +644,22 @@ const updateNotes = (dayId, text) => {
     saveData();
 };
 
-window.startWorkout = (dayId) => {
+const startWorkout = (dayId) => {
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-
-    if (!workoutDetails[dayId].workoutStarted) {
-        workoutDetails[dayId].workoutStarted = true;
-        workoutDetails[dayId].startTime = new Date().toISOString();
-
-        // Initialize exercises if not exists
-        if (!workoutDetails[dayId].exercises) {
-            const dayData = getCurrentDayData(dayId);
-            workoutDetails[dayId].exercises = parseExercises(dayData.details);
-        }
+    workoutDetails[dayId].workoutStarted = true;
+    workoutDetails[dayId].startTime = new Date().toISOString();
+    
+    // Initialize exercises if not exists
+    if (!workoutDetails[dayId].exercises) {
+        const dayData = getCurrentDayData(dayId);
+        workoutDetails[dayId].exercises = parseExercises(dayData.details);
     }
-
+    
     saveData();
     renderProgram();
-    openWorkoutSession(dayId);
-};
-
-const openWorkoutSession = (dayId) => {
-    activeWorkoutDayId = dayId;
-    const modal = document.getElementById('workout-session');
-    const timerEl = document.getElementById('session-timer');
-    if (timerEl) timerEl.id = `workout-timer-${dayId}`;
-    const notesEl = document.getElementById('session-notes');
-    if (notesEl) notesEl.value = workoutDetails[dayId]?.notes || '';
-    const exercisesEl = document.getElementById('session-exercises');
-    if (exercisesEl) exercisesEl.innerHTML = renderExercises(dayId);
-    modal.classList.remove('hidden');
-    startWorkoutTimer(dayId);
-};
-
-window.closeWorkoutSession = () => {
-    const modal = document.getElementById('workout-session');
-    modal.classList.add('hidden');
-    const timerEl = document.getElementById(`workout-timer-${activeWorkoutDayId}`);
-    if (timerEl) timerEl.id = 'session-timer';
-    activeWorkoutDayId = null;
-};
-
-const refreshWorkoutSession = () => {
-    if (!activeWorkoutDayId) return;
-    const exercisesEl = document.getElementById('session-exercises');
-    if (exercisesEl) exercisesEl.innerHTML = renderExercises(activeWorkoutDayId);
+    
+    // Start the workout timer
+    setTimeout(() => startWorkoutTimer(dayId), 100);
 };
 
 const getCurrentDayData = (dayId) => {
@@ -837,19 +767,18 @@ const updateSet = (dayId, exerciseIndex, setIndex, field, value) => {
     saveData();
 };
 
-window.toggleSetCompletion = (dayId, exerciseIndex, setIndex) => {
+const toggleSetCompletion = (dayId, exerciseIndex, setIndex) => {
     if (!workoutDetails[dayId] || !workoutDetails[dayId].exercises) return;
-
+    
     const set = workoutDetails[dayId].exercises[exerciseIndex].sets[setIndex];
     set.completed = !set.completed;
     saveData();
     renderProgram();
-    if (activeWorkoutDayId === dayId) refreshWorkoutSession();
 };
 
-window.addSet = (dayId, exerciseIndex) => {
+const addSet = (dayId, exerciseIndex) => {
     if (!workoutDetails[dayId] || !workoutDetails[dayId].exercises) return;
-
+    
     workoutDetails[dayId].exercises[exerciseIndex].sets.push({
         reps: '',
         weight: '',
@@ -857,10 +786,9 @@ window.addSet = (dayId, exerciseIndex) => {
     });
     saveData();
     renderProgram();
-    if (activeWorkoutDayId === dayId) refreshWorkoutSession();
 };
 
-window.finishWorkout = (dayId) => {
+const finishWorkout = (dayId) => {
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
     workoutDetails[dayId].workoutStarted = false;
     workoutDetails[dayId].endTime = new Date().toISOString();
@@ -874,21 +802,6 @@ window.finishWorkout = (dayId) => {
     
     saveData();
     renderProgram();
-    closeWorkoutSession();
-    showWorkoutCompleteMessage();
-};
-
-const showWorkoutCompleteMessage = (message) => {
-    const modal = document.getElementById('workout-complete-modal');
-    const textEl = document.getElementById('workout-complete-text');
-    const msg = message || completionMessages[Math.floor(Math.random() * completionMessages.length)];
-    textEl.textContent = msg;
-    modal.classList.remove('hidden');
-    modal.classList.add('show');
-    setTimeout(() => {
-        modal.classList.remove('show');
-        setTimeout(() => modal.classList.add('hidden'), 300);
-    }, 3000);
 };
 
 const renderClickableExercises = (details) => {
@@ -950,28 +863,27 @@ const renderExercises = (dayId) => {
                         </div>
                         
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
+                            <div>
+                                <input 
+                                    type="text" 
+                                    value="${set.weight}" 
+                                    onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'weight', this.value)"
+                                    class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
                             <label class="block text-xs text-gray-400 mb-2 font-medium">Score / Weight (LBS)</label>
-                            <input
-                                type="number"
-                                step="0.5"
-                                value="${set.weight}"
-                                onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'weight', this.value)"
-                                class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
-                                placeholder="Weight"
-                            />
-                        </div>
-                        <div>
+                            <input type="number" step="0.5"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Reps</label>
+                                <input 
+                                    type="number" 
                             <label class="block text-xs text-gray-400 mb-2 font-medium">Reps</label>
-                            <input
-                                type="number"
-                                value="${set.reps}"
-                                onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'reps', this.value)"
-                                class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
-                                placeholder="Reps"
-                            />
+                                    onchange="updateSet('${dayId}', ${exerciseIndex}, ${setIndex}, 'reps', this.value)"
+                                    class="w-full bg-gray-800 text-white text-center text-lg py-3 rounded-lg border border-gray-600 focus:border-lime-500 focus:outline-none"
+                                    placeholder="Reps"
+                                />
+                            </div>
                         </div>
-                    </div>
                     </div>
                 `}).join('')}
             </div>
@@ -1017,60 +929,76 @@ const startWorkoutTimer = (dayId) => {
 };
 
 // Timer Functions
-window.startTimer = (dayId, isStopwatch) => {
+const formatTime = (time) => {
+    const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+    const seconds = (time % 60).toString().padStart(2, '0');
+    return `${minutes}:${seconds}`;
+};
+
+const startTimer = (dayId, isStopwatch) => {
     clearInterval(timerIntervals[dayId]);
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-    const timerState = workoutDetails[dayId].timer || createTimerState(0, isStopwatch);
+    
+    const timerState = workoutDetails[dayId].timer || { time: 0, running: false, isStopwatch: true, initialTime: 0 };
+    timerState.running = true;
     timerState.isStopwatch = isStopwatch;
-
+    
     const displayId = isStopwatch ? `stopwatch-${dayId}` : `countdown-${dayId}`;
     const display = document.getElementById(displayId);
 
-    timerIntervals[dayId] = startTimerUtil(timerState, (time) => {
-        if (display) display.textContent = formatTime(time);
+    timerIntervals[dayId] = setInterval(() => {
+        if (isStopwatch) {
+            timerState.time++;
+        } else {
+            if (timerState.time > 0) {
+                timerState.time--;
+            } else {
+                stopTimer(dayId);
+            }
+        }
+        if (display) display.textContent = formatTime(timerState.time);
         workoutDetails[dayId].timer = timerState;
-    }, () => {
-        window.stopTimer(dayId);
-    });
-    updateTimerButtons(dayId);
+    }, 1000);
 };
 
-window.stopTimer = (dayId) => {
-    const timerState = workoutDetails[dayId]?.timer;
-    if (timerState) {
-        stopTimerUtil(timerState, timerIntervals[dayId]);
-    } else {
-        clearInterval(timerIntervals[dayId]);
+const stopTimer = (dayId) => {
+    clearInterval(timerIntervals[dayId]);
+    if (workoutDetails[dayId]?.timer) {
+        workoutDetails[dayId].timer.running = false;
     }
     saveData();
     updateTimerButtons(dayId);
 };
 
-window.resetTimer = (dayId, isStopwatch) => {
+const resetTimer = (dayId, isStopwatch) => {
     clearInterval(timerIntervals[dayId]);
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-    const timerState = workoutDetails[dayId].timer || createTimerState(0, isStopwatch);
-    resetTimerUtil(timerState, isStopwatch);
-
+    
+    const timerState = workoutDetails[dayId].timer || { time: 0, running: false, isStopwatch: true, initialTime: 0 };
+    timerState.time = isStopwatch ? 0 : timerState.initialTime;
+    timerState.running = false;
+    
     const displayId = isStopwatch ? `stopwatch-${dayId}` : `countdown-${dayId}`;
     const display = document.getElementById(displayId);
     if (display) display.textContent = formatTime(timerState.time);
-
+    
     workoutDetails[dayId].timer = timerState;
     saveData();
     updateTimerButtons(dayId);
 };
 
-window.setCountdownTime = (dayId) => {
+const setCountdownTime = (dayId) => {
     const minutes = parseInt(prompt('Enter countdown minutes:', '5') || '0');
     if (minutes >= 0) {
         if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-        const timerState = workoutDetails[dayId].timer || createTimerState();
-        setCountdownTimeUtil(timerState, minutes);
-
+        const timerState = workoutDetails[dayId].timer || { time: 0, running: false, isStopwatch: false, initialTime: 0 };
+        timerState.time = minutes * 60;
+        timerState.initialTime = minutes * 60;
+        timerState.isStopwatch = false;
+        
         const display = document.getElementById(`countdown-${dayId}`);
         if (display) display.textContent = formatTime(timerState.time);
-
+        
         workoutDetails[dayId].timer = timerState;
         saveData();
     }
@@ -1092,7 +1020,7 @@ const updateTimerButtons = (dayId) => {
     }
 };
 
-window.toggleWeekExpansion = (weekId) => {
+const toggleWeekExpansion = (weekId) => {
     if (openWeeks.has(weekId)) {
         openWeeks.delete(weekId);
     } else {
@@ -1101,7 +1029,7 @@ window.toggleWeekExpansion = (weekId) => {
     renderProgram();
 };
 
-window.toggleToolsExpansion = (dayId) => {
+const toggleToolsExpansion = (dayId) => {
     if (openTools.has(dayId)) {
         openTools.delete(dayId);
     } else {
@@ -1175,9 +1103,27 @@ const renderProgram = () => {
                                 <div class="text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">START WORKOUT</button>
                             ` : `
-                                <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">RESUME WORKOUT</button>
+                                <div class="mb-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="text-lg font-mono text-lime-400" id="workout-timer-${dayId}">00:00:00</div>
+                                        <button onclick="finishWorkout('${dayId}')" class="bg-lime-500 hover:bg-lime-600 text-black px-4 py-2 rounded text-sm font-bold">
+                                            FINISH WORKOUT
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="bg-gray-800/50 p-3 rounded mb-4">
+                                        <textarea 
+                                            placeholder="Your workout notes..."
+                                            class="w-full bg-transparent text-gray-300 placeholder-gray-500 text-sm resize-none border-none outline-none"
+                                            rows="2"
+                                            onchange="updateNotes('${dayId}', this.value)"
+                                        >${workoutDetails[dayId]?.notes || ''}</textarea>
+                                    </div>
+                                    
+                                    ${renderExercises(dayId)}
+                                </div>
                             `}
-                            ${(!isWorkoutStarted && isToolsOpen) ? `
+                            ${isToolsOpen ? `
                             <div class="border-t border-gray-600 pt-3 mt-3 space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Stopwatch -->
@@ -1253,7 +1199,6 @@ const renderProgram = () => {
             startWorkoutTimer(dayId);
         }
     });
-    bottomNav.classList.remove('hidden');
 };
 
 const showWelcomeMessage = () => {
@@ -1286,12 +1231,12 @@ const showWelcomeMessage = () => {
     }
 };
 
-window.showGoalScreen = () => {
+const showGoalScreen = () => {
     document.getElementById('welcome-screen').classList.add('hidden');
     document.getElementById('goal-selection').classList.remove('hidden');
 };
 
-window.selectGoal = (goal) => {
+const selectGoal = (goal) => {
     localStorage.setItem('hybridGoal', goal);
     currentGoal = goal;
     document.getElementById('goal-selection').classList.add('hidden');
@@ -1299,7 +1244,6 @@ window.selectGoal = (goal) => {
 };
 
 const initializeApp = () => {
-    bottomNav.classList.add('hidden');
     const savedGoal = localStorage.getItem('hybridGoal');
     const savedDifficulty = localStorage.getItem('hybridDifficulty');
     
@@ -1332,31 +1276,160 @@ const initializeApp = () => {
     showWelcomeMessage();
 };
 
-// --- Chart Functions ---
-const getSelectedTimeFilter = () => document.getElementById('analytics-time-filter')?.value || 'overall';
+// Notification Settings Functions
+function openNotificationSettings() {
+    document.getElementById('notification-modal').classList.remove('hidden');
+    updateNotificationSettingsDisplay();
+}
 
-const getCurrentWeekNumber = () => {
-    const weeks = Object.keys(workoutDetails).map(id => parseInt(id.split('_')[0]));
-    if (weeks.length === 0) return 1;
-    return Math.max(...weeks);
+function closeNotificationSettings() {
+    document.getElementById('notification-modal').classList.add('hidden');
+}
+
+function updateNotificationSettingsDisplay() {
+    const settings = getNotificationSettings();
+    const container = document.getElementById('notification-settings');
+    
+    container.innerHTML = `
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <label class="text-white font-medium">Enable Notifications</label>
+                <button onclick="toggleNotifications()" class="w-12 h-6 rounded-full transition-colors ${settings.enabled ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                    <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.enabled ? 'translate-x-6' : 'translate-x-0.5'}"></div>
+                </button>
+            </div>
+            
+            ${settings.enabled ? `
+                <div class="space-y-3 pl-4 border-l-2 border-lime-500">
+                    <div class="flex items-center justify-between">
+                        <label class="text-gray-300">Workout Reminders</label>
+                        <button onclick="toggleNotificationType('workoutReminders')" class="w-10 h-5 rounded-full transition-colors ${settings.workoutReminders ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.workoutReminders ? 'translate-x-5' : 'translate-x-0.5'}"></div>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="text-gray-300">Completion Celebrations</label>
+                        <button onclick="toggleNotificationType('completionCelebrations')" class="w-10 h-5 rounded-full transition-colors ${settings.completionCelebrations ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.completionCelebrations ? 'translate-x-5' : 'translate-x-0.5'}"></div>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="text-gray-300">Weekly Progress</label>
+                        <button onclick="toggleNotificationType('weeklyProgress')" class="w-10 h-5 rounded-full transition-colors ${settings.weeklyProgress ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.weeklyProgress ? 'translate-x-5' : 'translate-x-0.5'}"></div>
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <label class="text-gray-300 block mb-2">Daily Reminder Time</label>
+                        <input type="time" value="${settings.reminderTime}" onchange="updateReminderTime(this.value)" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
+                    </div>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+function toggleNotifications() {
+    const settings = getNotificationSettings();
+    if (!settings.enabled) {
+        requestNotificationPermission().then(granted => {
+            if (granted) {
+                settings.enabled = true;
+                saveNotificationSettings(settings);
+                updateNotificationSettingsDisplay();
+            }
+        });
+    } else {
+        settings.enabled = false;
+        saveNotificationSettings(settings);
+        updateNotificationSettingsDisplay();
+    }
+}
+
+function toggleNotificationType(type) {
+    const settings = getNotificationSettings();
+    settings[type] = !settings[type];
+    saveNotificationSettings(settings);
+    updateNotificationSettingsDisplay();
+}
+
+function updateReminderTime(time) {
+    const settings = getNotificationSettings();
+    settings.reminderTime = time;
+    saveNotificationSettings(settings);
+}
+
+// Initialize app when DOM is loaded
+function openNotificationSettings() {
+    document.getElementById('notification-modal').classList.remove('hidden');
+    populateNotificationSettings();
+}
+
+function closeNotificationSettings() {
+    document.getElementById('notification-modal').classList.add('hidden');
+}
+
+function populateNotificationSettings() {
+    const notificationSettings = document.getElementById('notification-settings');
+    const notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+    const reminderTime = localStorage.getItem('reminderTime') || '09:00';
+    
+    notificationSettings.innerHTML = `
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <label class="text-gray-300">Enable Notifications</label>
+                <input type="checkbox" id="notifications-toggle" ${notificationsEnabled ? 'checked' : ''} 
+                       onchange="toggleNotifications()" class="w-5 h-5 text-lime-500 bg-gray-800 border-gray-600 rounded focus:ring-lime-500">
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <label class="text-gray-300">Daily Reminder Time</label>
+                <input type="time" id="reminder-time" value="${reminderTime}" 
+                       onchange="updateReminderTime()" class="bg-gray-800 border border-gray-600 text-white rounded px-2 py-1 focus:border-lime-500">
+            </div>
+            
+            <div class="text-xs text-gray-400 mt-4">
+                <p>• Get reminded about your daily workouts</p>
+                <p>• Receive motivational messages</p>
+                <p>• Track your progress milestones</p>
+            </div>
+        </div>
+    `;
+}
+
+function toggleNotifications() {
+    const toggle = document.getElementById('notifications-toggle');
+    localStorage.setItem('notificationsEnabled', toggle.checked);
+    
+    if (toggle.checked && 'Notification' in window) {
+        Notification.requestPermission();
+    }
+}
+
+function updateReminderTime() {
+    const timeInput = document.getElementById('reminder-time');
+    localStorage.setItem('reminderTime', timeInput.value);
+}
+
+// --- Chart Functions ---
+const openProgressModal = () => {
+    document.getElementById('progress-modal').classList.remove('hidden');
+    populateExerciseChart();
 };
 
-const getFilteredWorkoutDetails = () => {
-    const filter = getSelectedTimeFilter();
-    if (filter === 'week') {
-        const currentWeek = getCurrentWeekNumber();
-        return Object.fromEntries(Object.entries(workoutDetails).filter(([dayId]) => parseInt(dayId.split('_')[0]) === currentWeek));
-    }
-    return workoutDetails;
+const closeProgressModal = () => {
+    document.getElementById('progress-modal').classList.add('hidden');
 };
 
 const populateExerciseSelect = () => {
     const select = document.getElementById('chart-exercise-select');
     select.innerHTML = ''; // Clear old options
-
+    
     const trackedExercises = new Set();
-    const details = getFilteredWorkoutDetails();
-    Object.values(details).forEach(day => {
+    Object.values(workoutDetails).forEach(day => {
         if (day.exercises) {
             day.exercises.forEach(ex => {
                  // Only track exercises with sets/reps or specific test names
@@ -1368,16 +1441,6 @@ const populateExerciseSelect = () => {
             });
         }
     });
-    const emptyMessage = document.getElementById('analytics-empty-message');
-    const analyticsContent = document.getElementById('analytics-content');
-    if (trackedExercises.size === 0) {
-        emptyMessage.classList.remove('hidden');
-        analyticsContent.classList.add('hidden');
-        return;
-    } else {
-        emptyMessage.classList.add('hidden');
-        analyticsContent.classList.remove('hidden');
-    }
 
     trackedExercises.forEach(exName => {
         const option = document.createElement('option');
@@ -1385,7 +1448,7 @@ const populateExerciseSelect = () => {
         option.textContent = exName;
         select.appendChild(option);
     });
-
+    
     // Automatically render chart for the first exercise
     if (trackedExercises.size > 0) {
         renderChart(trackedExercises.values().next().value);
@@ -1399,8 +1462,7 @@ const getChartData = (exerciseName) => {
     const data = [];
 
     // Sort workoutDetails by week and day
-    const details = getFilteredWorkoutDetails();
-    const sortedDays = Object.keys(details).sort((a, b) => {
+    const sortedDays = Object.keys(workoutDetails).sort((a, b) => {
         const [weekA, dayA] = a.split('_');
         const [weekB, dayB] = b.split('_');
         if (parseInt(weekA) !== parseInt(weekB)) {
@@ -1411,7 +1473,7 @@ const getChartData = (exerciseName) => {
     });
 
     sortedDays.forEach(dayId => {
-        const workout = details[dayId];
+        const workout = workoutDetails[dayId];
         if (workout.exercises) {
             const exercise = workout.exercises.find(ex => ex.name === exerciseName);
             if (exercise) {
@@ -1494,190 +1556,7 @@ const renderChart = (exerciseName) => {
     });
 };
 
-const calculateWeeklyTotals = () => {
-    const filter = getSelectedTimeFilter();
-    let weeks = currentProgramData.flatMap(p => p.weeks).map(w => w.week);
-    if (filter === 'week') {
-        const currentWeek = getCurrentWeekNumber();
-        weeks = weeks.filter(w => w === currentWeek);
-    }
-
-    return weeks.map(weekNum => {
-        const weekData = currentProgramData.flatMap(p => p.weeks).find(w => w.week === parseInt(weekNum));
-        let weekWorkouts = 0;
-        let weekVolume = 0;
-        let weekDistance = 0;
-
-        if (weekData) {
-            weekData.days.forEach(day => {
-                const dayId = `${weekNum}_${day.day}`;
-                if (completionStatus[dayId]) {
-                    weekWorkouts++;
-                    const details = workoutDetails[dayId];
-                    if (details && details.exercises) {
-                        details.exercises.forEach(ex => {
-                            ex.sets.forEach(set => {
-                                if (set.completed && set.reps && set.weight) {
-                                    const reps = parseInt(set.reps) || 0;
-                                    const weight = parseFloat(set.weight) || 0;
-                                    weekVolume += reps * weight;
-                                }
-                            });
-                        });
-                    }
-                    if (day.focus.toLowerCase().includes('run')) {
-                        const match = day.details.match(/(\d+)(-| - | to )?(\d+)?km/);
-                        if (match) {
-                            weekDistance += parseFloat(match[1]);
-                        }
-                    }
-                }
-            });
-        }
-
-        return { week: weekNum, workouts: weekWorkouts, volume: weekVolume, distance: weekDistance };
-    });
-};
-
-const renderWorkoutsChart = (labels, data) => {
-    const ctx = document.getElementById('workouts-chart').getContext('2d');
-    if (workoutsChart) {
-        workoutsChart.destroy();
-    }
-    workoutsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Workouts Completed',
-                data,
-                backgroundColor: 'rgba(163, 230, 53, 0.5)',
-                borderColor: '#A3E635',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { color: '#9CA3AF' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                },
-                x: {
-                    ticks: { color: '#9CA3AF' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: { color: '#D1D5DB' }
-                }
-            }
-        }
-    });
-};
-
-const renderVolumeChart = (labels, data) => {
-    const ctx = document.getElementById('volume-chart').getContext('2d');
-    if (volumeChart) {
-        volumeChart.destroy();
-    }
-    volumeChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: `Total Volume (${weightUnit})`,
-                data,
-                borderColor: '#A3E635',
-                backgroundColor: 'rgba(163, 230, 53, 0.2)',
-                tension: 0.1,
-                fill: true,
-                pointBackgroundColor: '#A3E635',
-                pointBorderColor: '#fff',
-                pointRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { color: '#9CA3AF' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                },
-                x: {
-                    ticks: { color: '#9CA3AF' },
-                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: { color: '#D1D5DB' }
-                }
-            }
-        }
-    });
-};
-
-const renderDistanceChart = (labels, data) => {
-    const ctx = document.getElementById('distance-chart').getContext('2d');
-    if (distanceChart) {
-        distanceChart.destroy();
-    }
-    distanceChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Distance (km)',
-                data,
-                backgroundColor: labels.map(() => 'rgba(163, 230, 53, 0.5)'),
-                borderColor: '#A3E635',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    labels: { color: '#D1D5DB' }
-                }
-            }
-        }
-    });
-};
-
-const updateDeltaIndicator = (elementId, data, formatter) => {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    if (data.length < 2) {
-        el.textContent = '';
-        return;
-    }
-    const delta = data[data.length - 1] - data[data.length - 2];
-    const sign = delta >= 0 ? '+' : '';
-    el.textContent = `${sign}${formatter(delta)} vs last week`;
-};
-
-const renderWeeklyCharts = () => {
-    const totals = calculateWeeklyTotals();
-    const labels = totals.map(t => `Week ${t.week}`);
-    const workouts = totals.map(t => t.workouts);
-    const volume = totals.map(t => t.volume);
-    const distance = totals.map(t => t.distance);
-
-    renderWorkoutsChart(labels, workouts);
-    renderVolumeChart(labels, volume);
-    renderDistanceChart(labels, distance);
-
-    updateDeltaIndicator('workouts-delta', workouts, d => `${d} workouts`);
-    updateDeltaIndicator('volume-delta', volume, d => `${d.toLocaleString()} ${weightUnit}`);
-    updateDeltaIndicator('distance-delta', distance, d => `${d.toFixed(1)} km`);
-};
-
-window.calculate1RM = (dayId) => {
+const calculate1RM = (dayId) => {
     const weightInput = document.getElementById(`weight-1rm-${dayId}`);
     const repsInput = document.getElementById(`reps-1rm-${dayId}`);
     const resultEl = document.getElementById(`result-1rm-${dayId}`);
@@ -1759,12 +1638,12 @@ const showWeeklyDebrief = (weekNum) => {
     document.getElementById('debrief-modal').classList.remove('hidden');
 };
 
-window.closeDebriefModal = () => {
+const closeDebriefModal = () => {
      document.getElementById('debrief-modal').classList.add('hidden');
 };
 
 // --- Exercise Library Functions ---
-window.openExerciseModal = (exerciseName) => {
+const openExerciseModal = (exerciseName) => {
     const exercise = exerciseLibrary[exerciseName];
     const modalContent = document.getElementById('exercise-modal-content');
     
@@ -1786,132 +1665,34 @@ window.openExerciseModal = (exerciseName) => {
     document.getElementById('exercise-modal').classList.remove('hidden');
 };
 
-window.closeExerciseModal = () => {
+const closeExerciseModal = () => {
     document.getElementById('exercise-modal').classList.add('hidden');
 };
 
 // --- PWA Install Prompt ---
 let deferredPrompt;
-const iosPrompt = document.getElementById('ios-pwa-prompt');
-const iosPromptDismiss = document.getElementById('ios-pwa-dismiss');
+const installButton = document.getElementById('install-button');
 
-function checkIosInstallPrompt() {
-  const ua = window.navigator.userAgent.toLowerCase();
-  const isIOS = /iphone|ipad|ipod/.test(ua);
-  const isStandalone = window.navigator.standalone === true;
-  const isSafari = isIOS && /safari/.test(ua) && !/crios|fxios|edgios/.test(ua);
-  const dismissed = localStorage.getItem('iosPwaPromptDismissed');
-
-  if (isIOS && isSafari && !isStandalone && !dismissed) {
-    iosPrompt.classList.remove('hidden');
-  }
-}
-
-function dismissIosInstallPrompt() {
-  iosPrompt.classList.add('hidden');
-  localStorage.setItem('iosPwaPromptDismissed', 'true');
-}
-
-if (iosPromptDismiss) {
-  iosPromptDismiss.addEventListener('click', dismissIosInstallPrompt);
-}
-
-// --- Onboarding Walkthrough ---
-const onboardingModal = document.getElementById('onboarding-modal');
-const onboardingContent = document.getElementById('onboarding-content');
-const onboardingBack = document.getElementById('onboarding-back');
-const onboardingNext = document.getElementById('onboarding-next');
-const onboardingSkip = document.getElementById('onboarding-skip');
-
-function renderOnboardingInstall() {
-  const installAction = deferredPrompt ? '<button id="onboarding-install" class="btn-primary w-full p-3 mt-4 bg-lime-500 hover:bg-lime-600 text-black font-bold rounded">Install App</button>' : '<p class="text-sm text-gray-400 mt-4 text-center">Use your browser\'s menu to add this app to your home screen.</p>';
-  return `
-    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Add to Home Screen</h2>
-    <p class="text-sm text-gray-400 text-center">Install HYBRID OPS for a full-screen experience.</p>
-    ${installAction}
-  `;
-}
-
-function showOnboardingStep() {
-  onboardingBack.classList.add('hidden');
-  onboardingNext.textContent = 'Finish';
-  onboardingContent.innerHTML = renderOnboardingInstall();
-
-  const focusable = onboardingModal.querySelector('button');
-  if (focusable) focusable.focus();
-}
-
-function finishOnboarding() {
-  onboardingModal.classList.add('hidden');
-  localStorage.setItem('hasSeenOnboarding','true');
-  initializeApp();
-  switchView('home');
-  checkIosInstallPrompt();
-}
-
-function startOnboarding() {
-  onboardingModal.classList.remove('hidden');
-  showOnboardingStep();
-}
-
-if (onboardingNext) {
-  onboardingNext.addEventListener('click', () => {
-    finishOnboarding();
-  });
-}
-
-if (onboardingSkip) {
-  onboardingSkip.addEventListener('click', () => {
-    finishOnboarding();
-  });
-}
-
-// Switch between main views
-function switchView(viewId) {
-  const sections = document.querySelectorAll('section[id]');
-  sections.forEach(section => {
-    section.classList.toggle('hidden', section.id !== viewId);
-  });
-
-  const tabs = document.querySelectorAll('nav button');
-  tabs.forEach(tab => {
-    const isActive = tab.dataset.view === viewId;
-    tab.classList.toggle('active', isActive);
-    tab.classList.toggle('text-lime-400', isActive);
-    tab.classList.toggle('text-gray-400', !isActive);
-    tab.classList.toggle('font-display', isActive);
-    tab.classList.toggle('font-bold', isActive);
-    if (isActive) {
-      tab.setAttribute('aria-current', 'page');
-    } else {
-      tab.removeAttribute('aria-current');
-    }
-  });
-
-  if (viewId === 'analytics') {
-    populateExerciseSelect();
-    renderWeeklyCharts();
-  }
-}
-
-// Initialize the app or onboarding when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-  if (!document.getElementById('bottom-nav')) return;
-
-  initializeApp();
-
-  if (localStorage.getItem('hasSeenOnboarding') !== 'true') {
-    startOnboarding();
-  } else {
-    checkIosInstallPrompt();
-  }
-  switchView('home');
-
-  const timeFilter = document.getElementById('analytics-time-filter');
-  if (timeFilter) {
-    timeFilter.addEventListener('change', () => {
-      populateExerciseSelect();
-      renderWeeklyCharts();
-    });
-  }
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent the mini-infobar from appearing on mobile
+  e.preventDefault();
+  // Stash the event so it can be triggered later.
+  deferredPrompt = e;
+  // Update UI to notify the user they can install the PWA
+  installButton.classList.remove('hidden');
 });
+
+installButton.addEventListener('click', async () => {
+  // Hide the app provided install promotion
+  installButton.classList.add('hidden');
+  // Show the install prompt
+  deferredPrompt.prompt();
+  // Wait for the user to respond to the prompt
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log(`User response to the install prompt: ${outcome}`);
+  // We've used the prompt, and can't use it again, throw it away
+  deferredPrompt = null;
+});
+
+// Initialize the app when the page loads
+document.addEventListener('DOMContentLoaded', initializeApp);
