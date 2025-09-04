@@ -243,16 +243,19 @@
 
     <section id="analytics" class="hidden container mx-auto max-w-4xl p-4 sm:p-6">
         <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">Performance Analytics</h2>
+        <p id="analytics-empty-message" class="hidden text-center text-gray-400 mb-4">No workouts logged yet. Complete a session to view analytics.</p>
 
-        <div class="mb-4">
-            <label for="chart-exercise-select" class="block text-sm font-medium text-gray-400 mb-2">Select Exercise to Track:</label>
-            <select id="chart-exercise-select" class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-3 focus:border-lime-500 focus:ring-lime-500 text-base">
-                <!-- Options will be populated by JS -->
-            </select>
-        </div>
+        <div id="analytics-content">
+            <div class="mb-4">
+                <label for="chart-exercise-select" class="block text-sm font-medium text-gray-400 mb-2">Select Exercise to Track:</label>
+                <select id="chart-exercise-select" class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-3 focus:border-lime-500 focus:ring-lime-500 text-base">
+                    <!-- Options will be populated by JS -->
+                </select>
+            </div>
 
-        <div class="overflow-x-auto">
-            <canvas id="progress-chart"></canvas>
+            <div class="overflow-x-auto">
+                <canvas id="progress-chart"></canvas>
+            </div>
         </div>
     </section>
 
