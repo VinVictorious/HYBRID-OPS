@@ -1854,13 +1854,17 @@ function startOnboarding() {
   showOnboardingStep();
 }
 
-onboardingNext.addEventListener('click', () => {
-  finishOnboarding();
-});
+if (onboardingNext) {
+  onboardingNext.addEventListener('click', () => {
+    finishOnboarding();
+  });
+}
 
-onboardingSkip.addEventListener('click', () => {
-  finishOnboarding();
-});
+if (onboardingSkip) {
+  onboardingSkip.addEventListener('click', () => {
+    finishOnboarding();
+  });
+}
 
 // Switch between main views
 function switchView(viewId) {
@@ -1894,11 +1898,12 @@ function switchView(viewId) {
 document.addEventListener('DOMContentLoaded', () => {
   if (!document.getElementById('bottom-nav')) return;
 
-  if (localStorage.getItem('hasSeenOnboarding') === 'true') {
-    initializeApp();
-    checkIosInstallPrompt();
-  } else {
+  initializeApp();
+
+  if (localStorage.getItem('hasSeenOnboarding') !== 'true') {
     startOnboarding();
+  } else {
+    checkIosInstallPrompt();
   }
   switchView('home');
 
