@@ -48,25 +48,3 @@ self.addEventListener('fetch', event => {
             })
     );
 });
-
-// Handle notification clicks
-self.addEventListener('notificationclick', event => {
-    event.notification.close();
-    
-    // Focus or open the app when notification is clicked
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true })
-            .then(clientList => {
-                // If app is already open, focus it
-                for (const client of clientList) {
-                    if (client.url.includes(self.location.origin) && 'focus' in client) {
-                        return client.focus();
-                    }
-                }
-                // If app is not open, open it
-                if (clients.openWindow) {
-                    return clients.openWindow('/');
-                }
-            })
-    );
-});
