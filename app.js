@@ -589,9 +589,6 @@ const selectDifficulty = (level) => {
     currentDifficulty = level;
     difficultySelectionScreen.classList.add('hidden');
     switchView('setup-screen');
-    if (deferredPrompt) {
-        installButton.classList.remove('hidden');
-    }
 };
 
 const selectWeightUnit = (unit) => {
@@ -1694,8 +1691,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   // Stash the event so it can be triggered later.
   deferredPrompt = e;
-  // Update UI to notify the user they can install the PWA
-  installButton.classList.remove('hidden');
+  // Only show the install button after the home view is active
+  const homeVisible = !document.getElementById('home').classList.contains('hidden');
+  if (homeVisible && !appContent.classList.contains('hidden')) {
+    installButton.classList.remove('hidden');
+  }
 });
 
 installButton.addEventListener('click', async () => {
@@ -1748,11 +1748,9 @@ if (iosPromptDismiss) {
 // --- Onboarding Walkthrough ---
 const onboardingModal = document.getElementById('onboarding-modal');
 const onboardingContent = document.getElementById('onboarding-content');
-const onboardingBack = document.getElementById('onboarding-back');
 const onboardingNext = document.getElementById('onboarding-next');
 const onboardingSkip = document.getElementById('onboarding-skip');
 
-let onboardingStep = 0;
 let onboardingNotifications = null;
 
 function renderOnboardingNotifications() {
@@ -1767,54 +1765,31 @@ function renderOnboardingNotifications() {
   `;
 }
 
-function renderOnboardingInstall() {
-  const installAction = deferredPrompt ? '<button id="onboarding-install" class="btn-primary w-full p-3 mt-4 bg-lime-500 hover:bg-lime-600 text-black font-bold rounded">Install App</button>' : '<p class="text-sm text-gray-400 mt-4 text-center">Use your browser\'s menu to add this app to your home screen.</p>';
-  return `
-    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Add to Home Screen</h2>
-    <p class="text-sm text-gray-400 text-center">Install HYBRID OPS for a full-screen experience.</p>
-    ${installAction}
-  `;
-}
+function showOnboarding() {
+  onboardingContent.innerHTML = renderOnboardingNotifications();
+  onboardingNext.disabled = onboardingNotifications === null;
 
-function showOnboardingStep() {
-  onboardingBack.disabled = onboardingStep === 0;
-  onboardingNext.textContent = onboardingStep === 1 ? 'Finish' : 'Next';
-
-  let html;
-  if (onboardingStep === 0) html = renderOnboardingNotifications();
-  else html = renderOnboardingInstall();
-  onboardingContent.innerHTML = html;
-
-  onboardingNext.disabled = (onboardingStep === 0 && onboardingNotifications === null);
-
-  if (onboardingStep === 0) {
-    onboardingModal.querySelectorAll('.onboarding-notif').forEach(btn => {
-      btn.addEventListener('click', () => {
-        onboardingNotifications = btn.dataset.enable === 'true';
-        onboardingModal.querySelectorAll('.onboarding-notif').forEach(b => {
-          b.classList.remove('bg-lime-500','text-black');
-          b.classList.add('bg-gray-700','text-gray-300');
-        });
-        btn.classList.remove('bg-gray-700','text-gray-300');
-        btn.classList.add('bg-lime-500','text-black');
-        onboardingNext.disabled = false;
-        if (onboardingNotifications && 'Notification' in window) {
-          Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-              localStorage.setItem('notificationsEnabled','true');
-            }
-          });
-        } else {
-          localStorage.setItem('notificationsEnabled','false');
-        }
+  onboardingModal.querySelectorAll('.onboarding-notif').forEach(btn => {
+    btn.addEventListener('click', () => {
+      onboardingNotifications = btn.dataset.enable === 'true';
+      onboardingModal.querySelectorAll('.onboarding-notif').forEach(b => {
+        b.classList.remove('bg-lime-500','text-black');
+        b.classList.add('bg-gray-700','text-gray-300');
       });
+      btn.classList.remove('bg-gray-700','text-gray-300');
+      btn.classList.add('bg-lime-500','text-black');
+      onboardingNext.disabled = false;
+      if (onboardingNotifications && 'Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            localStorage.setItem('notificationsEnabled','true');
+          }
+        });
+      } else {
+        localStorage.setItem('notificationsEnabled','false');
+      }
     });
-  } else if (onboardingStep === 1) {
-    const installBtn = onboardingModal.querySelector('#onboarding-install');
-    if (installBtn) {
-      installBtn.addEventListener('click', () => installButton.click());
-    }
-  }
+  });
 
   const focusable = onboardingModal.querySelector('button');
   if (focusable) focusable.focus();
@@ -1824,31 +1799,17 @@ function finishOnboarding() {
   onboardingModal.classList.add('hidden');
   localStorage.setItem('hasSeenOnboarding','true');
   initializeApp();
-  checkIosInstallPrompt();
 }
 
 function startOnboarding() {
-  onboardingStep = 0;
   onboardingNotifications = null;
   onboardingModal.classList.remove('hidden');
-  showOnboardingStep();
+  showOnboarding();
 }
 
 onboardingNext.addEventListener('click', () => {
-  if (onboardingStep === 0 && onboardingNotifications === null) return;
-  if (onboardingStep >= 1) {
-    finishOnboarding();
-  } else {
-    onboardingStep++;
-    showOnboardingStep();
-  }
-});
-
-onboardingBack.addEventListener('click', () => {
-  if (onboardingStep > 0) {
-    onboardingStep--;
-    showOnboardingStep();
-  }
+  if (onboardingNotifications === null) return;
+  finishOnboarding();
 });
 
 onboardingSkip.addEventListener('click', () => {
@@ -1876,13 +1837,22 @@ function switchView(viewId) {
       tab.removeAttribute('aria-current');
     }
   });
+
+  if (viewId === 'home' && !appContent.classList.contains('hidden')) {
+    if (deferredPrompt) {
+      installButton.classList.remove('hidden');
+    }
+    checkIosInstallPrompt();
+  } else {
+    installButton.classList.add('hidden');
+    iosPrompt.classList.add('hidden');
+  }
 }
 
 // Initialize the app or onboarding when the page loads
 document.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('hasSeenOnboarding') === 'true') {
     initializeApp();
-    checkIosInstallPrompt();
   } else {
     startOnboarding();
   }
