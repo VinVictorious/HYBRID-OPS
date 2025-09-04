@@ -1,3 +1,12 @@
+import {
+    formatTime,
+    createTimerState,
+    startTimer as startTimerUtil,
+    stopTimer as stopTimerUtil,
+    resetTimer as resetTimerUtil,
+    setCountdownTime as setCountdownTimeUtil,
+} from './src/utils/timer.js';
+
 // PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
@@ -1008,42 +1017,30 @@ const startWorkoutTimer = (dayId) => {
 };
 
 // Timer Functions
-const formatTime = (time) => {
-    const minutes = Math.floor(time / 60).toString().padStart(2, '0');
-    const seconds = (time % 60).toString().padStart(2, '0');
-    return `${minutes}:${seconds}`;
-};
-
 window.startTimer = (dayId, isStopwatch) => {
     clearInterval(timerIntervals[dayId]);
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-    
-    const timerState = workoutDetails[dayId].timer || { time: 0, running: false, isStopwatch: true, initialTime: 0 };
-    timerState.running = true;
+    const timerState = workoutDetails[dayId].timer || createTimerState(0, isStopwatch);
     timerState.isStopwatch = isStopwatch;
-    
+
     const displayId = isStopwatch ? `stopwatch-${dayId}` : `countdown-${dayId}`;
     const display = document.getElementById(displayId);
 
-    timerIntervals[dayId] = setInterval(() => {
-        if (isStopwatch) {
-            timerState.time++;
-        } else {
-            if (timerState.time > 0) {
-                timerState.time--;
-            } else {
-                stopTimer(dayId);
-            }
-        }
-        if (display) display.textContent = formatTime(timerState.time);
+    timerIntervals[dayId] = startTimerUtil(timerState, (time) => {
+        if (display) display.textContent = formatTime(time);
         workoutDetails[dayId].timer = timerState;
-    }, 1000);
+    }, () => {
+        window.stopTimer(dayId);
+    });
+    updateTimerButtons(dayId);
 };
 
 window.stopTimer = (dayId) => {
-    clearInterval(timerIntervals[dayId]);
-    if (workoutDetails[dayId]?.timer) {
-        workoutDetails[dayId].timer.running = false;
+    const timerState = workoutDetails[dayId]?.timer;
+    if (timerState) {
+        stopTimerUtil(timerState, timerIntervals[dayId]);
+    } else {
+        clearInterval(timerIntervals[dayId]);
     }
     saveData();
     updateTimerButtons(dayId);
@@ -1052,15 +1049,13 @@ window.stopTimer = (dayId) => {
 window.resetTimer = (dayId, isStopwatch) => {
     clearInterval(timerIntervals[dayId]);
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-    
-    const timerState = workoutDetails[dayId].timer || { time: 0, running: false, isStopwatch: true, initialTime: 0 };
-    timerState.time = isStopwatch ? 0 : timerState.initialTime;
-    timerState.running = false;
-    
+    const timerState = workoutDetails[dayId].timer || createTimerState(0, isStopwatch);
+    resetTimerUtil(timerState, isStopwatch);
+
     const displayId = isStopwatch ? `stopwatch-${dayId}` : `countdown-${dayId}`;
     const display = document.getElementById(displayId);
     if (display) display.textContent = formatTime(timerState.time);
-    
+
     workoutDetails[dayId].timer = timerState;
     saveData();
     updateTimerButtons(dayId);
@@ -1070,14 +1065,12 @@ window.setCountdownTime = (dayId) => {
     const minutes = parseInt(prompt('Enter countdown minutes:', '5') || '0');
     if (minutes >= 0) {
         if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-        const timerState = workoutDetails[dayId].timer || { time: 0, running: false, isStopwatch: false, initialTime: 0 };
-        timerState.time = minutes * 60;
-        timerState.initialTime = minutes * 60;
-        timerState.isStopwatch = false;
-        
+        const timerState = workoutDetails[dayId].timer || createTimerState();
+        setCountdownTimeUtil(timerState, minutes);
+
         const display = document.getElementById(`countdown-${dayId}`);
         if (display) display.textContent = formatTime(timerState.time);
-        
+
         workoutDetails[dayId].timer = timerState;
         saveData();
     }
