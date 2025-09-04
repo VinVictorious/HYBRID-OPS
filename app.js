@@ -588,10 +588,12 @@ const selectDifficulty = (level) => {
     localStorage.setItem('hybridDifficulty', level);
     currentDifficulty = level;
     difficultySelectionScreen.classList.add('hidden');
-    switchView('setup-screen');
-    if (deferredPrompt) {
-        installButton.classList.remove('hidden');
-    }
+    const settings = getNotificationSettings();
+    saveNotificationSettings(settings);
+    initializeApp();
+    switchView('home');
+    triggerNotificationPermission();
+    bottomNav.classList.remove('hidden');
 };
 
 const selectWeightUnit = (unit) => {
@@ -1694,46 +1696,8 @@ const closeResetModal = () => {
 
 // --- PWA Install Prompt ---
 let deferredPrompt;
-const installButton = document.getElementById('install-button');
-const continueButton = document.getElementById('continue-button');
 const iosPrompt = document.getElementById('ios-pwa-prompt');
 const iosPromptDismiss = document.getElementById('ios-pwa-dismiss');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevent the mini-infobar from appearing on mobile
-  e.preventDefault();
-  // Stash the event so it can be triggered later.
-  deferredPrompt = e;
-  // Update UI to notify the user they can install the PWA
-  installButton.classList.remove('hidden');
-});
-
-installButton.addEventListener('click', async () => {
-  // Show the install prompt
-  deferredPrompt.prompt();
-  // Wait for the user to respond to the prompt
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log(`User response to the install prompt: ${outcome}`);
-  // Hide the app provided install promotion
-  installButton.classList.add('hidden');
-  // We've used the prompt, and can't use it again, throw it away
-  deferredPrompt = null;
-});
-
-// Hide the install button if the app is installed
-window.addEventListener('appinstalled', () => {
-  installButton.classList.add('hidden');
-});
-
-continueButton.addEventListener('click', () => {
-  const settings = getNotificationSettings();
-  saveNotificationSettings(settings);
-  document.getElementById('setup-screen').classList.add('hidden');
-  initializeApp();
-  switchView('home');
-  triggerNotificationPermission();
-  bottomNav.classList.remove('hidden');
-});
 
 function checkIosInstallPrompt() {
   const ua = window.navigator.userAgent.toLowerCase();
@@ -1816,11 +1780,6 @@ function showOnboardingStep() {
         }
       });
     });
-  } else if (onboardingStep === 1) {
-    const installBtn = onboardingModal.querySelector('#onboarding-install');
-    if (installBtn) {
-      installBtn.addEventListener('click', () => installButton.click());
-    }
   }
 
   const focusable = onboardingModal.querySelector('button');
