@@ -14,7 +14,7 @@ if ('serviceWorker' in navigator) {
         .catch(e => console.log('ServiceWorker registration failed:', e));
 }
 
-let deferredPrompt;
+let deferredPrompt = null;
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ function triggerInstallPrompt() {
         if (btn) btn.classList.add('hidden');
         if (instructions) instructions.classList.remove('hidden');
         return;
-    }
+            deferredPrompt = null;
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choice) => {
         console.log(`User choice: ${choice.outcome}`);
