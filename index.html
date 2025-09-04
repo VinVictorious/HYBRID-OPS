@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="text-gray-300 antialiased">
-
+    <section id="home">
     <div class="container mx-auto max-w-4xl p-4 sm:p-6">
         
         <div id="welcome-screen" class="text-center flex flex-col justify-center fade-in" style="min-height: calc(100vh - 3rem);">
@@ -285,6 +285,32 @@
         <p class="text-sm mb-2">Tap <span class="font-bold">Share</span> → <span class="font-bold">Add to Home Screen</span></p>
         <button id="ios-pwa-dismiss" class="text-xs text-lime-400 hover:text-lime-300 underline">Dismiss</button>
     </div>
+    </section>
+
+    <section id="analytics" class="hidden container mx-auto max-w-4xl p-4 sm:p-6">
+        <h2 class="text-xl font-display text-lime-400 mb-4">Analytics</h2>
+        <p class="text-gray-400">Analytics content coming soon.</p>
+    </section>
+
+    <section id="settings" class="hidden container mx-auto max-w-4xl p-4 sm:p-6">
+        <h2 class="text-xl font-display text-lime-400 mb-4">Settings</h2>
+        <p class="text-gray-400">Settings content coming soon.</p>
+    </section>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-gray-900 border-t border-gray-700 flex justify-around py-2 text-sm">
+        <button id="tab-home" data-view="home" onclick="switchView('home')" class="flex flex-col items-center text-gray-400" aria-label="Home">
+            <span aria-hidden="true">🏠</span>
+            <span class="text-xs">Home</span>
+        </button>
+        <button id="tab-analytics" data-view="analytics" onclick="switchView('analytics')" class="flex flex-col items-center text-gray-400" aria-label="Analytics">
+            <span aria-hidden="true">📊</span>
+            <span class="text-xs">Analytics</span>
+        </button>
+        <button id="tab-settings" data-view="settings" onclick="switchView('settings')" class="flex flex-col items-center text-gray-400" aria-label="Settings">
+            <span aria-hidden="true">⚙️</span>
+            <span class="text-xs">Settings</span>
+        </button>
+    </nav>
 
     <script src="app.js"></script>
 </body>
