@@ -1721,6 +1721,7 @@ continueButton.addEventListener('click', () => {
   document.getElementById('setup-screen').classList.add('hidden');
   initializeApp();
   switchView('home');
+  checkIosInstallPrompt();
   bottomNav.classList.remove('hidden');
 });
 
@@ -1799,6 +1800,8 @@ function finishOnboarding() {
   onboardingModal.classList.add('hidden');
   localStorage.setItem('hasSeenOnboarding','true');
   initializeApp();
+  switchView('home');
+  checkIosInstallPrompt();
 }
 
 function startOnboarding() {
@@ -1853,8 +1856,10 @@ function switchView(viewId) {
 document.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('hasSeenOnboarding') === 'true') {
     initializeApp();
+    switchView('home');
+    checkIosInstallPrompt();
   } else {
     startOnboarding();
+    switchView('home');
   }
-  switchView('home');
 });
