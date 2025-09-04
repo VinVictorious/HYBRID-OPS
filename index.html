@@ -148,9 +148,24 @@
                     <a href="contact.html" class="hover:underline hover:text-gray-400 transition-colors">Contact</a>
                 </div>
             </footer>
+    </div>
+    </div>
+
+    <!-- Workout Session Modal -->
+    <div id="workout-session" class="fixed inset-0 bg-black/90 backdrop-blur-sm flex flex-col hidden z-50">
+        <div class="p-4 flex items-center justify-between border-b border-gray-700">
+            <button onclick="closeWorkoutSession()" class="text-gray-400 hover:text-white">Back</button>
+            <div id="session-timer" class="text-lg font-mono text-lime-400">00:00:00</div>
+            <button onclick="finishWorkout(activeWorkoutDayId)" class="bg-lime-500 hover:bg-lime-600 text-black px-4 py-2 rounded text-sm font-bold">Finish Workout</button>
+        </div>
+        <div class="p-4 overflow-y-auto flex-1 space-y-4">
+            <div>
+                <textarea id="session-notes" onchange="updateNotes(activeWorkoutDayId, this.value)" placeholder="Your workout notes..." class="w-full bg-gray-800 text-gray-300 p-3 rounded resize-none border-none outline-none" rows="3"></textarea>
+            </div>
+            <div id="session-exercises"></div>
         </div>
     </div>
-    
+
     <!-- Progress Chart Modal -->
     <div id="progress-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden scale-in">
         <div class="modal-content bg-gray-900 border border-gray-700 rounded-lg max-w-3xl w-full p-4 sm:p-6 relative">

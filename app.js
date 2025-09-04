@@ -566,6 +566,7 @@ let weightUnit = 'lbs';
 let currentGoal = null;
 let currentDifficulty = null;
 let currentProgramData = [];
+let activeWorkoutDayId = null;
 
 const saveData = () => {
     localStorage.setItem(`hybridData_${currentGoal}_${currentDifficulty}`, JSON.stringify({
@@ -646,20 +647,48 @@ const updateNotes = (dayId, text) => {
 
 const startWorkout = (dayId) => {
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
-    workoutDetails[dayId].workoutStarted = true;
-    workoutDetails[dayId].startTime = new Date().toISOString();
-    
-    // Initialize exercises if not exists
-    if (!workoutDetails[dayId].exercises) {
-        const dayData = getCurrentDayData(dayId);
-        workoutDetails[dayId].exercises = parseExercises(dayData.details);
+
+    if (!workoutDetails[dayId].workoutStarted) {
+        workoutDetails[dayId].workoutStarted = true;
+        workoutDetails[dayId].startTime = new Date().toISOString();
+
+        // Initialize exercises if not exists
+        if (!workoutDetails[dayId].exercises) {
+            const dayData = getCurrentDayData(dayId);
+            workoutDetails[dayId].exercises = parseExercises(dayData.details);
+        }
     }
-    
+
     saveData();
     renderProgram();
-    
-    // Start the workout timer
-    setTimeout(() => startWorkoutTimer(dayId), 100);
+    openWorkoutSession(dayId);
+};
+
+const openWorkoutSession = (dayId) => {
+    activeWorkoutDayId = dayId;
+    const modal = document.getElementById('workout-session');
+    const timerEl = document.getElementById('session-timer');
+    if (timerEl) timerEl.id = `workout-timer-${dayId}`;
+    const notesEl = document.getElementById('session-notes');
+    if (notesEl) notesEl.value = workoutDetails[dayId]?.notes || '';
+    const exercisesEl = document.getElementById('session-exercises');
+    if (exercisesEl) exercisesEl.innerHTML = renderExercises(dayId);
+    modal.classList.remove('hidden');
+    startWorkoutTimer(dayId);
+};
+
+const closeWorkoutSession = () => {
+    const modal = document.getElementById('workout-session');
+    modal.classList.add('hidden');
+    const timerEl = document.getElementById(`workout-timer-${activeWorkoutDayId}`);
+    if (timerEl) timerEl.id = 'session-timer';
+    activeWorkoutDayId = null;
+};
+
+const refreshWorkoutSession = () => {
+    if (!activeWorkoutDayId) return;
+    const exercisesEl = document.getElementById('session-exercises');
+    if (exercisesEl) exercisesEl.innerHTML = renderExercises(activeWorkoutDayId);
 };
 
 const getCurrentDayData = (dayId) => {
@@ -769,16 +798,17 @@ const updateSet = (dayId, exerciseIndex, setIndex, field, value) => {
 
 const toggleSetCompletion = (dayId, exerciseIndex, setIndex) => {
     if (!workoutDetails[dayId] || !workoutDetails[dayId].exercises) return;
-    
+
     const set = workoutDetails[dayId].exercises[exerciseIndex].sets[setIndex];
     set.completed = !set.completed;
     saveData();
     renderProgram();
+    if (activeWorkoutDayId === dayId) refreshWorkoutSession();
 };
 
 const addSet = (dayId, exerciseIndex) => {
     if (!workoutDetails[dayId] || !workoutDetails[dayId].exercises) return;
-    
+
     workoutDetails[dayId].exercises[exerciseIndex].sets.push({
         reps: '',
         weight: '',
@@ -786,6 +816,7 @@ const addSet = (dayId, exerciseIndex) => {
     });
     saveData();
     renderProgram();
+    if (activeWorkoutDayId === dayId) refreshWorkoutSession();
 };
 
 const finishWorkout = (dayId) => {
@@ -802,6 +833,7 @@ const finishWorkout = (dayId) => {
     
     saveData();
     renderProgram();
+    closeWorkoutSession();
 };
 
 const renderClickableExercises = (details) => {
@@ -1104,27 +1136,9 @@ const renderProgram = () => {
                                 <div class="text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">START WORKOUT</button>
                             ` : `
-                                <div class="mb-4">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <div class="text-lg font-mono text-lime-400" id="workout-timer-${dayId}">00:00:00</div>
-                                        <button onclick="finishWorkout('${dayId}')" class="bg-lime-500 hover:bg-lime-600 text-black px-4 py-2 rounded text-sm font-bold">
-                                            FINISH WORKOUT
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="bg-gray-800/50 p-3 rounded mb-4">
-                                        <textarea 
-                                            placeholder="Your workout notes..."
-                                            class="w-full bg-transparent text-gray-300 placeholder-gray-500 text-sm resize-none border-none outline-none"
-                                            rows="2"
-                                            onchange="updateNotes('${dayId}', this.value)"
-                                        >${workoutDetails[dayId]?.notes || ''}</textarea>
-                                    </div>
-                                    
-                                    ${renderExercises(dayId)}
-                                </div>
+                                <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">RESUME WORKOUT</button>
                             `}
-                            ${isToolsOpen ? `
+                            ${(!isWorkoutStarted && isToolsOpen) ? `
                             <div class="border-t border-gray-600 pt-3 mt-3 space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <!-- Stopwatch -->
