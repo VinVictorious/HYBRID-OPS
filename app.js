@@ -1686,12 +1686,12 @@ const closeExerciseModal = () => {
 };
 
 // --- Reset Confirmation Modal ---
-const openResetModal = () => {
-    document.getElementById('reset-modal').classList.remove('hidden');
+const openResetConfirm = () => {
+    document.getElementById('reset-confirm-modal').classList.remove('hidden');
 };
 
-const closeResetModal = () => {
-    document.getElementById('reset-modal').classList.add('hidden');
+const closeResetConfirm = () => {
+    document.getElementById('reset-confirm-modal').classList.add('hidden');
 };
 
 // --- PWA Install Prompt ---
