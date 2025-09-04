@@ -599,11 +599,8 @@ const selectDifficulty = (level) => {
     localStorage.setItem('hybridDifficulty', level);
     currentDifficulty = level;
     difficultySelectionScreen.classList.add('hidden');
-    const settings = getNotificationSettings();
-    saveNotificationSettings(settings);
     initializeApp();
     switchView('home');
-    triggerNotificationPermission();
     bottomNav.classList.remove('hidden');
 };
 
@@ -1312,169 +1309,6 @@ const initializeApp = () => {
     showWelcomeMessage();
 };
 
-// Notification Settings Functions
-function getNotificationSettings() {
-    return JSON.parse(localStorage.getItem('notificationSettings')) || {
-        enabled: false,
-        workoutReminders: true,
-        completionCelebrations: true,
-        weeklyProgress: true,
-        motivationalMessages: true,
-        reminderTime: '09:00',
-        notificationType: 'push'
-    };
-}
-
-function saveNotificationSettings(settings) {
-    localStorage.setItem('notificationSettings', JSON.stringify(settings));
-}
-
-function requestNotificationPermission() {
-    return new Promise(resolve => {
-        if (!('Notification' in window)) {
-            resolve(false);
-            return;
-        }
-        if (Notification.permission === 'granted') {
-            resolve(true);
-        } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then(permission => {
-                resolve(permission === 'granted');
-            });
-        } else {
-            resolve(false);
-        }
-    });
-}
-
-function triggerNotificationPermission() {
-    if (localStorage.getItem('notificationsEnabled') === 'true') {
-        requestNotificationPermission().then(granted => {
-            if (!granted) {
-                localStorage.setItem('notificationsEnabled', 'false');
-            }
-        });
-    }
-}
-
-function updateNotificationSettingsDisplay() {
-    const settings = getNotificationSettings();
-    const container = document.getElementById('notification-settings');
-    
-    container.innerHTML = `
-        <div class="space-y-4">
-            <div class="flex items-center justify-between py-1">
-                <label class="text-white font-medium text-sm">Enable Notifications</label>
-                <button id="toggle-notifications" class="w-10 h-5 rounded-full transition-colors ${settings.enabled ? 'bg-lime-500' : 'bg-gray-600'} relative">
-                    <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.enabled ? 'translate-x-5' : 'translate-x-0.5'}"></div>
-                </button>
-            </div>
-
-            ${settings.enabled ? `
-                <div class="space-y-3 pl-4 border-l-2 border-lime-500">
-                    <div class="flex items-center justify-between py-1">
-                        <label class="text-gray-300 text-sm">Workout Reminders</label>
-                        <button id="toggle-workoutReminders" class="w-10 h-5 rounded-full transition-colors ${settings.workoutReminders ? 'bg-lime-500' : 'bg-gray-600'} relative">
-                            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.workoutReminders ? 'translate-x-5' : 'translate-x-0.5'}"></div>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center justify-between py-1">
-                        <label class="text-gray-300 text-sm">Completion Celebrations</label>
-                        <button id="toggle-completionCelebrations" class="w-10 h-5 rounded-full transition-colors ${settings.completionCelebrations ? 'bg-lime-500' : 'bg-gray-600'} relative">
-                            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.completionCelebrations ? 'translate-x-5' : 'translate-x-0.5'}"></div>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center justify-between py-1">
-                        <label class="text-gray-300 text-sm">Weekly Progress</label>
-                        <button id="toggle-weeklyProgress" class="w-10 h-5 rounded-full transition-colors ${settings.weeklyProgress ? 'bg-lime-500' : 'bg-gray-600'} relative">
-                            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.weeklyProgress ? 'translate-x-5' : 'translate-x-0.5'}"></div>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center justify-between py-1">
-                        <label class="text-gray-300 text-sm">Motivational Messages</label>
-                        <button id="toggle-motivationalMessages" class="w-10 h-5 rounded-full transition-colors ${settings.motivationalMessages ? 'bg-lime-500' : 'bg-gray-600'} relative">
-                            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.motivationalMessages ? 'translate-x-5' : 'translate-x-0.5'}"></div>
-                        </button>
-                    </div>
-
-                    <div class="py-1">
-                        <label class="text-gray-300 block mb-2 text-sm">Daily Notification Time</label>
-                        <input id="notification-reminder-time" type="time" value="${settings.reminderTime}" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
-                    </div>
-
-                    <div class="py-1">
-                        <label class="text-gray-300 block mb-2 text-sm">Notification Type</label>
-                        <select id="notification-type" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
-                            <option value="push" ${settings.notificationType === 'push' ? 'selected' : ''}>Push</option>
-                            <option value="email" ${settings.notificationType === 'email' ? 'selected' : ''}>Email</option>
-                            <option value="sms" ${settings.notificationType === 'sms' ? 'selected' : ''}>SMS</option>
-                        </select>
-                    </div>
-                </div>
-            ` : ''}
-        </div>
-    `;
-
-    bindNotificationSettingsEvents();
-}
-
-function bindNotificationSettingsEvents() {
-    const mainToggle = document.getElementById('toggle-notifications');
-    if (mainToggle) mainToggle.addEventListener('click', toggleNotifications);
-
-    ['workoutReminders', 'completionCelebrations', 'weeklyProgress', 'motivationalMessages'].forEach(type => {
-        const btn = document.getElementById(`toggle-${type}`);
-        if (btn) btn.addEventListener('click', () => toggleNotificationSetting(type));
-    });
-
-    const timeInput = document.getElementById('notification-reminder-time');
-    if (timeInput) timeInput.addEventListener('change', e => updateReminderTime(e.target.value));
-
-    const typeSelect = document.getElementById('notification-type');
-    if (typeSelect) typeSelect.addEventListener('change', e => updateNotificationType(e.target.value));
-}
-
-function toggleNotifications() {
-    const settings = getNotificationSettings();
-    if (!settings.enabled) {
-        requestNotificationPermission().then(granted => {
-            if (granted) {
-                settings.enabled = true;
-                saveNotificationSettings(settings);
-                updateNotificationSettingsDisplay();
-            }
-        });
-    } else {
-        settings.enabled = false;
-        saveNotificationSettings(settings);
-        updateNotificationSettingsDisplay();
-    }
-}
-
-function toggleNotificationSetting(type) {
-    const settings = getNotificationSettings();
-    settings[type] = !settings[type];
-    saveNotificationSettings(settings);
-    updateNotificationSettingsDisplay();
-}
-
-function updateReminderTime(time) {
-    const settings = getNotificationSettings();
-    settings.reminderTime = time;
-    saveNotificationSettings(settings);
-    updateNotificationSettingsDisplay();
-}
-
-function updateNotificationType(type) {
-    const settings = getNotificationSettings();
-    settings.notificationType = type;
-    saveNotificationSettings(settings);
-    updateNotificationSettingsDisplay();
-}
-
 // --- Chart Functions ---
 const getSelectedTimeFilter = () => document.getElementById('analytics-time-filter')?.value || 'overall';
 
@@ -1493,7 +1327,6 @@ const getFilteredWorkoutDetails = () => {
     return workoutDetails;
 };
 
-// --- Chart Functions ---
 const populateExerciseSelect = () => {
     const select = document.getElementById('chart-exercise-select');
     select.innerHTML = ''; // Clear old options
@@ -1967,21 +1800,6 @@ const onboardingBack = document.getElementById('onboarding-back');
 const onboardingNext = document.getElementById('onboarding-next');
 const onboardingSkip = document.getElementById('onboarding-skip');
 
-let onboardingStep = 0;
-let onboardingNotifications = null;
-
-function renderOnboardingNotifications() {
-  const selected = onboardingNotifications;
-  return `
-    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Notifications</h2>
-    <p class="text-sm text-gray-400 mb-4 text-center">Enable reminders to stay on track.</p>
-    <div class="flex justify-center space-x-4">
-      <button class="onboarding-notif px-4 py-2 rounded ${selected === true ? 'bg-lime-500 text-black' : 'bg-gray-700 text-gray-300'}" data-enable="true">Enable</button>
-      <button class="onboarding-notif px-4 py-2 rounded ${selected === false ? 'bg-lime-500 text-black' : 'bg-gray-700 text-gray-300'}" data-enable="false">Disable</button>
-    </div>
-  `;
-}
-
 function renderOnboardingInstall() {
   const installAction = deferredPrompt ? '<button id="onboarding-install" class="btn-primary w-full p-3 mt-4 bg-lime-500 hover:bg-lime-600 text-black font-bold rounded">Install App</button>' : '<p class="text-sm text-gray-400 mt-4 text-center">Use your browser\'s menu to add this app to your home screen.</p>';
   return `
@@ -1992,35 +1810,9 @@ function renderOnboardingInstall() {
 }
 
 function showOnboardingStep() {
-  onboardingBack.disabled = onboardingStep === 0;
-  onboardingNext.textContent = onboardingStep === 1 ? 'Finish' : 'Next';
-
-  let html;
-  if (onboardingStep === 0) html = renderOnboardingNotifications();
-  else html = renderOnboardingInstall();
-  onboardingContent.innerHTML = html;
-
-  onboardingNext.disabled = (onboardingStep === 0 && onboardingNotifications === null);
-
-  if (onboardingStep === 0) {
-    onboardingModal.querySelectorAll('.onboarding-notif').forEach(btn => {
-      btn.addEventListener('click', () => {
-        onboardingNotifications = btn.dataset.enable === 'true';
-        onboardingModal.querySelectorAll('.onboarding-notif').forEach(b => {
-          b.classList.remove('bg-lime-500','text-black');
-          b.classList.add('bg-gray-700','text-gray-300');
-        });
-        btn.classList.remove('bg-gray-700','text-gray-300');
-        btn.classList.add('bg-lime-500','text-black');
-        onboardingNext.disabled = false;
-        if (onboardingNotifications) {
-          localStorage.setItem('notificationsEnabled','true');
-        } else {
-          localStorage.setItem('notificationsEnabled','false');
-        }
-      });
-    });
-  }
+  onboardingBack.classList.add('hidden');
+  onboardingNext.textContent = 'Finish';
+  onboardingContent.innerHTML = renderOnboardingInstall();
 
   const focusable = onboardingModal.querySelector('button');
   if (focusable) focusable.focus();
@@ -2031,32 +1823,16 @@ function finishOnboarding() {
   localStorage.setItem('hasSeenOnboarding','true');
   initializeApp();
   switchView('home');
-  triggerNotificationPermission();
   checkIosInstallPrompt();
 }
 
 function startOnboarding() {
-  onboardingStep = 0;
-  onboardingNotifications = null;
   onboardingModal.classList.remove('hidden');
   showOnboardingStep();
 }
 
 onboardingNext.addEventListener('click', () => {
-  if (onboardingStep === 0 && onboardingNotifications === null) return;
-  if (onboardingStep >= 1) {
-    finishOnboarding();
-  } else {
-    onboardingStep++;
-    showOnboardingStep();
-  }
-});
-
-onboardingBack.addEventListener('click', () => {
-  if (onboardingStep > 0) {
-    onboardingStep--;
-    showOnboardingStep();
-  }
+  finishOnboarding();
 });
 
 onboardingSkip.addEventListener('click', () => {
@@ -2102,7 +1878,6 @@ document.addEventListener('DOMContentLoaded', () => {
     startOnboarding();
   }
   switchView('home');
-  triggerNotificationPermission();
 
   const timeFilter = document.getElementById('analytics-time-filter');
   if (timeFilter) {
