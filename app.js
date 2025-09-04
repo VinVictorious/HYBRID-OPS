@@ -553,6 +553,7 @@ const programContainer = document.getElementById('program-container');
 const difficultySelectionScreen = document.getElementById('difficulty-selection');
 const appContent = document.getElementById('app-content');
 const goalSelectionScreen = document.getElementById('goal-selection');
+const bottomNav = document.getElementById('bottom-nav');
 let progressChart = null;
 
 let completionStatus = {};
@@ -1214,6 +1215,7 @@ const renderProgram = () => {
             startWorkoutTimer(dayId);
         }
     });
+    bottomNav.classList.remove('hidden');
 };
 
 const showWelcomeMessage = () => {
@@ -1259,6 +1261,7 @@ const selectGoal = (goal) => {
 };
 
 const initializeApp = () => {
+    bottomNav.classList.add('hidden');
     const savedGoal = localStorage.getItem('hybridGoal');
     const savedDifficulty = localStorage.getItem('hybridDifficulty');
     
