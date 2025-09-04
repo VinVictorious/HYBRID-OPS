@@ -1295,6 +1295,38 @@ const initializeApp = () => {
 };
 
 // Notification Settings Functions
+function getNotificationSettings() {
+    return JSON.parse(localStorage.getItem('notificationSettings')) || {
+        enabled: false,
+        workoutReminders: true,
+        completionCelebrations: true,
+        weeklyProgress: true,
+        reminderTime: '09:00'
+    };
+}
+
+function saveNotificationSettings(settings) {
+    localStorage.setItem('notificationSettings', JSON.stringify(settings));
+}
+
+function requestNotificationPermission() {
+    return new Promise(resolve => {
+        if (!('Notification' in window)) {
+            resolve(false);
+            return;
+        }
+        if (Notification.permission === 'granted') {
+            resolve(true);
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                resolve(permission === 'granted');
+            });
+        } else {
+            resolve(false);
+        }
+    });
+}
+
 function openNotificationSettings() {
     document.getElementById('notification-modal').classList.remove('hidden');
     updateNotificationSettingsDisplay();
@@ -1378,6 +1410,7 @@ function updateReminderTime(time) {
     const settings = getNotificationSettings();
     settings.reminderTime = time;
     saveNotificationSettings(settings);
+    updateNotificationSettingsDisplay();
 }
 
 
