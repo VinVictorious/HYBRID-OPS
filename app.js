@@ -1816,50 +1816,42 @@ if (iosPromptDismiss) {
 }
 
 // --- Onboarding Walkthrough ---
-const onboardingModal = document.getElementById('onboarding-modal');
-const onboardingContent = document.getElementById('onboarding-content');
-const onboardingBack = document.getElementById('onboarding-back');
-const onboardingNext = document.getElementById('onboarding-next');
-const onboardingSkip = document.getElementById('onboarding-skip');
+function promptInstallAfterOnboarding() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choice) => {
+      console.log(`User choice: ${choice.outcome}`);
+      if (choice.outcome === 'dismissed') {
+        const banner = document.getElementById('post-onboarding-install');
+        if (banner) banner.classList.remove('hidden');
+      }
+      deferredPrompt = null;
+    });
+  } else {
+    const banner = document.getElementById('post-onboarding-install');
+    if (banner) banner.classList.remove('hidden');
+  }
 
-function renderOnboardingInstall() {
-  const installAction = deferredPrompt ? '<button id="onboarding-install" class="btn-primary w-full p-3 mt-4 bg-lime-500 hover:bg-lime-600 text-black font-bold rounded">Install App</button>' : '<p class="text-sm text-gray-400 mt-4 text-center">Use your browser\'s menu to add this app to your home screen.</p>';
-  return `
-    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Add to Home Screen</h2>
-    <p class="text-sm text-gray-400 text-center">Install HYBRID OPS for a full-screen experience.</p>
-    ${installAction}
-  `;
-}
-
-function showOnboardingStep() {
-  onboardingBack.classList.add('hidden');
-  onboardingNext.textContent = 'Finish';
-  onboardingContent.innerHTML = renderOnboardingInstall();
-
-  const focusable = onboardingModal.querySelector('button');
-  if (focusable) focusable.focus();
+  const dismiss = document.getElementById('post-onboarding-install-dismiss');
+  if (dismiss) {
+    dismiss.addEventListener('click', () => {
+      const banner = document.getElementById('post-onboarding-install');
+      if (banner) banner.classList.add('hidden');
+    }, { once: true });
+  }
 }
 
 function finishOnboarding() {
-  onboardingModal.classList.add('hidden');
   localStorage.setItem('hasSeenOnboarding','true');
   initializeApp();
   switchView('home');
   checkIosInstallPrompt();
+  promptInstallAfterOnboarding();
 }
 
 function startOnboarding() {
-  onboardingModal.classList.remove('hidden');
-  showOnboardingStep();
+  finishOnboarding();
 }
-
-onboardingNext.addEventListener('click', () => {
-  finishOnboarding();
-});
-
-onboardingSkip.addEventListener('click', () => {
-  finishOnboarding();
-});
 
 // Switch between main views
 function switchView(viewId) {
