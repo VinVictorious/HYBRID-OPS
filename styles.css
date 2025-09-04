@@ -38,8 +38,30 @@ body {
     box-shadow: 0 0 8px #A3E635, 0 0 16px #A3E635; 
 }
 
-.text-glow { 
-    text-shadow: 0 0 8px rgba(163, 230, 53, 0.7); 
+.text-glow {
+    text-shadow: 0 0 8px rgba(163, 230, 53, 0.7);
+}
+
+/* Uniform back link styling */
+.back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 2px solid #A3E635;
+    color: #A3E635;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    font-family: 'Changa', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.back-link:hover {
+    background: #A3E635;
+    color: #000000;
+    text-decoration: none;
 }
 
 /* Loading States */
