@@ -1928,6 +1928,8 @@ function switchView(viewId) {
     tab.classList.toggle('active', isActive);
     tab.classList.toggle('text-lime-400', isActive);
     tab.classList.toggle('text-gray-400', !isActive);
+    tab.classList.toggle('font-display', isActive);
+    tab.classList.toggle('font-bold', isActive);
     if (isActive) {
       tab.setAttribute('aria-current', 'page');
     } else {

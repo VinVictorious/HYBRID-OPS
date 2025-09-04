@@ -343,3 +343,7 @@ body {
     left: 0;
     color: #A3E635;
 }
+
+.nav-icon {
+    filter: drop-shadow(0 0 4px #A3E635);
+}
