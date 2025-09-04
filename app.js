@@ -1310,38 +1310,38 @@ function updateNotificationSettingsDisplay() {
     
     container.innerHTML = `
         <div class="space-y-4">
-            <div class="flex items-center justify-between">
-                <label class="text-white font-medium">Enable Notifications</label>
-                <button onclick="toggleNotifications()" class="w-12 h-6 rounded-full transition-colors ${settings.enabled ? 'bg-lime-500' : 'bg-gray-600'} relative">
-                    <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${settings.enabled ? 'translate-x-6' : 'translate-x-0.5'}"></div>
+            <div class="flex items-center justify-between py-1">
+                <label class="text-white font-medium text-sm">Enable Notifications</label>
+                <button onclick="toggleNotifications()" class="w-10 h-5 rounded-full transition-colors ${settings.enabled ? 'bg-lime-500' : 'bg-gray-600'} relative">
+                    <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.enabled ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                 </button>
             </div>
             
             ${settings.enabled ? `
                 <div class="space-y-3 pl-4 border-l-2 border-lime-500">
-                    <div class="flex items-center justify-between">
-                        <label class="text-gray-300">Workout Reminders</label>
+                    <div class="flex items-center justify-between py-1">
+                        <label class="text-gray-300 text-sm">Workout Reminders</label>
                         <button onclick="toggleNotificationType('workoutReminders')" class="w-10 h-5 rounded-full transition-colors ${settings.workoutReminders ? 'bg-lime-500' : 'bg-gray-600'} relative">
                             <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.workoutReminders ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                         </button>
                     </div>
-                    
-                    <div class="flex items-center justify-between">
-                        <label class="text-gray-300">Completion Celebrations</label>
+
+                    <div class="flex items-center justify-between py-1">
+                        <label class="text-gray-300 text-sm">Completion Celebrations</label>
                         <button onclick="toggleNotificationType('completionCelebrations')" class="w-10 h-5 rounded-full transition-colors ${settings.completionCelebrations ? 'bg-lime-500' : 'bg-gray-600'} relative">
                             <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.completionCelebrations ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                         </button>
                     </div>
-                    
-                    <div class="flex items-center justify-between">
-                        <label class="text-gray-300">Weekly Progress</label>
+
+                    <div class="flex items-center justify-between py-1">
+                        <label class="text-gray-300 text-sm">Weekly Progress</label>
                         <button onclick="toggleNotificationType('weeklyProgress')" class="w-10 h-5 rounded-full transition-colors ${settings.weeklyProgress ? 'bg-lime-500' : 'bg-gray-600'} relative">
                             <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-transform ${settings.weeklyProgress ? 'translate-x-5' : 'translate-x-0.5'}"></div>
                         </button>
                     </div>
-                    
-                    <div>
-                        <label class="text-gray-300 block mb-2">Daily Reminder Time</label>
+
+                    <div class="py-1">
+                        <label class="text-gray-300 block mb-2 text-sm">Daily Reminder Time</label>
                         <input type="time" value="${settings.reminderTime}" onchange="updateReminderTime(this.value)" class="bg-gray-800 border border-gray-600 text-white rounded p-2 w-full focus:border-lime-500">
                     </div>
                 </div>
