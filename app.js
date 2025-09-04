@@ -625,7 +625,7 @@ const loadData = () => {
     weightUnit = data?.unit || 'lbs';
 };
 
-const selectDifficulty = (level) => {
+window.selectDifficulty = (level) => {
     localStorage.setItem('hybridDifficulty', level);
     currentDifficulty = level;
     difficultySelectionScreen.classList.add('hidden');
@@ -634,7 +634,7 @@ const selectDifficulty = (level) => {
     bottomNav.classList.remove('hidden');
 };
 
-const selectWeightUnit = (unit) => {
+window.selectWeightUnit = (unit) => {
     weightUnit = unit;
     saveData();
     renderProgram();
@@ -650,7 +650,7 @@ const updateOverallProgress = () => {
     document.getElementById('overall-progress-text').textContent = `[ ${completedDays}/${totalDays} MISSIONS COMPLETE ] - ${Math.round(percentage)}%`;
 };
 
-const toggleDayCompletion = (dayId) => {
+window.toggleDayCompletion = (dayId) => {
     completionStatus[dayId] = !completionStatus[dayId];
     saveData();
 
@@ -677,7 +677,7 @@ const updateNotes = (dayId, text) => {
     saveData();
 };
 
-const startWorkout = (dayId) => {
+window.startWorkout = (dayId) => {
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
 
     if (!workoutDetails[dayId].workoutStarted) {
@@ -709,7 +709,7 @@ const openWorkoutSession = (dayId) => {
     startWorkoutTimer(dayId);
 };
 
-const closeWorkoutSession = () => {
+window.closeWorkoutSession = () => {
     const modal = document.getElementById('workout-session');
     modal.classList.add('hidden');
     const timerEl = document.getElementById(`workout-timer-${activeWorkoutDayId}`);
@@ -828,7 +828,7 @@ const updateSet = (dayId, exerciseIndex, setIndex, field, value) => {
     saveData();
 };
 
-const toggleSetCompletion = (dayId, exerciseIndex, setIndex) => {
+window.toggleSetCompletion = (dayId, exerciseIndex, setIndex) => {
     if (!workoutDetails[dayId] || !workoutDetails[dayId].exercises) return;
 
     const set = workoutDetails[dayId].exercises[exerciseIndex].sets[setIndex];
@@ -838,7 +838,7 @@ const toggleSetCompletion = (dayId, exerciseIndex, setIndex) => {
     if (activeWorkoutDayId === dayId) refreshWorkoutSession();
 };
 
-const addSet = (dayId, exerciseIndex) => {
+window.addSet = (dayId, exerciseIndex) => {
     if (!workoutDetails[dayId] || !workoutDetails[dayId].exercises) return;
 
     workoutDetails[dayId].exercises[exerciseIndex].sets.push({
@@ -851,7 +851,7 @@ const addSet = (dayId, exerciseIndex) => {
     if (activeWorkoutDayId === dayId) refreshWorkoutSession();
 };
 
-const finishWorkout = (dayId) => {
+window.finishWorkout = (dayId) => {
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
     workoutDetails[dayId].workoutStarted = false;
     workoutDetails[dayId].endTime = new Date().toISOString();
@@ -1014,7 +1014,7 @@ const formatTime = (time) => {
     return `${minutes}:${seconds}`;
 };
 
-const startTimer = (dayId, isStopwatch) => {
+window.startTimer = (dayId, isStopwatch) => {
     clearInterval(timerIntervals[dayId]);
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
     
@@ -1040,7 +1040,7 @@ const startTimer = (dayId, isStopwatch) => {
     }, 1000);
 };
 
-const stopTimer = (dayId) => {
+window.stopTimer = (dayId) => {
     clearInterval(timerIntervals[dayId]);
     if (workoutDetails[dayId]?.timer) {
         workoutDetails[dayId].timer.running = false;
@@ -1049,7 +1049,7 @@ const stopTimer = (dayId) => {
     updateTimerButtons(dayId);
 };
 
-const resetTimer = (dayId, isStopwatch) => {
+window.resetTimer = (dayId, isStopwatch) => {
     clearInterval(timerIntervals[dayId]);
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
     
@@ -1066,7 +1066,7 @@ const resetTimer = (dayId, isStopwatch) => {
     updateTimerButtons(dayId);
 };
 
-const setCountdownTime = (dayId) => {
+window.setCountdownTime = (dayId) => {
     const minutes = parseInt(prompt('Enter countdown minutes:', '5') || '0');
     if (minutes >= 0) {
         if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
@@ -1099,7 +1099,7 @@ const updateTimerButtons = (dayId) => {
     }
 };
 
-const toggleWeekExpansion = (weekId) => {
+window.toggleWeekExpansion = (weekId) => {
     if (openWeeks.has(weekId)) {
         openWeeks.delete(weekId);
     } else {
@@ -1108,7 +1108,7 @@ const toggleWeekExpansion = (weekId) => {
     renderProgram();
 };
 
-const toggleToolsExpansion = (dayId) => {
+window.toggleToolsExpansion = (dayId) => {
     if (openTools.has(dayId)) {
         openTools.delete(dayId);
     } else {
@@ -1293,12 +1293,12 @@ const showWelcomeMessage = () => {
     }
 };
 
-const showGoalScreen = () => {
+window.showGoalScreen = () => {
     document.getElementById('welcome-screen').classList.add('hidden');
     document.getElementById('goal-selection').classList.remove('hidden');
 };
 
-const selectGoal = (goal) => {
+window.selectGoal = (goal) => {
     localStorage.setItem('hybridGoal', goal);
     currentGoal = goal;
     document.getElementById('goal-selection').classList.add('hidden');
@@ -1684,7 +1684,7 @@ const renderWeeklyCharts = () => {
     updateDeltaIndicator('distance-delta', distance, d => `${d.toFixed(1)} km`);
 };
 
-const calculate1RM = (dayId) => {
+window.calculate1RM = (dayId) => {
     const weightInput = document.getElementById(`weight-1rm-${dayId}`);
     const repsInput = document.getElementById(`reps-1rm-${dayId}`);
     const resultEl = document.getElementById(`result-1rm-${dayId}`);
@@ -1766,12 +1766,12 @@ const showWeeklyDebrief = (weekNum) => {
     document.getElementById('debrief-modal').classList.remove('hidden');
 };
 
-const closeDebriefModal = () => {
+window.closeDebriefModal = () => {
      document.getElementById('debrief-modal').classList.add('hidden');
 };
 
 // --- Exercise Library Functions ---
-const openExerciseModal = (exerciseName) => {
+window.openExerciseModal = (exerciseName) => {
     const exercise = exerciseLibrary[exerciseName];
     const modalContent = document.getElementById('exercise-modal-content');
     
@@ -1793,7 +1793,7 @@ const openExerciseModal = (exerciseName) => {
     document.getElementById('exercise-modal').classList.remove('hidden');
 };
 
-const closeExerciseModal = () => {
+window.closeExerciseModal = () => {
     document.getElementById('exercise-modal').classList.add('hidden');
 };
 
