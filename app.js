@@ -610,19 +610,6 @@ const selectWeightUnit = (unit) => {
     renderProgram();
 };
 
-const resetProgram = () => {
-    localStorage.removeItem('hybridGoal');
-    localStorage.removeItem('hybridDifficulty');
-    localStorage.removeItem(`hybridData_${currentGoal}_${currentDifficulty}`);
-    completionStatus = {};
-    workoutDetails = {};
-    openWeeks = new Set();
-    openTools = new Set();
-    currentGoal = null;
-    currentDifficulty = null;
-    initializeApp();
-};
-
 const updateOverallProgress = () => {
     if (!currentDifficulty) return;
     const totalDays = currentProgramData.reduce((acc, phase) => acc + phase.weeks.reduce((wAcc, week) => wAcc + week.days.length, 0), 0);
@@ -1697,15 +1684,6 @@ const openExerciseModal = (exerciseName) => {
 const closeExerciseModal = () => {
     document.getElementById('exercise-modal').classList.add('hidden');
 };
-
-// --- Reset Confirmation Modal ---
-function openResetConfirm() {
-    document.getElementById('reset-confirm-modal').classList.remove('hidden');
-}
-
-function closeResetConfirm() {
-    document.getElementById('reset-confirm-modal').classList.add('hidden');
-}
 
 // --- PWA Install Prompt ---
 let deferredPrompt;
