@@ -345,5 +345,5 @@ body {
 }
 
 .nav-icon {
-    filter: drop-shadow(0 0 4px #A3E635);
+    filter: none;
 }
