@@ -1896,6 +1896,12 @@ function switchView(viewId) {
 
 // Initialize the app or onboarding when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+    // Attach event listener to Get Started button
+    const getStartedButton = document.getElementById('get-started-button');
+    if (getStartedButton) {
+        getStartedButton.addEventListener('click', showGoalScreen);
+    }
+
   if (!document.getElementById('bottom-nav')) return;
 
   initializeApp();
