@@ -1453,15 +1453,6 @@ function updateReminderTime(time) {
 
 
 // --- Chart Functions ---
-const openProgressModal = () => {
-    document.getElementById('progress-modal').classList.remove('hidden');
-    populateExerciseSelect();
-};
-
-const closeProgressModal = () => {
-    document.getElementById('progress-modal').classList.add('hidden');
-};
-
 const populateExerciseSelect = () => {
     const select = document.getElementById('chart-exercise-select');
     select.innerHTML = ''; // Clear old options
@@ -1866,6 +1857,10 @@ function switchView(viewId) {
       tab.removeAttribute('aria-current');
     }
   });
+
+  if (viewId === 'analytics') {
+    populateExerciseSelect();
+  }
 }
 
 // Initialize the app or onboarding when the page loads
