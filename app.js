@@ -563,6 +563,9 @@ const appContent = document.getElementById('app-content');
 const goalSelectionScreen = document.getElementById('goal-selection');
 const bottomNav = document.getElementById('bottom-nav');
 let progressChart = null;
+let workoutsChart = null;
+let volumeChart = null;
+let distanceChart = null;
 
 let completionStatus = {};
 let workoutDetails = {};
@@ -1582,6 +1585,171 @@ const renderChart = (exerciseName) => {
     });
 };
 
+const calculateWeeklyTotals = () => {
+    const weeks = currentProgramData.flatMap(p => p.weeks).map(w => w.week);
+    const labels = weeks.map(w => `Week ${w}`);
+    const workouts = [];
+    const volume = [];
+    const distance = [];
+
+    weeks.forEach(weekNum => {
+        const weekData = currentProgramData.flatMap(p => p.weeks).find(w => w.week === parseInt(weekNum));
+        let weekWorkouts = 0;
+        let weekVolume = 0;
+        let weekDistance = 0;
+
+        if (weekData) {
+            weekData.days.forEach(day => {
+                const dayId = `${weekNum}_${day.day}`;
+                if (completionStatus[dayId]) {
+                    weekWorkouts++;
+                    const details = workoutDetails[dayId];
+                    if (details && details.exercises) {
+                        details.exercises.forEach(ex => {
+                            ex.sets.forEach(set => {
+                                if (set.completed && set.reps && set.weight) {
+                                    const reps = parseInt(set.reps) || 0;
+                                    const weight = parseFloat(set.weight) || 0;
+                                    weekVolume += reps * weight;
+                                }
+                            });
+                        });
+                    }
+                    if (day.focus.toLowerCase().includes('run')) {
+                        const match = day.details.match(/(\d+)(-| - | to )?(\d+)?km/);
+                        if (match) {
+                            weekDistance += parseFloat(match[1]);
+                        }
+                    }
+                }
+            });
+        }
+
+        workouts.push(weekWorkouts);
+        volume.push(weekVolume);
+        distance.push(weekDistance);
+    });
+
+    return { labels, workouts, volume, distance };
+};
+
+const renderWorkoutsChart = (labels, data) => {
+    const ctx = document.getElementById('workouts-chart').getContext('2d');
+    if (workoutsChart) {
+        workoutsChart.destroy();
+    }
+    workoutsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Workouts Completed',
+                data,
+                backgroundColor: 'rgba(163, 230, 53, 0.5)',
+                borderColor: '#A3E635',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#9CA3AF' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                },
+                x: {
+                    ticks: { color: '#9CA3AF' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: '#D1D5DB' }
+                }
+            }
+        }
+    });
+};
+
+const renderVolumeChart = (labels, data) => {
+    const ctx = document.getElementById('volume-chart').getContext('2d');
+    if (volumeChart) {
+        volumeChart.destroy();
+    }
+    volumeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: `Total Volume (${weightUnit})`,
+                data,
+                borderColor: '#A3E635',
+                backgroundColor: 'rgba(163, 230, 53, 0.2)',
+                tension: 0.1,
+                fill: true,
+                pointBackgroundColor: '#A3E635',
+                pointBorderColor: '#fff',
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#9CA3AF' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                },
+                x: {
+                    ticks: { color: '#9CA3AF' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: '#D1D5DB' }
+                }
+            }
+        }
+    });
+};
+
+const renderDistanceChart = (labels, data) => {
+    const ctx = document.getElementById('distance-chart').getContext('2d');
+    if (distanceChart) {
+        distanceChart.destroy();
+    }
+    distanceChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Distance (km)',
+                data,
+                backgroundColor: labels.map(() => 'rgba(163, 230, 53, 0.5)'),
+                borderColor: '#A3E635',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: { color: '#D1D5DB' }
+                }
+            }
+        }
+    });
+};
+
+const renderWeeklyCharts = () => {
+    const { labels, workouts, volume, distance } = calculateWeeklyTotals();
+    renderWorkoutsChart(labels, workouts);
+    renderVolumeChart(labels, volume);
+    renderDistanceChart(labels, distance);
+};
+
 const calculate1RM = (dayId) => {
     const weightInput = document.getElementById(`weight-1rm-${dayId}`);
     const repsInput = document.getElementById(`reps-1rm-${dayId}`);
@@ -1848,6 +2016,7 @@ function switchView(viewId) {
 
   if (viewId === 'analytics') {
     populateExerciseSelect();
+    renderWeeklyCharts();
   }
 }
 
