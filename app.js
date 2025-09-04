@@ -1915,6 +1915,27 @@ onboardingSkip.addEventListener('click', () => {
   finishOnboarding();
 });
 
+// Switch between main views
+function switchView(viewId) {
+  const sections = document.querySelectorAll('section[id]');
+  sections.forEach(section => {
+    section.classList.toggle('hidden', section.id !== viewId);
+  });
+
+  const tabs = document.querySelectorAll('nav button');
+  tabs.forEach(tab => {
+    const isActive = tab.dataset.view === viewId;
+    tab.classList.toggle('active', isActive);
+    tab.classList.toggle('text-lime-400', isActive);
+    tab.classList.toggle('text-gray-400', !isActive);
+    if (isActive) {
+      tab.setAttribute('aria-current', 'page');
+    } else {
+      tab.removeAttribute('aria-current');
+    }
+  });
+}
+
 // Initialize the app or onboarding when the page loads
 document.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('hasSeenOnboarding') === 'true') {
@@ -1923,4 +1944,5 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     startOnboarding();
   }
+  switchView('home');
 });
