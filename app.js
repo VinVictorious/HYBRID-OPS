@@ -1686,13 +1686,13 @@ const closeExerciseModal = () => {
 };
 
 // --- Reset Confirmation Modal ---
-const openResetConfirm = () => {
+function openResetConfirm() {
     document.getElementById('reset-confirm-modal').classList.remove('hidden');
-};
+}
 
-const closeResetConfirm = () => {
+function closeResetConfirm() {
     document.getElementById('reset-confirm-modal').classList.add('hidden');
-};
+}
 
 // --- PWA Install Prompt ---
 let deferredPrompt;
