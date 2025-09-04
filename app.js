@@ -1754,32 +1754,7 @@ const onboardingNext = document.getElementById('onboarding-next');
 const onboardingSkip = document.getElementById('onboarding-skip');
 
 let onboardingStep = 0;
-let onboardingGoal = null;
-let onboardingDifficulty = null;
 let onboardingNotifications = null;
-
-function renderOnboardingGoal() {
-  return `
-    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Choose Your Goal</h2>
-    <div class="space-y-4">
-      <button class="onboarding-goal w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg hover:border-lime-500 focus:ring-2 focus:ring-lime-500" data-goal="hybridAthlete">Hybrid Athlete</button>
-      <button class="onboarding-goal w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg hover:border-lime-500 focus:ring-2 focus:ring-lime-500" data-goal="tacticalAthlete">Tactical Athlete</button>
-      <button class="onboarding-goal w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg hover:border-lime-500 focus:ring-2 focus:ring-lime-500" data-goal="forceTestPrep">Force Test Prep</button>
-    </div>
-  `;
-}
-
-function renderOnboardingDifficulty() {
-  return `
-    <h2 class="text-xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-center">Select Experience Level</h2>
-    <p class="text-sm text-gray-400 mb-4 text-center">This adjusts training volume and intensity.</p>
-    <div class="space-y-4">
-      <button class="onboarding-diff w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg hover:border-lime-500 focus:ring-2 focus:ring-lime-500" data-diff="beginner">Beginner</button>
-      <button class="onboarding-diff w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg hover:border-lime-500 focus:ring-2 focus:ring-lime-500" data-diff="intermediate">Intermediate</button>
-      <button class="onboarding-diff w-full p-3 bg-gray-800/50 border border-gray-700 rounded-lg hover:border-lime-500 focus:ring-2 focus:ring-lime-500" data-diff="advanced">Advanced</button>
-    </div>
-  `;
-}
 
 function renderOnboardingNotifications() {
   const selected = onboardingNotifications;
@@ -1804,36 +1779,16 @@ function renderOnboardingInstall() {
 
 function showOnboardingStep() {
   onboardingBack.disabled = onboardingStep === 0;
-  onboardingNext.textContent = onboardingStep === 3 ? 'Finish' : 'Next';
+  onboardingNext.textContent = onboardingStep === 1 ? 'Finish' : 'Next';
 
   let html;
-  if (onboardingStep === 0) html = renderOnboardingGoal();
-  else if (onboardingStep === 1) html = renderOnboardingDifficulty();
-  else if (onboardingStep === 2) html = renderOnboardingNotifications();
+  if (onboardingStep === 0) html = renderOnboardingNotifications();
   else html = renderOnboardingInstall();
   onboardingContent.innerHTML = html;
 
-  onboardingNext.disabled = (onboardingStep === 0 && !onboardingGoal) || (onboardingStep === 1 && !onboardingDifficulty) || (onboardingStep === 2 && onboardingNotifications === null);
+  onboardingNext.disabled = (onboardingStep === 0 && onboardingNotifications === null);
 
   if (onboardingStep === 0) {
-    onboardingModal.querySelectorAll('.onboarding-goal').forEach(btn => {
-      btn.addEventListener('click', () => {
-        onboardingGoal = btn.dataset.goal;
-        onboardingModal.querySelectorAll('.onboarding-goal').forEach(b => b.classList.remove('border-lime-500'));
-        btn.classList.add('border-lime-500');
-        onboardingNext.disabled = false;
-      });
-    });
-  } else if (onboardingStep === 1) {
-    onboardingModal.querySelectorAll('.onboarding-diff').forEach(btn => {
-      btn.addEventListener('click', () => {
-        onboardingDifficulty = btn.dataset.diff;
-        onboardingModal.querySelectorAll('.onboarding-diff').forEach(b => b.classList.remove('border-lime-500'));
-        btn.classList.add('border-lime-500');
-        onboardingNext.disabled = false;
-      });
-    });
-  } else if (onboardingStep === 2) {
     onboardingModal.querySelectorAll('.onboarding-notif').forEach(btn => {
       btn.addEventListener('click', () => {
         onboardingNotifications = btn.dataset.enable === 'true';
@@ -1855,7 +1810,7 @@ function showOnboardingStep() {
         }
       });
     });
-  } else if (onboardingStep === 3) {
+  } else if (onboardingStep === 1) {
     const installBtn = onboardingModal.querySelector('#onboarding-install');
     if (installBtn) {
       installBtn.addEventListener('click', () => installButton.click());
@@ -1869,30 +1824,20 @@ function showOnboardingStep() {
 function finishOnboarding() {
   onboardingModal.classList.add('hidden');
   localStorage.setItem('hasSeenOnboarding','true');
-  if (onboardingGoal) localStorage.setItem('hybridGoal', onboardingGoal);
-  if (onboardingDifficulty) localStorage.setItem('hybridDifficulty', onboardingDifficulty);
   initializeApp();
   checkIosInstallPrompt();
 }
 
 function startOnboarding() {
   onboardingStep = 0;
-  onboardingGoal = null;
-  onboardingDifficulty = null;
   onboardingNotifications = null;
   onboardingModal.classList.remove('hidden');
   showOnboardingStep();
 }
 
 onboardingNext.addEventListener('click', () => {
-  if (onboardingStep === 0 && !onboardingGoal) return;
-  if (onboardingStep === 1 && !onboardingDifficulty) return;
-  if (onboardingStep === 1) {
-    if (onboardingGoal) localStorage.setItem('hybridGoal', onboardingGoal);
-    if (onboardingDifficulty) localStorage.setItem('hybridDifficulty', onboardingDifficulty);
-    initializeApp();
-  }
-  if (onboardingStep >= 3) {
+  if (onboardingStep === 0 && onboardingNotifications === null) return;
+  if (onboardingStep >= 1) {
     finishOnboarding();
   } else {
     onboardingStep++;
