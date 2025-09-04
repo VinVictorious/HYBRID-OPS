@@ -1441,14 +1441,32 @@ function updateReminderTime(time) {
     updateNotificationSettingsDisplay();
 }
 
+// --- Chart Functions ---
+const getSelectedTimeFilter = () => document.getElementById('analytics-time-filter')?.value || 'overall';
+
+const getCurrentWeekNumber = () => {
+    const weeks = Object.keys(workoutDetails).map(id => parseInt(id.split('_')[0]));
+    if (weeks.length === 0) return 1;
+    return Math.max(...weeks);
+};
+
+const getFilteredWorkoutDetails = () => {
+    const filter = getSelectedTimeFilter();
+    if (filter === 'week') {
+        const currentWeek = getCurrentWeekNumber();
+        return Object.fromEntries(Object.entries(workoutDetails).filter(([dayId]) => parseInt(dayId.split('_')[0]) === currentWeek));
+    }
+    return workoutDetails;
+};
 
 // --- Chart Functions ---
 const populateExerciseSelect = () => {
     const select = document.getElementById('chart-exercise-select');
     select.innerHTML = ''; // Clear old options
-    
+
     const trackedExercises = new Set();
-    Object.values(workoutDetails).forEach(day => {
+    const details = getFilteredWorkoutDetails();
+    Object.values(details).forEach(day => {
         if (day.exercises) {
             day.exercises.forEach(ex => {
                  // Only track exercises with sets/reps or specific test names
@@ -1491,7 +1509,8 @@ const getChartData = (exerciseName) => {
     const data = [];
 
     // Sort workoutDetails by week and day
-    const sortedDays = Object.keys(workoutDetails).sort((a, b) => {
+    const details = getFilteredWorkoutDetails();
+    const sortedDays = Object.keys(details).sort((a, b) => {
         const [weekA, dayA] = a.split('_');
         const [weekB, dayB] = b.split('_');
         if (parseInt(weekA) !== parseInt(weekB)) {
@@ -1502,7 +1521,7 @@ const getChartData = (exerciseName) => {
     });
 
     sortedDays.forEach(dayId => {
-        const workout = workoutDetails[dayId];
+        const workout = details[dayId];
         if (workout.exercises) {
             const exercise = workout.exercises.find(ex => ex.name === exerciseName);
             if (exercise) {
@@ -1586,7 +1605,12 @@ const renderChart = (exerciseName) => {
 };
 
 const calculateWeeklyTotals = () => {
-    const weeks = currentProgramData.flatMap(p => p.weeks).map(w => w.week);
+    const filter = getSelectedTimeFilter();
+    let weeks = currentProgramData.flatMap(p => p.weeks).map(w => w.week);
+    if (filter === 'week') {
+        const currentWeek = getCurrentWeekNumber();
+        weeks = weeks.filter(w => w === currentWeek);
+    }
     const labels = weeks.map(w => `Week ${w}`);
     const workouts = [];
     const volume = [];
@@ -2030,4 +2054,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   switchView('home');
   triggerNotificationPermission();
+
+  const timeFilter = document.getElementById('analytics-time-filter');
+  if (timeFilter) {
+    timeFilter.addEventListener('change', () => {
+      populateExerciseSelect();
+      renderWeeklyCharts();
+    });
+  }
 });
