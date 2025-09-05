@@ -1881,6 +1881,8 @@ function switchView(viewId) {
   }
 }
 
+window.switchView = switchView;
+
 // Initialize the app or onboarding when the page loads
 document.addEventListener('DOMContentLoaded', () => {
   if (!document.getElementById('bottom-nav')) return;
