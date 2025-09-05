@@ -19,29 +19,35 @@ let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    const btn = document.getElementById('install-app-btn');
-    const instructions = document.getElementById('install-instructions');
-    if (btn) btn.classList.remove('hidden');
-    if (instructions) instructions.classList.add('hidden');
+    updateInstallAvailabilityUI();
 });
 
 function triggerInstallPrompt() {
+    // Kept for Settings page button; will only show prompt if available
     if (!deferredPrompt) {
-        const btn = document.getElementById('install-app-btn');
-        const instructions = document.getElementById('install-instructions');
-        if (btn) btn.classList.add('hidden');
-        if (instructions) instructions.classList.remove('hidden');
+        updateInstallAvailabilityUI();
         return;
     }
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then((choice) => {
         console.log(`User choice: ${choice.outcome}`);
-        const btn = document.getElementById('install-app-btn');
-        const instructions = document.getElementById('install-instructions');
-        if (btn) btn.classList.add('hidden');
-        if (choice.outcome === 'dismissed' && instructions) instructions.classList.remove('hidden');
         deferredPrompt = null;
+        updateInstallAvailabilityUI();
     });
+}
+
+function updateInstallAvailabilityUI() {
+    const settingsBtn = document.getElementById('install-app-btn');
+    const settingsInstructions = document.getElementById('install-instructions');
+    const onboardBtn = document.getElementById('onboarding-install-btn');
+    const onboardInstructions = document.getElementById('onboarding-install-instructions');
+
+    const hasPrompt = !!deferredPrompt;
+
+    if (settingsBtn) settingsBtn.classList.toggle('hidden', !hasPrompt);
+    if (settingsInstructions) settingsInstructions.classList.toggle('hidden', hasPrompt);
+    if (onboardBtn) onboardBtn.classList.toggle('hidden', !hasPrompt);
+    if (onboardInstructions) onboardInstructions.classList.toggle('hidden', hasPrompt);
 }
 
 const icons = {
@@ -638,9 +644,19 @@ window.selectDifficulty = (level) => {
     localStorage.setItem('hybridDifficulty', level);
     currentDifficulty = level;
     difficultySelectionScreen.classList.add('hidden');
-    initializeApp();
-    switchView('home');
-    bottomNav.classList.remove('hidden');
+    // Show dedicated install page as next onboarding step
+    const installScreen = document.getElementById('install-screen');
+    if (installScreen) {
+        installScreen.classList.remove('hidden');
+        // Ensure bottom nav stays hidden during onboarding
+        bottomNav.classList.add('hidden');
+        updateInstallAvailabilityUI();
+    } else {
+        // Fallback: proceed to app if install screen missing
+        initializeApp();
+        switchView('home');
+        bottomNav.classList.remove('hidden');
+    }
 };
 
 window.selectWeightUnit = (unit) => {
@@ -887,6 +903,30 @@ window.finishWorkout = (dayId = activeWorkoutDayId) => {
     renderProgram();
     closeWorkoutSession();
     showWorkoutCompleteMessage();
+};
+
+// --- Onboarding: Install step actions ---
+window.installAppNow = () => {
+    // Prefer showing the browser prompt when available
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+            deferredPrompt = null;
+            updateInstallAvailabilityUI();
+            skipInstall();
+        });
+    } else {
+        // No prompt available; just advance and user can install later from Settings
+        skipInstall();
+    }
+};
+
+window.skipInstall = () => {
+    const installScreen = document.getElementById('install-screen');
+    if (installScreen) installScreen.classList.add('hidden');
+    initializeApp();
+    switchView('home');
+    bottomNav.classList.remove('hidden');
 };
 
 const showWorkoutCompleteMessage = (message) => {
@@ -1858,8 +1898,7 @@ function finishOnboarding() {
   localStorage.setItem('hasSeenOnboarding','true');
   initializeApp();
   switchView('home');
-  checkIosInstallPrompt();
-  promptInstallAfterOnboarding();
+  // Removed automatic install prompts at startup
 }
 
 function startOnboarding() {
@@ -1902,7 +1941,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (localStorage.getItem('hasSeenOnboarding') === 'true') {
     initializeApp();
-    checkIosInstallPrompt();
+    // checkIosInstallPrompt(); // Avoid auto prompting at startup
   } else {
     startOnboarding();
   }
