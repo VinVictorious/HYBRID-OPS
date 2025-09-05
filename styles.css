@@ -42,6 +42,23 @@ body {
     text-shadow: 0 0 8px rgba(163, 230, 53, 0.7);
 }
 
+/* Reusable page title styling (matches mission style) */
+.page-title {
+    font-family: 'Changa', sans-serif; /* font-display */
+    text-transform: uppercase;
+    letter-spacing: 0.05em; /* tracking-wider */
+    color: #A3E635; /* lime-400 */
+    text-shadow: 0 0 8px rgba(163, 230, 53, 0.7); /* text-glow */
+    text-align: center;
+    font-weight: 700; /* bold */
+    margin-bottom: 1rem; /* mb-4 */
+    font-size: 1.25rem; /* text-xl */
+}
+
+@media (min-width: 640px) { /* sm: */
+    .page-title { font-size: 1.5rem; } /* text-2xl */
+}
+
 /* Reusable badge styling for beta labels */
 .beta-badge {
     position: fixed;
