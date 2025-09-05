@@ -34,6 +34,10 @@ const urlsToCache = [
     '/icons/home.png',
     '/icons/analytics.png',
     '/icons/settings.png',
+    // Legacy svgs (if referenced anywhere)
+    '/icons/home.svg',
+    '/icons/analytics.svg',
+    '/icons/settings.svg',
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
     'https://fonts.googleapis.com/css2?family=Changa:wght@600;700&family=Roboto+Mono:wght@400;500&display=swap'

@@ -497,6 +497,18 @@ body {
     filter: none;
 }
 
+/* Bottom nav PNG icons (active/inactive states) */
+.nav-img {
+    width: 24px;
+    height: 24px;
+    opacity: 0.6;
+    transition: opacity 160ms ease, filter 160ms ease, transform 160ms ease;
+}
+.nav-img.active {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(163,230,53,0.55));
+}
+
 .difficulty-icon {
     width: 28px;
     height: 28px;

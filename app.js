@@ -2178,6 +2178,8 @@ function switchView(viewId) {
     } else {
       tab.removeAttribute('aria-current');
     }
+    const img = tab.querySelector('img.nav-img');
+    if (img) img.classList.toggle('active', isActive);
   });
 
   if (viewId === 'analytics') {
