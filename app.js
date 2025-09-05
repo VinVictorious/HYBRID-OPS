@@ -143,12 +143,12 @@ function renderPlatformInstructions(container) {
 }
 
 const icons = {
-    strength: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5,3A3.5,3.5,0,0,0,17,6.5V17.5A3.5,3.5,0,0,0,20.5,21A3.5,3.5,0,0,0,24,17.5V6.5A3.5,3.5,0,0,0,20.5,3M3.5,3A3.5,3.5,0,0,0,0,6.5V17.5A3.5,3.5,0,0,0,3.5,21A3.5,3.5,0,0,0,7,17.5V6.5A3.5,3.5,0,0,0,3.5,3M9,5H15V19H9V5Z" /></svg>`,
-    run: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>`,
-    circuit: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4L17 2H7z"/></svg>`,
-    mobility: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm4.31 6.49l-1.48-1.48c-.15-.15-.34-.27-.55-.33l-2.78-.78v-1.9c0-.55-.45-1-1-1s-1 .45-1 1v2.5c0 .28.11.53.29.71l2.71 2.71v4.78c0 .55.45 1 1 1s1-.45 1-1v-5.5c0-.28-.11-.53-.29-.71l-.29-.29 1.48 1.48c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41zM5.5 12c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5S7 14.33 7 13.5 6.33 12 5.5 12z"/></svg>`,
-    recovery: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
-    test: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`
+    strength: `<img src="icons/strength.png" alt="Strength" class="h-8 w-8"/>`,
+    run: `<img src="icons/run.png" alt="Run" class="h-8 w-8"/>`,
+    circuit: `<img src="icons/circuit.png" alt="Circuit" class="h-8 w-8"/>`,
+    mobility: `<img src="icons/mobility.png" alt="Mobility" class="h-8 w-8"/>`,
+    recovery: `<img src="icons/recovery.png" alt="Recovery" class="h-8 w-8"/>`,
+    test: `<img src="icons/test.png" alt="Test" class="h-8 w-8"/>`
 };
 
 const completionMessages = [
@@ -1339,9 +1339,9 @@ const renderProgram = () => {
                                         <h5 class="text-xs font-semibold text-gray-400 uppercase mb-2">Stopwatch</h5>
                                         <div class="text-2xl font-mono text-lime-400 mb-2" id="stopwatch-${dayId}">${formatTime(timerState.isStopwatch ? timerState.time : 0)}</div>
                                         <div class="flex space-x-2">
-                                            <button id="timer-start-${dayId}" onclick="startTimer('${dayId}', true)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors" ${timerState.running ? 'style="display: none"' : ''}>Start</button>
-                                            <button id="timer-stop-${dayId}" onclick="stopTimer('${dayId}')" class="px-2 py-1 bg-transparent border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white rounded text-xs transition-colors" ${!timerState.running ? 'style="display: none"' : ''}>Stop</button>
-                                            <button onclick="resetTimer('${dayId}', true)" class="px-2 py-1 bg-transparent border-2 border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white rounded text-xs transition-colors">Reset</button>
+                                            <button id="timer-start-${dayId}" onclick="startTimer('${dayId}', true)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors" ${timerState.running ? 'style="display: none"' : ''}><img src="icons/play.png" alt="" class="btn-icon"/>Start</button>
+                                            <button id="timer-stop-${dayId}" onclick="stopTimer('${dayId}')" class="px-2 py-1 bg-transparent border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white rounded text-xs transition-colors" ${!timerState.running ? 'style="display: none"' : ''}><img src="icons/stop.png" alt="" class="btn-icon"/>Stop</button>
+                                            <button onclick="resetTimer('${dayId}', true)" class="px-2 py-1 bg-transparent border-2 border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white rounded text-xs transition-colors"><img src="icons/reset.png" alt="" class="btn-icon"/>Reset</button>
                                         </div>
                                     </div>
                                     <!-- Countdown -->
@@ -1349,9 +1349,9 @@ const renderProgram = () => {
                                         <h5 class="text-xs font-semibold text-gray-400 uppercase mb-2">Countdown</h5>
                                         <div class="text-2xl font-mono text-lime-400 mb-2" id="countdown-${dayId}">${formatTime(!timerState.isStopwatch ? timerState.time : 0)}</div>
                                         <div class="flex space-x-2">
-                                            <button onclick="setCountdownTime('${dayId}')" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors">Set</button>
-                                            <button onclick="startTimer('${dayId}', false)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors">Start</button>
-                                            <button onclick="resetTimer('${dayId}', false)" class="px-2 py-1 bg-transparent border-2 border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white rounded text-xs transition-colors">Reset</button>
+                                            <button onclick="setCountdownTime('${dayId}')" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors"><img src="icons/countdown.png" alt="" class="btn-icon"/>Set</button>
+                                            <button onclick="startTimer('${dayId}', false)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors"><img src="icons/play.png" alt="" class="btn-icon"/>Start</button>
+                                            <button onclick="resetTimer('${dayId}', false)" class="px-2 py-1 bg-transparent border-2 border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white rounded text-xs transition-colors"><img src="icons/reset.png" alt="" class="btn-icon"/>Reset</button>
                                         </div>
                                     </div>
                                 </div>

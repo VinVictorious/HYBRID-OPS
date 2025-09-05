@@ -505,6 +505,15 @@ body {
     transition: transform 180ms ease, filter 180ms ease;
 }
 
+/* Small inline icons for buttons */
+.btn-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    vertical-align: -2px;
+    display: inline-block;
+}
+
 /* Micro-interactions for Experience (difficulty) cards */
 #difficulty-selection .workout-card {
     transition: transform 180ms ease, box-shadow 180ms ease;
