@@ -41,6 +41,8 @@ function updateInstallAvailabilityUI() {
     const settingsInstructions = document.getElementById('install-instructions');
     const onboardBtn = document.getElementById('onboarding-install-btn');
     const onboardInstructions = document.getElementById('onboarding-install-instructions');
+    const installPageBtn = document.getElementById('install-page-prompt-btn');
+    const installPageInstructions = document.getElementById('install-page-instructions');
 
     const hasPrompt = !!deferredPrompt;
 
@@ -48,6 +50,8 @@ function updateInstallAvailabilityUI() {
     if (settingsInstructions) settingsInstructions.classList.toggle('hidden', hasPrompt);
     if (onboardBtn) onboardBtn.classList.toggle('hidden', !hasPrompt);
     if (onboardInstructions) onboardInstructions.classList.toggle('hidden', hasPrompt);
+    if (installPageBtn) installPageBtn.classList.toggle('hidden', !hasPrompt);
+    if (installPageInstructions) installPageInstructions.classList.toggle('hidden', hasPrompt);
 }
 
 const icons = {
@@ -2084,7 +2088,8 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     startOnboarding();
   }
-  switchView('home');
+  const initialView = (location.hash && location.hash.substring(1)) || 'home';
+  switchView(initialView);
 
   const timeFilter = document.getElementById('analytics-time-filter');
   if (timeFilter) {
@@ -2092,5 +2097,11 @@ document.addEventListener('DOMContentLoaded', () => {
       populateExerciseSelect();
       renderWeeklyCharts();
     });
+  }
+  // Wire up install page prompt button if present
+  const installPromptBtn = document.getElementById('install-page-prompt-btn');
+  if (installPromptBtn) {
+    installPromptBtn.addEventListener('click', () => triggerInstallPrompt());
+    updateInstallAvailabilityUI();
   }
 });
