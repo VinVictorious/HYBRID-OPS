@@ -860,7 +860,8 @@ window.addSet = (dayId, exerciseIndex) => {
     if (activeWorkoutDayId === dayId) refreshWorkoutSession();
 };
 
-window.finishWorkout = (dayId) => {
+window.finishWorkout = (dayId = activeWorkoutDayId) => {
+    if (!dayId) return;
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
     workoutDetails[dayId].workoutStarted = false;
     workoutDetails[dayId].endTime = new Date().toISOString();
