@@ -59,6 +59,23 @@ body {
     .page-title { font-size: 1.5rem; } /* text-2xl */
 }
 
+/* Secondary section title styling for legal/contact pages */
+.section-title {
+    font-family: 'Changa', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #A3E635;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem; /* text-lg */
+    text-shadow: 0 0 4px rgba(163, 230, 53, 0.4);
+}
+
+@media (min-width: 640px) {
+    .section-title { font-size: 1.25rem; } /* text-xl */
+}
+
 /* Reusable badge styling for beta labels */
 .beta-badge {
     position: fixed;
