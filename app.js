@@ -52,6 +52,12 @@ function updateInstallAvailabilityUI() {
     if (onboardInstructions) onboardInstructions.classList.toggle('hidden', hasPrompt);
     if (installPageBtn) installPageBtn.classList.toggle('hidden', !hasPrompt);
     if (installPageInstructions) installPageInstructions.classList.toggle('hidden', hasPrompt);
+
+    // Render platform-specific guidance when prompt is not available
+    if (!hasPrompt) {
+      renderPlatformInstructions(document.getElementById('onboarding-install-instructions'));
+      renderPlatformInstructions(document.getElementById('install-platform-instructions'));
+    }
 }
 
 function isAppInstalled() {
@@ -72,6 +78,68 @@ function updateInstalledBanner() {
   if (banner) banner.classList.toggle('hidden', !installed);
   if (btn) btn.classList.toggle('hidden', installed);
   if (instructions) instructions.classList.toggle('hidden', installed);
+}
+
+// --- Platform detection and tailored instructions ---
+function detectPlatform() {
+  const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
+  const isIOS = /iphone|ipad|ipod/.test(ua);
+  const isAndroid = /android/.test(ua);
+  const isEdge = /edg\//.test(ua);
+  const isChrome = /chrome\//.test(ua) && !isEdge && !/crios|fxios/.test(ua);
+  const isSafari = /safari/.test(ua) && !/chrome|crios|fxios|edg/.test(ua);
+
+  if (isIOS && isSafari) return 'ios-safari';
+  if (isAndroid && /cr|chrome/.test(ua)) return 'android-chrome';
+  if (isEdge) return 'desktop-edge';
+  if (isChrome) return 'desktop-chrome';
+  return 'other';
+}
+
+function instructionHTMLFor(platform) {
+  const appName = 'HYBRID OPS';
+  const domain = location.hostname || 'hybrid-ops.app';
+  const card = `
+    <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-4 mb-3 flex items-center space-x-3">
+      <img src="icons/home.svg" alt="App" class="w-8 h-8"/>
+      <div>
+        <div class="text-white font-semibold">${appName}</div>
+        <div class="text-gray-400 text-xs">${domain}</div>
+      </div>
+    </div>`;
+
+  if (platform === 'ios-safari') {
+    return `${card}
+      <ol class="list-decimal ml-5 space-y-2 text-gray-300">
+        <li>Tap <img src="icons/share.svg" alt="Share" class="inline w-5 h-5 align-text-bottom"/> in the Safari toolbar.</li>
+        <li>Scroll and select <span class="px-2 py-0.5 border border-gray-500 rounded text-gray-200">Add to Home Screen</span>.</li>
+        <li>Find <span class="font-semibold">${appName}</span> on your Home Screen <img src="icons/home.svg" alt="Home" class="inline w-5 h-5 align-text-bottom"/>.</li>
+      </ol>`;
+  }
+  if (platform === 'android-chrome') {
+    return `${card}
+      <ol class="list-decimal ml-5 space-y-2 text-gray-300">
+        <li>Tap the menu <img src="icons/menu.svg" alt="Menu" class="inline w-5 h-5 align-text-bottom"/> in the top-right.</li>
+        <li>Choose <span class="px-2 py-0.5 border border-gray-500 rounded text-gray-200">Install app</span> or <span class="px-2 py-0.5 border border-gray-500 rounded text-gray-200">Add to Home screen</span>.</li>
+        <li>Confirm, then launch from your Home Screen <img src="icons/home.svg" alt="Home" class="inline w-5 h-5 align-text-bottom"/>.</li>
+      </ol>`;
+  }
+  if (platform === 'desktop-chrome' || platform === 'desktop-edge') {
+    return `${card}
+      <ol class="list-decimal ml-5 space-y-2 text-gray-300">
+        <li>Click the <span class="px-2 py-0.5 border border-gray-500 rounded text-gray-200">Install</span> icon near the address bar.</li>
+        <li>Confirm <span class="px-2 py-0.5 border border-gray-500 rounded text-gray-200">Install</span>.</li>
+        <li>Launch ${appName} from your apps list.</li>
+      </ol>`;
+  }
+  return `${card}
+    <p class="text-gray-300">Use your browser's menu to install or add to Home Screen.</p>`;
+}
+
+function renderPlatformInstructions(container) {
+  if (!container) return;
+  const platform = detectPlatform();
+  container.innerHTML = instructionHTMLFor(platform);
 }
 
 const icons = {
