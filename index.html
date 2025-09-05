@@ -26,12 +26,14 @@
     <section id="home">
     <div class="container mx-auto max-w-4xl p-4 sm:p-6">
         
-        <div id="welcome-screen" class="text-center flex flex-col justify-center fade-in" style="min-height: calc(100vh - 3rem);">
+        <div id="welcome-screen" class="relative text-center flex flex-col justify-center fade-in" style="min-height: calc(100vh - 3rem);">
+            <div class="welcome-grid pointer-events-none" aria-hidden="true"></div>
             <div class="beta-badge">BETA</div>
             <div>
-                 <div class="pt-10">
-                    <h3 class="font-display text-lime-400 text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase text-glow" style="letter-spacing: 0.1em; word-break: break-word;">[HYBRID OPS]</h3>
-                    <div class="flex flex-wrap justify-center items-center space-x-2 sm:space-x-4 mt-6 text-gray-200 font-bold tracking-widest text-xs sm:text-sm max-w-md mx-auto">
+                 <div class="pt-16 sm:pt-20">
+                    <img src="icons/app-icon-192.png" alt="" class="brand-mark mx-auto mb-2" />
+                    <h3 class="font-display text-lime-400 text-2xl sm:text-4xl md:text-5xl lg:text-6xl uppercase text-glow tracking-wider" style="word-break: break-word;">[HYBRID OPS]</h3>
+                    <div class="flex flex-wrap justify-center items-center space-x-2 sm:space-x-4 mt-4 text-gray-400 font-medium tracking-wider text-[0.70rem] sm:text-sm max-w-md mx-auto">
                         <p class="pillar" style="animation-delay: 0.2s;">[STRENGTH]</p>
                         <p class="pillar-separator text-lime-400">-</p>
                         <p class="pillar" style="animation-delay: 0.4s;">[ENDURANCE]</p>
@@ -39,9 +41,9 @@
                         <p class="pillar" style="animation-delay: 0.6s;">[MOBILITY]</p>
                     </div>
                 </div>
-                <p id="welcome-note" class="text-gray-400 my-16 px-4 min-h-[72px]"></p>
-                <div class="pb-4">
-                    <button onclick="showGoalScreen()" class="btn-primary w-full max-w-sm mx-auto p-3 sm:p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-base font-display uppercase tracking-widest rounded-lg text-glow progress-bar-glow clickable">
+                <p id="welcome-note" class="text-gray-400 my-8 px-4 min-h-[72px]"></p>
+                <div class="pb-2">
+                    <button onclick="showGoalScreen()" class="btn-primary pulse-soft w-full max-w-sm mx-auto py-3 px-4 sm:py-3.5 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-base font-display uppercase tracking-wider rounded-xl text-glow progress-bar-glow clickable">
                         <span id="get-started-text">Get Started</span>
                         <span id="get-started-loading" class="hidden"><span class="loading-spinner"></span>Loading...</span>
                     </button>

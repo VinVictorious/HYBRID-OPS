@@ -42,6 +42,46 @@ body {
     text-shadow: 0 0 8px rgba(163, 230, 53, 0.7);
 }
 
+/* Welcome screen enhancements */
+.brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(163, 230, 53, 0.7), 0 0 24px rgba(163, 230, 53, 0.35);
+}
+
+.welcome-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image:
+        linear-gradient(rgba(163,230,53,0.7) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(163,230,53,0.7) 1px, transparent 1px);
+    background-size: 32px 32px;
+    animation: grid-pan 30s linear infinite;
+}
+
+@keyframes grid-pan {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 64px 64px, 64px 64px; }
+}
+
+/* Refined primary button */
+.btn-primary {
+    border-radius: 0.75rem; /* ~ rounded-xl */
+    min-height: 48px; /* WCAG target */
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.06), inset 0 -1px 2px rgba(0,0,0,0.35);
+}
+
+.pulse-soft {
+    animation: soft-pulse 5.5s ease-in-out infinite;
+}
+
+@keyframes soft-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(163,230,53,0.30), inset 0 1px 2px rgba(255,255,255,0.06), inset 0 -1px 2px rgba(0,0,0,0.35); }
+    50% { box-shadow: 0 0 18px 4px rgba(163,230,53,0.35), inset 0 1px 2px rgba(255,255,255,0.06), inset 0 -1px 2px rgba(0,0,0,0.35); }
+}
+
 /* Reusable page title styling (matches mission style) */
 .page-title {
     font-family: 'Changa', sans-serif; /* font-display */
