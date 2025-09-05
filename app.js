@@ -1529,9 +1529,11 @@ function showOnboardingProgress(show) {
 function setOnboardingStep(step) {
     const bar = document.getElementById('onboarding-progress-bar');
     const text = document.getElementById('onboarding-progress-text');
+    const stepLabel = document.getElementById('onboarding-step-label');
     const pct = Math.round((step / totalOnboardingSteps) * 100);
     if (bar) bar.style.width = `${pct}%`;
     if (text) text.textContent = `${pct}% Complete`;
+    if (stepLabel) stepLabel.textContent = `Step ${step} of ${totalOnboardingSteps}`;
 }
 
 function highlightSelection(containerId, selectedEl) {
