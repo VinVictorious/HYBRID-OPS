@@ -502,6 +502,26 @@ body {
     height: 28px;
     display: inline-block;
     filter: drop-shadow(0 0 8px rgba(163,230,53,0.6));
+    transition: transform 180ms ease, filter 180ms ease;
+}
+
+/* Micro-interactions for Experience (difficulty) cards */
+#difficulty-selection .workout-card {
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+#difficulty-selection .workout-card:hover {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 6px 24px rgba(163, 230, 53, 0.12);
+}
+
+#difficulty-selection .workout-card:active {
+    transform: translateY(0) scale(0.995);
+}
+
+#difficulty-selection .workout-card:hover .difficulty-icon {
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 12px rgba(163,230,53,0.8));
 }
 
 /* Workout Complete Toast */
