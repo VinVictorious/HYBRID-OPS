@@ -1022,6 +1022,8 @@ window.installAppNow = () => {
 window.skipInstall = () => {
     const installScreen = document.getElementById('install-screen');
     if (installScreen) installScreen.classList.add('hidden');
+    // Mark onboarding complete so deep links and settings pages return to app
+    localStorage.setItem('hasSeenOnboarding','true');
     initializeApp();
     switchView('home');
     bottomNav.classList.remove('hidden');
@@ -2193,7 +2195,9 @@ window.switchView = switchView;
 document.addEventListener('DOMContentLoaded', () => {
   const bottom = document.getElementById('bottom-nav');
   if (bottom) {
-    if (localStorage.getItem('hasSeenOnboarding') === 'true') {
+    const hasOnboarded = localStorage.getItem('hasSeenOnboarding') === 'true'
+      || (!!localStorage.getItem('hybridGoal') && !!localStorage.getItem('hybridDifficulty'));
+    if (hasOnboarded) {
       initializeApp();
       // checkIosInstallPrompt(); // Avoid auto prompting at startup
     } else {
