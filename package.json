@@ -7,7 +7,7 @@
     "dev": "http-server . -p 3000 -c-1",
     "build": "echo 'Static files ready'",
     "preview": "http-server . -p 4173 -c-1",
-    "test": "jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [
     "fitness",
@@ -20,6 +20,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0"
   }
 }
