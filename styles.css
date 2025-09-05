@@ -499,14 +499,26 @@ body {
 
 /* Bottom nav PNG icons (active/inactive states) */
 .nav-img {
-    width: 24px;
-    height: 24px;
-    opacity: 0.6;
+    width: 28px; /* slightly larger for readability */
+    height: 28px;
+    opacity: 0.7;
     transition: opacity 160ms ease, filter 160ms ease, transform 160ms ease;
 }
 .nav-img.active {
     opacity: 1;
-    filter: drop-shadow(0 0 8px rgba(163,230,53,0.55));
+    /* stronger glow */
+    filter: drop-shadow(0 0 10px rgba(163,230,53,0.60)) drop-shadow(0 0 18px rgba(163,230,53,0.35));
+}
+
+/* Tap bounce animation for nav icons */
+.nav-img.nav-bounce {
+    animation: nav-bounce 180ms ease-out;
+}
+
+@keyframes nav-bounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(0.9); }
+    100% { transform: scale(1); }
 }
 
 .difficulty-icon {

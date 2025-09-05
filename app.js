@@ -2215,6 +2215,17 @@ document.addEventListener('DOMContentLoaded', () => {
         renderWeeklyCharts();
       });
     }
+
+    // Tap bounce micro-interaction for nav icons
+    const navButtons = document.querySelectorAll('nav button');
+    navButtons.forEach(btn => {
+      btn.addEventListener('pointerdown', () => {
+        const img = btn.querySelector('img.nav-img');
+        if (!img) return;
+        img.classList.add('nav-bounce');
+        img.addEventListener('animationend', () => img.classList.remove('nav-bounce'), { once: true });
+      });
+    });
   }
 
   // Wire up install page prompt button if present
