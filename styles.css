@@ -529,13 +529,21 @@ body {
     transition: transform 180ms ease, filter 180ms ease;
 }
 
+/* Program day icons (cards) */
+.program-icon {
+    width: 36px;  /* was 32px; bump for readability */
+    height: 36px;
+    filter: drop-shadow(0 0 10px rgba(163,230,53,0.55));
+}
+
 /* Small inline icons for buttons */
 .btn-icon {
-    width: 14px;
-    height: 14px;
+    width: 18px;   /* bump size for clarity */
+    height: 18px;
     margin-right: 6px;
-    vertical-align: -2px;
+    vertical-align: -3px;
     display: inline-block;
+    filter: drop-shadow(0 0 8px rgba(163,230,53,0.5));
 }
 
 /* Micro-interactions for Experience (difficulty) cards */

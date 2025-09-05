@@ -143,12 +143,12 @@ function renderPlatformInstructions(container) {
 }
 
 const icons = {
-    strength: `<img src="icons/strength.png" alt="Strength" class="h-8 w-8"/>`,
-    run: `<img src="icons/run.png" alt="Run" class="h-8 w-8"/>`,
-    circuit: `<img src="icons/circuit.png" alt="Circuit" class="h-8 w-8"/>`,
-    mobility: `<img src="icons/mobility.png" alt="Mobility" class="h-8 w-8"/>`,
-    recovery: `<img src="icons/recovery.png" alt="Recovery" class="h-8 w-8"/>`,
-    test: `<img src="icons/test.png" alt="Test" class="h-8 w-8"/>`
+    strength: `<img src="icons/strength.png" alt="Strength" class="program-icon"/>`,
+    run: `<img src="icons/run.png" alt="Run" class="program-icon"/>`,
+    circuit: `<img src="icons/circuit.png" alt="Circuit" class="program-icon"/>`,
+    mobility: `<img src="icons/mobility.png" alt="Mobility" class="program-icon"/>`,
+    recovery: `<img src="icons/recovery.png" alt="Recovery" class="program-icon"/>`,
+    test: `<img src="icons/test.png" alt="Test" class="program-icon"/>`
 };
 
 const completionMessages = [
