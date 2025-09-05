@@ -101,7 +101,7 @@ function instructionHTMLFor(platform) {
   const domain = location.hostname || 'hybrid-ops.app';
   const card = `
     <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-4 mb-3 flex items-center space-x-3">
-      <img src="icons/home.svg" alt="App" class="w-8 h-8"/>
+      <img src="icons/app-icon-192.png" alt="App" class="w-8 h-8 rounded"/>
       <div>
         <div class="text-white font-semibold">${appName}</div>
         <div class="text-gray-400 text-xs">${domain}</div>
