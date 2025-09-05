@@ -1370,12 +1370,26 @@ window.showGoalScreen = () => {
 // Onboarding Back buttons
 // Onboarding Back buttons
 window.backToWelcome = () => {
+    const hasSetup = !!(localStorage.getItem('hybridGoal') && localStorage.getItem('hybridDifficulty'));
     const goal = document.getElementById('goal-selection');
-    const welcome = document.getElementById('welcome-screen');
     if (goal) goal.classList.add('hidden');
-    if (welcome) welcome.classList.remove('hidden');
-    bottomNav.classList.add('hidden');
-    showOnboardingProgress(false);
+    if (hasSetup) {
+        // Go to app home when setup is complete
+        document.getElementById('welcome-screen')?.classList.add('hidden');
+        document.getElementById('difficulty-selection')?.classList.add('hidden');
+        document.getElementById('install-screen')?.classList.add('hidden');
+        appContent.classList.remove('hidden');
+        bottomNav.classList.remove('hidden');
+        switchView('home');
+        showOnboardingProgress(false);
+    } else {
+        // Return to intro and re-run welcome note
+        const welcome = document.getElementById('welcome-screen');
+        if (welcome) welcome.classList.remove('hidden');
+        bottomNav.classList.add('hidden');
+        showOnboardingProgress(false);
+        showWelcomeMessage();
+    }
 };
 
 window.backToGoalSelection = () => {
@@ -2043,6 +2057,8 @@ function startOnboarding() {
   if (welcome) welcome.classList.remove('hidden');
   bottomNav.classList.add('hidden');
   showOnboardingProgress(false);
+  // Ensure welcome note types in when onboarding starts
+  showWelcomeMessage();
 }
 
 // Switch between main views
