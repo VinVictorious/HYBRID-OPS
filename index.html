@@ -59,7 +59,8 @@
             <p id="onboarding-progress-text" class="text-center text-sm mt-2 text-gray-400 font-mono">0% Complete</p>
         </div>
 
-        <div id="goal-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
+        <div id="goal-selection" class="hidden relative text-center flex flex-col justify-center min-h-[85vh] fade-in">
+            <div class="welcome-grid pointer-events-none" aria-hidden="true"></div>
             <div>
                 <button onclick="backToWelcome()" class="back-link">&larr; Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">What is your primary objective?</h2>
@@ -81,7 +82,8 @@
             </div>
         </div>
 
-        <div id="difficulty-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
+        <div id="difficulty-selection" class="hidden relative text-center flex flex-col justify-center min-h-[85vh] fade-in">
+            <div class="welcome-grid pointer-events-none" aria-hidden="true"></div>
             <div>
                 <button onclick="backToGoalSelection()" class="back-link">&larr; Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">Choose Your Experience Level</h2>
@@ -105,7 +107,8 @@
         </div>
 
         <!-- Install App (Onboarding Step) -->
-        <div id="install-screen" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
+        <div id="install-screen" class="hidden relative text-center flex flex-col justify-center min-h-[85vh] fade-in">
+            <div class="welcome-grid pointer-events-none" aria-hidden="true"></div>
             <div>
                 <button onclick="backToDifficulty()" class="back-link">&larr; Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">Install The App</h2>
