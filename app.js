@@ -624,6 +624,10 @@ let currentGoal = null;
 let currentDifficulty = null;
 let currentProgramData = [];
 let activeWorkoutDayId = null;
+// Onboarding state
+const totalOnboardingSteps = 3;
+let pendingGoal = null;
+let pendingDifficulty = null;
 
 const saveData = () => {
     localStorage.setItem(`hybridData_${currentGoal}_${currentDifficulty}`, JSON.stringify({
@@ -651,6 +655,8 @@ window.selectDifficulty = (level) => {
         // Ensure bottom nav stays hidden during onboarding
         bottomNav.classList.add('hidden');
         updateInstallAvailabilityUI();
+        showOnboardingProgress(true);
+        setOnboardingStep(3);
     } else {
         // Fallback: proceed to app if install screen missing
         initializeApp();
@@ -1342,8 +1348,21 @@ const showWelcomeMessage = () => {
 window.showGoalScreen = () => {
     document.getElementById('welcome-screen').classList.add('hidden');
     document.getElementById('goal-selection').classList.remove('hidden');
+    showOnboardingProgress(true);
+    setOnboardingStep(1);
+    // Reset selection state
+    pendingGoal = null;
+    const nextBtn = document.getElementById('goal-next-btn');
+    if (nextBtn) nextBtn.disabled = true;
+    // Preselect previously chosen goal, if any
+    const savedGoal = localStorage.getItem('hybridGoal');
+    if (savedGoal) {
+        const el = document.getElementById(`goal-${savedGoal}`);
+        if (el) chooseGoal(savedGoal, el);
+    }
 };
 
+// Onboarding Back buttons
 // Onboarding Back buttons
 window.backToWelcome = () => {
     const goal = document.getElementById('goal-selection');
@@ -1351,6 +1370,7 @@ window.backToWelcome = () => {
     if (goal) goal.classList.add('hidden');
     if (welcome) welcome.classList.remove('hidden');
     bottomNav.classList.add('hidden');
+    showOnboardingProgress(false);
 };
 
 window.backToGoalSelection = () => {
@@ -1359,6 +1379,18 @@ window.backToGoalSelection = () => {
     if (difficulty) difficulty.classList.add('hidden');
     if (goal) goal.classList.remove('hidden');
     bottomNav.classList.add('hidden');
+    showOnboardingProgress(true);
+    setOnboardingStep(1);
+    // Preselect saved goal
+    const savedGoal = localStorage.getItem('hybridGoal');
+    const nextBtn = document.getElementById('goal-next-btn');
+    if (savedGoal) {
+        const el = document.getElementById(`goal-${savedGoal}`);
+        if (el) chooseGoal(savedGoal, el);
+        if (nextBtn) nextBtn.disabled = false;
+    } else {
+        if (nextBtn) nextBtn.disabled = true;
+    }
 };
 
 window.backToDifficulty = () => {
@@ -1367,6 +1399,73 @@ window.backToDifficulty = () => {
     if (install) install.classList.add('hidden');
     if (difficulty) difficulty.classList.remove('hidden');
     bottomNav.classList.add('hidden');
+    showOnboardingProgress(true);
+    setOnboardingStep(2);
+    // Preselect saved difficulty
+    const savedDiff = localStorage.getItem('hybridDifficulty');
+    const nextBtn = document.getElementById('difficulty-next-btn');
+    if (savedDiff) {
+        const el = document.getElementById(`difficulty-${savedDiff}`);
+        if (el) chooseDifficulty(savedDiff, el);
+        if (nextBtn) nextBtn.disabled = false;
+    } else {
+        if (nextBtn) nextBtn.disabled = true;
+    }
+};
+
+// --- Onboarding progress helpers ---
+function showOnboardingProgress(show) {
+    const cont = document.getElementById('onboarding-progress');
+    if (cont) cont.classList.toggle('hidden', !show);
+}
+
+function setOnboardingStep(step) {
+    const bar = document.getElementById('onboarding-progress-bar');
+    const text = document.getElementById('onboarding-progress-text');
+    const pct = Math.round((step / totalOnboardingSteps) * 100);
+    if (bar) bar.style.width = `${pct}%`;
+    if (text) text.textContent = `${pct}% Complete`;
+}
+
+function highlightSelection(containerId, selectedEl) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const cards = container.querySelectorAll('.workout-card');
+    cards.forEach(card => card.classList.remove('border-lime-500', 'bg-lime-500/10'));
+    if (selectedEl) {
+        selectedEl.classList.add('border-lime-500', 'bg-lime-500/10');
+    }
+}
+
+window.chooseGoal = (goal, el) => {
+    pendingGoal = goal;
+    highlightSelection('goal-selection', el);
+    const nextBtn = document.getElementById('goal-next-btn');
+    if (nextBtn) nextBtn.disabled = false;
+};
+
+window.confirmGoalSelection = () => {
+    if (!pendingGoal) return;
+    // Persist and move to next step
+    selectGoal(pendingGoal);
+    showOnboardingProgress(true);
+    setOnboardingStep(2);
+    // Reset difficulty next state
+    const nextBtn = document.getElementById('difficulty-next-btn');
+    if (nextBtn) nextBtn.disabled = !pendingDifficulty;
+};
+
+window.chooseDifficulty = (level, el) => {
+    pendingDifficulty = level;
+    highlightSelection('difficulty-selection', el);
+    const nextBtn = document.getElementById('difficulty-next-btn');
+    if (nextBtn) nextBtn.disabled = false;
+};
+
+window.confirmDifficultySelection = () => {
+    if (!pendingDifficulty) return;
+    selectDifficulty(pendingDifficulty);
+    setOnboardingStep(3);
 };
 
 window.selectGoal = (goal) => {

@@ -50,23 +50,32 @@
             </div>
         </div>
 
+        <!-- Onboarding Progress -->
+        <div id="onboarding-progress" class="hidden max-w-sm mx-auto my-4">
+            <div class="w-full bg-black/50 rounded-full h-2 border border-gray-700">
+                <div id="onboarding-progress-bar" class="bg-lime-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p id="onboarding-progress-text" class="text-center text-xs mt-2 text-gray-400 font-mono">0% Complete</p>
+        </div>
+
         <div id="goal-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
             <div>
                 <button onclick="backToWelcome()" class="text-gray-400 hover:text-white mb-4">Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">What is your primary objective?</h2>
                 <div class="space-y-4 max-w-sm mx-auto">
-                    <button onclick="selectGoal('hybridAthlete')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up">
+                    <button id="goal-hybridAthlete" onclick="chooseGoal('hybridAthlete', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up">
                         <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Hybrid Athlete</h3>
                         <p class="text-sm text-gray-400 mt-2">Build a well-rounded base of strength and endurance.</p>
                     </button>
-                    <button onclick="selectGoal('tacticalAthlete')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up" style="animation-delay: 0.1s;">
+                    <button id="goal-tacticalAthlete" onclick="chooseGoal('tacticalAthlete', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up" style="animation-delay: 0.1s;">
                         <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Tactical Athlete</h3>
                         <p class="text-sm text-gray-400 mt-2">Develop the functional fitness required for demanding roles.</p>
                     </button>
-                    <button onclick="selectGoal('forceTestPrep')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up" style="animation-delay: 0.2s;">
+                    <button id="goal-forceTestPrep" onclick="chooseGoal('forceTestPrep', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up" style="animation-delay: 0.2s;">
                         <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Force Test Prep</h3>
                         <p class="text-sm text-gray-400 mt-2">Prepare for the specific physical demands of a fitness test.</p>
                     </button>
+                    <button id="goal-next-btn" onclick="confirmGoalSelection()" class="btn-primary w-full p-3 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold font-display uppercase tracking-widest rounded-lg text-glow mt-4 disabled:opacity-50" disabled>Next</button>
                 </div>
             </div>
         </div>
@@ -76,18 +85,19 @@
                 <button onclick="backToGoalSelection()" class="text-gray-400 hover:text-white mb-4">Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">Choose Your Experience Level</h2>
                 <div class="space-y-4 max-w-sm mx-auto">
-                    <button onclick="selectDifficulty('beginner')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in">
+                    <button id="difficulty-beginner" onclick="chooseDifficulty('beginner', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in">
                         <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Beginner</h3>
                         <p class="text-sm text-gray-400 mt-2">New to structured strength & endurance training.</p>
                     </button>
-                    <button onclick="selectDifficulty('intermediate')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.1s;">
+                    <button id="difficulty-intermediate" onclick="chooseDifficulty('intermediate', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.1s;">
                         <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Intermediate</h3>
                         <p class="text-sm text-gray-400 mt-2">Comfortable with main lifts & consistent running.</p>
                     </button>
-                    <button onclick="selectDifficulty('advanced')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.2s;">
+                    <button id="difficulty-advanced" onclick="chooseDifficulty('advanced', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.2s;">
                         <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Advanced</h3>
                         <p class="text-sm text-gray-400 mt-2">Highly experienced in both lifting & running.</p>
                     </button>
+                    <button id="difficulty-next-btn" onclick="confirmDifficultySelection()" class="btn-primary w-full p-3 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold font-display uppercase tracking-widest rounded-lg text-glow mt-4 disabled:opacity-50" disabled>Next</button>
                 </div>
                 <p class="text-xs text-gray-500 mt-6">This can be changed later in the program.</p>
             </div>
