@@ -933,6 +933,7 @@ window.skipInstall = () => {
     initializeApp();
     switchView('home');
     bottomNav.classList.remove('hidden');
+    showOnboardingProgress(false);
 };
 
 const showWorkoutCompleteMessage = (message) => {
@@ -2023,10 +2024,21 @@ function finishOnboarding() {
   initializeApp();
   switchView('home');
   // Removed automatic install prompts at startup
+  showOnboardingProgress(false);
 }
 
 function startOnboarding() {
-  finishOnboarding();
+  // Prepare onboarding screens; show Welcome by default
+  const welcome = document.getElementById('welcome-screen');
+  const goal = document.getElementById('goal-selection');
+  const difficulty = document.getElementById('difficulty-selection');
+  const install = document.getElementById('install-screen');
+  if (goal) goal.classList.add('hidden');
+  if (difficulty) difficulty.classList.add('hidden');
+  if (install) install.classList.add('hidden');
+  if (welcome) welcome.classList.remove('hidden');
+  bottomNav.classList.add('hidden');
+  showOnboardingProgress(false);
 }
 
 // Switch between main views
@@ -2054,6 +2066,9 @@ function switchView(viewId) {
   if (viewId === 'analytics') {
     populateExerciseSelect();
     renderWeeklyCharts();
+  } else if (viewId === 'home') {
+    // Hide onboarding progress when landing on home
+    showOnboardingProgress(false);
   }
 }
 
