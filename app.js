@@ -864,6 +864,7 @@ window.finishWorkout = (dayId = activeWorkoutDayId) => {
     if (!dayId) return;
     if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
     workoutDetails[dayId].workoutStarted = false;
+    workoutDetails[dayId].startTime = null;
     workoutDetails[dayId].endTime = new Date().toISOString();
     completionStatus[dayId] = true;
     
@@ -871,6 +872,15 @@ window.finishWorkout = (dayId = activeWorkoutDayId) => {
     if (workoutTimers[dayId]) {
         clearInterval(workoutTimers[dayId]);
         delete workoutTimers[dayId];
+    }
+    // Stop any tool timers for this day as well
+    if (timerIntervals[dayId]) {
+        clearInterval(timerIntervals[dayId]);
+        delete timerIntervals[dayId];
+    }
+    // Optionally collapse tools panel
+    if (openTools.has(dayId)) {
+        openTools.delete(dayId);
     }
     
     saveData();
@@ -1172,12 +1182,14 @@ const renderProgram = () => {
                                 </div>
                             </div>
                             
-                            ${!isWorkoutStarted ? `
+                            ${isCompleted ? `
+                                <div class="w-full p-4 bg-lime-600 text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg text-center">COMPLETED</div>
+                            ` : (!isWorkoutStarted ? `
                                 <div class="text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">START WORKOUT</button>
                             ` : `
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">RESUME WORKOUT</button>
-                            `}
+                            `)}
                             ${(!isWorkoutStarted && isToolsOpen) ? `
                             <div class="border-t border-gray-600 pt-3 mt-3 space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
