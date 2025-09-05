@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hybrid-ops-cache-v3';
+const CACHE_NAME = 'hybrid-ops-cache-v4';
 const urlsToCache = [
     '/',
     '/index.html',
@@ -45,19 +45,25 @@ const urlsToCache = [
 
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
+        Promise.all([
+            caches.open(CACHE_NAME)
+                .then(cache => {
+                    console.log('Opened cache');
+                    return cache.addAll(urlsToCache);
+                }),
+            self.skipWaiting()
+        ])
     );
 });
 
 self.addEventListener('activate', event => {
     event.waitUntil(
-        caches.keys().then(keys => Promise.all(
-            keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-        ))
+        Promise.all([
+            caches.keys().then(keys => Promise.all(
+                keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+            )),
+            self.clients.claim()
+        ])
     );
 });
 
