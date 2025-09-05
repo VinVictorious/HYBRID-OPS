@@ -1,10 +1,20 @@
-const CACHE_NAME = 'hybrid-ops-cache-v2';
+const CACHE_NAME = 'hybrid-ops-cache-v3';
 const urlsToCache = [
     '/',
     '/index.html',
     '/styles.css',
     '/app.js',
     '/manifest.json',
+    // App icons
+    '/icons/app-icon-32.png',
+    '/icons/app-icon-180.png',
+    '/icons/app-icon-192.png',
+    '/icons/app-icon-512.png',
+    '/icons/app-icon-maskable-512.png',
+    // Onboarding/difficulty icons
+    '/icons/spark.png',
+    '/icons/dumbbell.png',
+    '/icons/lightning.png',
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
     'https://fonts.googleapis.com/css2?family=Changa:wght@600;700&family=Roboto+Mono:wght@400;500&display=swap'
@@ -17,6 +27,14 @@ self.addEventListener('install', event => {
                 console.log('Opened cache');
                 return cache.addAll(urlsToCache);
             })
+    );
+});
+
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        caches.keys().then(keys => Promise.all(
+            keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+        ))
     );
 });
 
