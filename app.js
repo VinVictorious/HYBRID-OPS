@@ -1045,16 +1045,42 @@ const showWorkoutCompleteMessage = (message) => {
 
 const renderClickableExercises = (details) => {
      const lines = details.split('<br>');
-     return lines.map(line => {
+     return lines
+        .map(line => line.trim())
+        .filter(cleanLine => cleanLine.length > 0) // skip empties from <br><br>
+        .map(cleanLine => {
+            const colonIndex = cleanLine.indexOf(':');
+            if (colonIndex > 0) {
+                const name = cleanLine.substring(0, colonIndex).trim();
+                const setsReps = cleanLine.substring(colonIndex + 1).trim();
+                return `<p class=\"mb-1\"><button onclick=\"openExerciseModal('${name}')\" class=\"text-left hover:text-lime-400 transition-colors underline\">${name}</button>: ${setsReps}</p>`;
+            }
+            return `<p class=\"mb-1\">${cleanLine}</p>`;
+        })
+        .join('');
+};
+
+// Parse exercises specifically for the preview chips on day cards.
+// Skips long instructional lines and bullets so chips don't show descriptions.
+const parseExercisesForPreview = (details) => {
+    const exercises = [];
+    const lines = details.split('<br>');
+    lines.forEach(line => {
         const cleanLine = line.trim();
+        if (!cleanLine) return;
+        if (cleanLine.startsWith('-')) return; // bullets/instructions
+        if (/^perform\b/i.test(cleanLine)) return; // e.g., Perform each test...
+        if (cleanLine.includes('Rounds')) return; // circuits header
+        if (cleanLine.includes('Followed by')) return;
+
         const colonIndex = cleanLine.indexOf(':');
         if (colonIndex > 0) {
             const name = cleanLine.substring(0, colonIndex).trim();
-            const setsReps = cleanLine.substring(colonIndex + 1).trim();
-            return `<p class="mb-1"><button onclick="openExerciseModal('${name}')" class="text-left hover:text-lime-400 transition-colors underline">${name}</button>: ${setsReps}</p>`;
+            exercises.push({ name });
         }
-        return `<p class="mb-1">${cleanLine}</p>`;
-     }).join('');
+        // Ignore non-colon lines in preview to avoid long sentences like "3-5km pace" or descriptions
+    });
+    return exercises;
 };
 
 const renderExercises = (dayId) => {
@@ -1298,7 +1324,7 @@ const renderProgram = () => {
                         const notes = workoutDetails[dayId]?.notes || '';
                         
                         const isWorkoutStarted = workoutDetails[dayId]?.workoutStarted || false;
-                        const parsedExercises = parseExercises(day.details) || [];
+                        const parsedExercises = parseExercisesForPreview(day.details) || [];
                         const exerciseCount = parsedExercises.length;
                         const maxDots = 8;
                         const miniDots = Array.from({ length: maxDots }, (_, i) => `<span class="mini-dot ${i < Math.min(exerciseCount, maxDots) ? 'filled' : ''}"></span>`).join('');

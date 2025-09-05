@@ -130,6 +130,10 @@ body {
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 0.375rem; /* rounded-md */
     background: rgba(31,41,55,0.35); /* gray-800/35 */
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Mini progress dots for exercise count */
@@ -175,6 +179,10 @@ body {
     background: rgba(55,65,81,0.60); /* gray-700/60 */
     color: #E5E7EB; /* gray-200 */
     transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+    white-space: nowrap; /* keep label on one line */
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .pill-btn:hover {
@@ -183,12 +191,20 @@ body {
     background: #A3E635; /* lime-400 */
 }
 
+@media (max-width: 400px) {
+    .pill-btn {
+        padding: 0.25rem 0.5rem; /* tighter on small phones */
+        font-size: 0.75rem;
+    }
+}
+
 .tools-btn {
     border-radius: 0.5rem; /* rounded-lg */
     padding: 0.375rem; /* p-1.5 */
     background: rgba(75,85,99,0.40); /* gray-600/40 */
     border: 1px solid rgba(255,255,255,0.08);
     transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    flex-shrink: 0;
 }
 
 .tools-btn:hover {
