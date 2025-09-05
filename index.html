@@ -52,6 +52,7 @@
 
         <div id="goal-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
             <div>
+                <button onclick="backToWelcome()" class="text-gray-400 hover:text-white mb-4">Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">What is your primary objective?</h2>
                 <div class="space-y-4 max-w-sm mx-auto">
                     <button onclick="selectGoal('hybridAthlete')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable slide-up">
@@ -72,6 +73,7 @@
 
         <div id="difficulty-selection" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
             <div>
+                <button onclick="backToGoalSelection()" class="text-gray-400 hover:text-white mb-4">Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">Choose Your Experience Level</h2>
                 <div class="space-y-4 max-w-sm mx-auto">
                     <button onclick="selectDifficulty('beginner')" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in">
@@ -94,6 +96,7 @@
         <!-- Install App (Onboarding Step) -->
         <div id="install-screen" class="hidden text-center flex flex-col justify-center min-h-[85vh] fade-in">
             <div>
+                <button onclick="backToDifficulty()" class="text-gray-400 hover:text-white mb-4">Back</button>
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">Install The App</h2>
                 <p class="text-gray-400 mb-6 max-w-sm mx-auto">Add HYBRID OPS to your home screen for faster access and a full-screen experience. You can also skip and install later from Settings.</p>
                 <div class="space-y-3 max-w-sm mx-auto">

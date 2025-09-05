@@ -1344,6 +1344,31 @@ window.showGoalScreen = () => {
     document.getElementById('goal-selection').classList.remove('hidden');
 };
 
+// Onboarding Back buttons
+window.backToWelcome = () => {
+    const goal = document.getElementById('goal-selection');
+    const welcome = document.getElementById('welcome-screen');
+    if (goal) goal.classList.add('hidden');
+    if (welcome) welcome.classList.remove('hidden');
+    bottomNav.classList.add('hidden');
+};
+
+window.backToGoalSelection = () => {
+    const difficulty = document.getElementById('difficulty-selection');
+    const goal = document.getElementById('goal-selection');
+    if (difficulty) difficulty.classList.add('hidden');
+    if (goal) goal.classList.remove('hidden');
+    bottomNav.classList.add('hidden');
+};
+
+window.backToDifficulty = () => {
+    const install = document.getElementById('install-screen');
+    const difficulty = document.getElementById('difficulty-selection');
+    if (install) install.classList.add('hidden');
+    if (difficulty) difficulty.classList.remove('hidden');
+    bottomNav.classList.add('hidden');
+};
+
 window.selectGoal = (goal) => {
     localStorage.setItem('hybridGoal', goal);
     currentGoal = goal;
