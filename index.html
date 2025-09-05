@@ -90,16 +90,31 @@
                 <h2 class="text-xl sm:text-2xl font-bold text-lime-400 mb-6 font-display uppercase tracking-wider text-glow">Choose Your Experience Level</h2>
                 <div class="space-y-4 max-w-sm mx-auto">
                     <button id="difficulty-beginner" onclick="chooseDifficulty('beginner', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in">
-                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Beginner</h3>
-                        <p class="text-sm text-gray-400 mt-2">New to structured strength & endurance training.</p>
+                        <div class="flex items-center space-x-3 text-left">
+                            <img src="icons/spark.svg" alt="Beginner" class="difficulty-icon"/>
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Beginner</h3>
+                                <p class="text-sm text-gray-300 mt-1">New to structured training.</p>
+                            </div>
+                        </div>
                     </button>
                     <button id="difficulty-intermediate" onclick="chooseDifficulty('intermediate', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.1s;">
-                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Intermediate</h3>
-                        <p class="text-sm text-gray-400 mt-2">Comfortable with main lifts & consistent running.</p>
+                        <div class="flex items-center space-x-3 text-left">
+                            <img src="icons/dumbbell.svg" alt="Intermediate" class="difficulty-icon"/>
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Intermediate</h3>
+                                <p class="text-sm text-gray-300 mt-1">Comfortable with lifts & running.</p>
+                            </div>
+                        </div>
                     </button>
                     <button id="difficulty-advanced" onclick="chooseDifficulty('advanced', this)" class="workout-card w-full p-4 bg-gray-800/50 border border-gray-700 rounded-lg hover:bg-lime-500/20 hover:border-lime-500 clickable bounce-in" style="animation-delay: 0.2s;">
-                        <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Advanced</h3>
-                        <p class="text-sm text-gray-400 mt-2">Highly experienced in both lifting & running.</p>
+                        <div class="flex items-center space-x-3 text-left">
+                            <img src="icons/lightning.svg" alt="Advanced" class="difficulty-icon"/>
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold font-display text-white uppercase tracking-widest">Advanced</h3>
+                                <p class="text-sm text-gray-300 mt-1">Experienced in lifting & endurance.</p>
+                            </div>
+                        </div>
                     </button>
                     <button id="difficulty-next-btn" onclick="confirmDifficultySelection()" class="btn-primary w-full p-3 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold font-display uppercase tracking-widest rounded-lg text-glow mt-4 disabled:opacity-50" disabled>Next</button>
                 </div>

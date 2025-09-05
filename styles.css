@@ -497,6 +497,13 @@ body {
     filter: none;
 }
 
+.difficulty-icon {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    filter: drop-shadow(0 0 8px rgba(163,230,53,0.6));
+}
+
 /* Workout Complete Toast */
 #workout-complete-modal {
     opacity: 0;
