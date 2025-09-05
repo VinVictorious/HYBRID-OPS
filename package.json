@@ -7,7 +7,11 @@
     "dev": "http-server . -p 3000 -c-1",
     "build": "echo 'Static files ready'",
     "preview": "http-server . -p 4173 -c-1",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "auto-commit": "chokidar \"**/*\" -i \"node_modules/**\" -i \".git/**\" -i \"**/*.swp\" -i \"**/*.tmp\" -i \"**/*.log\" -d 800 --throttle 4000 -c \"node tools/auto-commit.js\"",
+    "auto-commit:once": "node tools/auto-commit.js",
+    "auto-commit:push": "chokidar \"**/*\" -i \"node_modules/**\" -i \".git/**\" -i \"**/*.swp\" -i \"**/*.tmp\" -i \"**/*.log\" -d 800 --throttle 4000 -c \"node tools/auto-commit.js --push\"",
+    "auto-commit:push-once": "node tools/auto-commit.js --push"
   },
   "keywords": [
     "fitness",
@@ -21,6 +25,7 @@
   "type": "module",
   "devDependencies": {
     "http-server": "^14.1.1",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "chokidar-cli": "^3.0.0"
   }
 }

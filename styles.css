@@ -34,6 +34,184 @@ body {
     background-color: #030712; 
 }
 
+/* Premium Day Card styling */
+.day-card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(31,41,55,0.70), rgba(17,24,39,0.70)); /* gray-800 -> gray-900 */
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 0.75rem; /* ~ rounded-xl */
+    padding: 1rem; /* p-4 */
+    overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+    backdrop-filter: blur(2px);
+}
+
+.day-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px; /* subtle inner vignette */
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(600px 120px at -10% 0%, rgba(163,230,53,0.12), transparent 40%);
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+
+.day-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px; /* replaces border-l-4 */
+    background: linear-gradient(180deg, rgba(163,230,53,0.65), rgba(163,230,53,0.25));
+    filter: drop-shadow(0 0 8px rgba(163,230,53,0.40));
+    opacity: 0.7;
+}
+
+.day-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.06) inset;
+}
+
+.day-card:hover::before { opacity: 1; }
+
+.day-card.is-complete {
+    border-color: rgba(34,197,94,0.50); /* lime-500 */
+    box-shadow: 0 0 0 1px rgba(34,197,94,0.25) inset, 0 0 16px rgba(34,197,94,0.20);
+    background: linear-gradient(180deg, rgba(31,41,55,0.80), rgba(3,7,18,0.80));
+}
+
+.day-card.is-complete::after {
+    background: linear-gradient(180deg, #4ADE80, #22C55E); /* lime-400 -> lime-500 */
+    opacity: 1;
+    filter: drop-shadow(0 0 12px rgba(34,197,94,0.65));
+}
+
+/* Radial sweep when marking complete */
+.day-card.complete-glow::before {
+    opacity: 1;
+    background: radial-gradient(220px 120px at 0% 0%, rgba(163,230,53,0.35), transparent 55%);
+    animation: radial-sweep 0.7s ease-out;
+}
+
+@keyframes radial-sweep {
+    0% { transform: translate(-10%, -10%) scale(0.85); opacity: 1; }
+    100% { transform: translate(30%, 30%) scale(1.25); opacity: 0; }
+}
+
+/* Focus type as a premium pill */
+.focus-pill {
+    display: inline-block;
+    padding: 0.125rem 0.5rem; /* px-2 py-0.5 */
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 600; /* semi-bold */
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-radius: 9999px; /* pill */
+    background: linear-gradient(180deg, rgba(163,230,53,0.25), rgba(163,230,53,0.15));
+    color: #D9F99D; /* lime-200 */
+    border: 1px solid rgba(163,230,53,0.35);
+}
+
+/* Quick preview of exercises on each card */
+.exercise-chips { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 0.25rem; 
+    margin-top: 0.25rem; 
+}
+
+.exercise-chip {
+    display: inline-block;
+    padding: 0.125rem 0.5rem; /* px-2 py-0.5 */
+    font-size: 0.70rem; /* tight */
+    color: #E5E7EB; /* gray-200 */
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.375rem; /* rounded-md */
+    background: rgba(31,41,55,0.35); /* gray-800/35 */
+}
+
+/* Mini progress dots for exercise count */
+.mini-dots { 
+    display: flex; 
+    gap: 4px; 
+    margin: 4px 0 6px 0;
+}
+
+.mini-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: rgba(255,255,255,0.12);
+}
+
+.mini-dot.filled {
+    background: #A3E635; /* lime-400 */
+    box-shadow: 0 0 6px rgba(163,230,53,0.6);
+}
+
+/* Large, faint day watermark */
+.day-watermark {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    font-family: 'Changa', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 1.75rem;
+    color: rgba(163,230,53,0.08);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Refined small action buttons */
+.pill-btn {
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem; /* py-1 px-3 */
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(55,65,81,0.60); /* gray-700/60 */
+    color: #E5E7EB; /* gray-200 */
+    transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.pill-btn:hover {
+    border-color: #A3E635; /* lime-400 */
+    color: #000000;
+    background: #A3E635; /* lime-400 */
+}
+
+.tools-btn {
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 0.375rem; /* p-1.5 */
+    background: rgba(75,85,99,0.40); /* gray-600/40 */
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.tools-btn:hover {
+    background: rgba(75,85,99,0.55);
+    border-color: rgba(163,230,53,0.45);
+    transform: translateY(-1px);
+}
+
+/* Override broken inner text when complete */
+.day-card.is-complete .pill-btn {
+    position: relative;
+    color: transparent !important; /* hide original text safely */
+}
+.day-card.is-complete .pill-btn::after {
+    content: 'COMPLETE';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #000; /* ensure readable over lime */
+    letter-spacing: 0.04em;
+}
+
 .progress-bar-glow { 
     box-shadow: 0 0 8px #A3E635, 0 0 16px #A3E635; 
 }
