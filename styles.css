@@ -37,12 +37,13 @@ body {
 /* Premium Day Card styling */
 .day-card {
     position: relative;
-    background: linear-gradient(180deg, rgba(31,41,55,0.70), rgba(17,24,39,0.70)); /* gray-800 -> gray-900 */
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 0.75rem; /* ~ rounded-xl */
-    padding: 1rem; /* p-4 */
+    background: rgba(31,41,55,0.55); /* softer elevated panel */
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 1.25rem; /* smoother corners */
+    padding: 1.25rem; /* more breathing room */
     overflow: hidden;
     transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.45);
     backdrop-filter: blur(2px);
 }
 
@@ -63,15 +64,15 @@ body {
     left: 0;
     top: 0;
     bottom: 0;
-    width: 4px; /* replaces border-l-4 */
-    background: linear-gradient(180deg, rgba(163,230,53,0.65), rgba(163,230,53,0.25));
-    filter: drop-shadow(0 0 8px rgba(163,230,53,0.40));
-    opacity: 0.7;
+    width: 2px; /* subtle accent */
+    background: linear-gradient(180deg, rgba(163,230,53,0.45), rgba(163,230,53,0.15));
+    filter: drop-shadow(0 0 6px rgba(163,230,53,0.30));
+    opacity: 0.6;
 }
 
 .day-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 36px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.06) inset;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.50);
 }
 
 .day-card:hover::before { opacity: 1; }
@@ -104,7 +105,7 @@ body {
 .focus-pill {
     display: inline-block;
     padding: 0.125rem 0.5rem; /* px-2 py-0.5 */
-    font-size: 0.75rem; /* text-xs */
+    font-size: 0.70rem; /* text-xs slightly smaller */
     font-weight: 600; /* semi-bold */
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -175,15 +176,18 @@ body {
     border-radius: 9999px;
     padding: 0.25rem 0.75rem; /* py-1 px-3 */
     font-weight: 600;
-    border: 1px solid rgba(255,255,255,0.14);
-    background: rgba(55,65,81,0.60); /* gray-700/60 */
-    color: #E5E7EB; /* gray-200 */
+    border: 1.5px solid rgba(163,230,53,0.45);
+    background: rgba(0,0,0,0.0);
+    color: #D9F99D; /* lime-200 */
     transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
     white-space: nowrap; /* keep label on one line */
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
 }
+
+/* Hide legacy pill button inside new day-card headers */
+.day-card .pill-btn { display: none !important; }
 
 .pill-btn:hover {
     border-color: #A3E635; /* lime-400 */
@@ -205,6 +209,63 @@ body {
     border: 1px solid rgba(255,255,255,0.08);
     transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
     flex-shrink: 0;
+}
+
+/* New button variants */
+.btn-outline-pill {
+    border-radius: 9999px;
+    border: 1.5px solid rgba(163,230,53,0.45);
+    padding: 0.375rem 0.75rem;
+    color: #D9F99D;
+    background: transparent;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-outline-pill.done {
+    background: #22C55E; color: #000; border-color: #22C55E;
+}
+.btn-check-icon { width: 14px; height: 14px; filter: drop-shadow(0 0 6px rgba(163,230,53,0.6)); }
+
+/* Workout CTA outside the card */
+.workout-cta { margin-top: 0.5rem; }
+.cta-start {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.875rem;
+    background: transparent;
+    border: 2px solid #A3E635;
+    color: #A3E635;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-family: 'Changa', sans-serif;
+    box-shadow: 0 0 8px #A3E635, 0 0 16px rgba(163,230,53,0.45);
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+.cta-start:hover { background: #A3E635; color: #000; transform: translateY(-1px); }
+
+/* Header split layout */
+.workout-header { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: start; margin-bottom: 0.5rem; }
+.workout-title { color: #fff; font-weight: 800; font-family: 'Changa', sans-serif; letter-spacing: 0.06em; }
+.workout-subtext { color: #9CA3AF; font-size: 0.875rem; margin-top: 0.25rem; }
+.day-label { font-size: 0.8rem; letter-spacing: 0.12em; color: #A3E635; text-transform: uppercase; }
+
+/* Exercise list formatting */
+.exercise-item { margin-bottom: 0.5rem; }
+.exercise-name { color: #BEF264; font-weight: 700; font-family: 'Changa', sans-serif; letter-spacing: 0.04em; background: none; border: none; padding: 0; }
+.exercise-name:hover { color: #A3E635; }
+.exercise-meta { color: #9CA3AF; font-size: 0.875rem; }
+
+/* Week header and divider */
+.week-header { display: flex; align-items: center; justify-content: space-between; }
+.week-title { font-family: 'Changa', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; color: #A3E635; font-weight: 700; font-size: 1rem; }
+.week-divider { height: 1px; background: rgba(255,255,255,0.08); margin-top: 0.5rem; }
+
+/* Slide-open animation for expanded content */
+.collapsible { animation: slideOpen 280ms ease-out both; }
+@keyframes slideOpen { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 400px) {
+    .pill-btn { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
 }
 
 .tools-btn:hover {

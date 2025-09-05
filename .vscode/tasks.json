@@ -1,0 +1,31 @@
+{
+  // Auto-commit helpers. VS Code will start the push watcher on folder open.
+  // You can switch which task auto-starts by changing the "runOn" setting.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Auto Commit + Push (watch)",
+      "type": "shell",
+      "command": "npm run auto-commit:push",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated"
+      },
+      "runOptions": { "runOn": "folderOpen" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Auto Commit (local only, watch)",
+      "type": "shell",
+      "command": "npm run auto-commit",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
+

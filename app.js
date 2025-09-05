@@ -1047,15 +1047,15 @@ const renderClickableExercises = (details) => {
      const lines = details.split('<br>');
      return lines
         .map(line => line.trim())
-        .filter(cleanLine => cleanLine.length > 0) // skip empties from <br><br>
-        .map(cleanLine => {
-            const colonIndex = cleanLine.indexOf(':');
+        .filter(text => text.length > 0)
+        .map(text => {
+            const colonIndex = text.indexOf(':');
             if (colonIndex > 0) {
-                const name = cleanLine.substring(0, colonIndex).trim();
-                const setsReps = cleanLine.substring(colonIndex + 1).trim();
-                return `<p class=\"mb-1\"><button onclick=\"openExerciseModal('${name}')\" class=\"text-left hover:text-lime-400 transition-colors underline\">${name}</button>: ${setsReps}</p>`;
+                const name = text.substring(0, colonIndex).trim();
+                const setsReps = text.substring(colonIndex + 1).trim();
+                return `<div class="exercise-item"><button onclick="openExerciseModal('${name}')" class="exercise-name">${name}</button><div class="exercise-meta">${setsReps}</div></div>`;
             }
-            return `<p class=\"mb-1\">${cleanLine}</p>`;
+            return `<div class="exercise-item"><div class="exercise-meta">${text}</div></div>`;
         })
         .join('');
 };
@@ -1302,10 +1302,10 @@ const renderProgram = () => {
             const completedDays = week.days.filter(day => completionStatus[`${week.week}_${day.day}`]).length;
             const progressPercentage = (completedDays / week.days.length) * 100;
             
-            html += `<div class="mb-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                <button onclick="toggleWeekExpansion('${weekId}')" class="w-full p-4 text-left flex items-center justify-between hover:bg-gray-700/50 transition-colors rounded-lg">
+            html += `<div class="mb-4 bg-gray-900/40 rounded-lg border border-gray-700">
+                <button onclick="toggleWeekExpansion('${weekId}')" class="w-full p-4 text-left week-header hover:bg-gray-800/40 transition-colors rounded-lg">
                     <div>
-                        <h3 class="font-semibold text-lime-300 font-display text-lg">Week ${week.week === 0 ? 'Baseline' : week.week}</h3>
+                        <h3 class="week-title">Week ${week.week === 0 ? 'Baseline' : week.week}</h3>
                         <div class="mt-2 w-full bg-gray-600 rounded-full h-2">
                             <div class="bg-lime-500 h-2 rounded-full transition-all duration-300" style="width: ${progressPercentage}%"></div>
                         </div>
@@ -1315,7 +1315,8 @@ const renderProgram = () => {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
                 </button>
-                ${isOpen ? `<div class="px-4 pb-4 space-y-3">
+                <div class="week-divider"></div>
+                ${isOpen ? `<div class="collapsible px-4 pb-4 space-y-3">
                     ${week.days.map(day => {
                         const dayId = `${week.week}_${day.day}`;
                         const isCompleted = completionStatus[dayId];
@@ -1331,15 +1332,15 @@ const renderProgram = () => {
                         const exercisesPreview = parsedExercises.slice(0, 3).map(ex => `<span class="exercise-chip">${ex.name}</span>`).join('');
                         
                         return `<div class="day-card ${isCompleted ? 'completed-card is-complete' : ''}" data-day-id="${dayId}">
-                            <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center space-x-3">
+                            <div class="workout-header">
+                                <div class="flex items-center gap-3">
                                     <div class="text-lime-400 flex-shrink-0">${icons[day.icon]}</div>
                                     <div>
-                                        <h4 class="font-bold text-white font-display">${day.day.toUpperCase()}</h4>
-                                        <p class="focus-pill">${day.focus}</p>
+                                        <div class="day-label">${day.day.toUpperCase()}</div>
+                                        <div class="workout-title">${day.focus}</div>
                                     </div>
                                 </div>
-                                <div class="flex items-center space-x-2">
+                                <div class="flex items-center gap-2">
                                     ${!isWorkoutStarted ? `
                                         <button onclick="toggleToolsExpansion('${dayId}')" class="tools-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="tools-icon h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1348,6 +1349,10 @@ const renderProgram = () => {
                                             </svg>
                                         </button>
                                     ` : ''}
+                                    <button onclick="toggleDayCompletion('${dayId}')" class="btn-outline-pill ${isCompleted ? 'done' : ''}">
+                                        <img src="icons/check.png" alt="" class="btn-check-icon" aria-hidden="true"/>
+                                        ${isCompleted ? 'Done' : 'Mark Done'}
+                                    </button>
                                     <button onclick="toggleDayCompletion('${dayId}')" class="pill-btn ${isCompleted ? 'bg-lime-600 text-black border-lime-600' : ''}">
                                         ${isCompleted ? '✅ COMPLETE' : 'MARK DONE'}
                                     </button>
@@ -1358,13 +1363,10 @@ const renderProgram = () => {
                             <div class="mini-dots">${miniDots}</div>
                             
                             ${isCompleted ? `
-                                <div class="w-full p-4 bg-lime-600 text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg text-center">COMPLETED</div>
-                            ` : (!isWorkoutStarted ? `
-                                <div class="text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
-                                <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors pulse-soft">START WORKOUT</button>
+                                <div class="w-full p-3 bg-lime-600 text-black font-bold text-base font-display uppercase tracking-widest rounded-lg text-center">Completed</div>
                             ` : `
-                                <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors pulse-soft">RESUME WORKOUT</button>
-                            `)}
+                                <div class="mt-2">${renderClickableExercises(day.details)}</div>
+                            `}
                             ${(!isWorkoutStarted && isToolsOpen) ? `
                             <div class="border-t border-gray-600 pt-3 mt-3 space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1411,7 +1413,7 @@ const renderProgram = () => {
                                 </div>
                             </div>
                             ` : ''}
-                        </div>`;
+                        </div>${!isCompleted ? `<div class="workout-cta"><button onclick="startWorkout('${dayId}')" class="cta-start">${isWorkoutStarted ? 'Resume Workout' : 'Start Workout'}</button></div>` : ''}`;
                     }).join('')}
                 </div>` : ''}
             </div>`;
