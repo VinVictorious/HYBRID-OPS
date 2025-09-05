@@ -54,6 +54,26 @@ function updateInstallAvailabilityUI() {
     if (installPageInstructions) installPageInstructions.classList.toggle('hidden', hasPrompt);
 }
 
+function isAppInstalled() {
+  try {
+    return (
+      window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+    ) || window.navigator.standalone === true || (document.referrer || '').startsWith('android-app://');
+  } catch (_) {
+    return false;
+  }
+}
+
+function updateInstalledBanner() {
+  const banner = document.getElementById('install-page-installed');
+  const btn = document.getElementById('install-page-prompt-btn');
+  const instructions = document.getElementById('install-page-instructions');
+  const installed = isAppInstalled();
+  if (banner) banner.classList.toggle('hidden', !installed);
+  if (btn) btn.classList.toggle('hidden', installed);
+  if (instructions) instructions.classList.toggle('hidden', installed);
+}
+
 const icons = {
     strength: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5,3A3.5,3.5,0,0,0,17,6.5V17.5A3.5,3.5,0,0,0,20.5,21A3.5,3.5,0,0,0,24,17.5V6.5A3.5,3.5,0,0,0,20.5,3M3.5,3A3.5,3.5,0,0,0,0,6.5V17.5A3.5,3.5,0,0,0,3.5,21A3.5,3.5,0,0,0,7,17.5V6.5A3.5,3.5,0,0,0,3.5,3M9,5H15V19H9V5Z" /></svg>`,
     run: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/></svg>`,
@@ -2096,28 +2116,38 @@ window.switchView = switchView;
 
 // Initialize the app or onboarding when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-  if (!document.getElementById('bottom-nav')) return;
+  const bottom = document.getElementById('bottom-nav');
+  if (bottom) {
+    if (localStorage.getItem('hasSeenOnboarding') === 'true') {
+      initializeApp();
+      // checkIosInstallPrompt(); // Avoid auto prompting at startup
+    } else {
+      startOnboarding();
+    }
+    const initialView = (location.hash && location.hash.substring(1)) || 'home';
+    switchView(initialView);
 
-  if (localStorage.getItem('hasSeenOnboarding') === 'true') {
-    initializeApp();
-    // checkIosInstallPrompt(); // Avoid auto prompting at startup
-  } else {
-    startOnboarding();
+    const timeFilter = document.getElementById('analytics-time-filter');
+    if (timeFilter) {
+      timeFilter.addEventListener('change', () => {
+        populateExerciseSelect();
+        renderWeeklyCharts();
+      });
+    }
   }
-  const initialView = (location.hash && location.hash.substring(1)) || 'home';
-  switchView(initialView);
 
-  const timeFilter = document.getElementById('analytics-time-filter');
-  if (timeFilter) {
-    timeFilter.addEventListener('change', () => {
-      populateExerciseSelect();
-      renderWeeklyCharts();
-    });
-  }
   // Wire up install page prompt button if present
   const installPromptBtn = document.getElementById('install-page-prompt-btn');
   if (installPromptBtn) {
     installPromptBtn.addEventListener('click', () => triggerInstallPrompt());
     updateInstallAvailabilityUI();
+    updateInstalledBanner();
   }
+});
+
+// Update UI if app becomes installed during this session
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  updateInstallAvailabilityUI();
+  updateInstalledBanner();
 });
