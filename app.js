@@ -1446,7 +1446,7 @@ window.showGoalScreen = () => {
     // Reset selection state
     pendingGoal = null;
     const nextBtn = document.getElementById('goal-next-btn');
-    if (nextBtn) nextBtn.disabled = true;
+    if (nextBtn) { nextBtn.disabled = true; nextBtn.classList.remove('cta-strobe'); }
     // Preselect previously chosen goal, if any
     const savedGoal = localStorage.getItem('hybridGoal');
     if (savedGoal) {
@@ -1494,9 +1494,9 @@ window.backToGoalSelection = () => {
     if (savedGoal) {
         const el = document.getElementById(`goal-${savedGoal}`);
         if (el) chooseGoal(savedGoal, el);
-        if (nextBtn) nextBtn.disabled = false;
+        if (nextBtn) { nextBtn.disabled = false; nextBtn.classList.add('cta-strobe'); }
     } else {
-        if (nextBtn) nextBtn.disabled = true;
+        if (nextBtn) { nextBtn.disabled = true; nextBtn.classList.remove('cta-strobe'); }
     }
 };
 
@@ -1514,9 +1514,9 @@ window.backToDifficulty = () => {
     if (savedDiff) {
         const el = document.getElementById(`difficulty-${savedDiff}`);
         if (el) chooseDifficulty(savedDiff, el);
-        if (nextBtn) nextBtn.disabled = false;
+        if (nextBtn) { nextBtn.disabled = false; nextBtn.classList.add('cta-strobe'); }
     } else {
-        if (nextBtn) nextBtn.disabled = true;
+        if (nextBtn) { nextBtn.disabled = true; nextBtn.classList.remove('cta-strobe'); }
     }
 };
 
@@ -1550,7 +1550,7 @@ window.chooseGoal = (goal, el) => {
     pendingGoal = goal;
     highlightSelection('goal-selection', el);
     const nextBtn = document.getElementById('goal-next-btn');
-    if (nextBtn) nextBtn.disabled = false;
+    if (nextBtn) { nextBtn.disabled = false; nextBtn.classList.add('cta-strobe'); }
 };
 
 window.confirmGoalSelection = () => {
@@ -1562,19 +1562,24 @@ window.confirmGoalSelection = () => {
     // Reset difficulty next state
     const nextBtn = document.getElementById('difficulty-next-btn');
     if (nextBtn) nextBtn.disabled = !pendingDifficulty;
+    // Stop strobing on previous Next
+    const goalNext = document.getElementById('goal-next-btn');
+    if (goalNext) goalNext.classList.remove('cta-strobe');
 };
 
 window.chooseDifficulty = (level, el) => {
     pendingDifficulty = level;
     highlightSelection('difficulty-selection', el);
     const nextBtn = document.getElementById('difficulty-next-btn');
-    if (nextBtn) nextBtn.disabled = false;
+    if (nextBtn) { nextBtn.disabled = false; nextBtn.classList.add('cta-strobe'); }
 };
 
 window.confirmDifficultySelection = () => {
     if (!pendingDifficulty) return;
     selectDifficulty(pendingDifficulty);
     setOnboardingStep(3);
+    const diffNext = document.getElementById('difficulty-next-btn');
+    if (diffNext) diffNext.classList.remove('cta-strobe');
 };
 
 window.selectGoal = (goal) => {
