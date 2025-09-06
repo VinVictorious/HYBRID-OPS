@@ -158,6 +158,9 @@ const completionMessages = [
     "You crushed it. Keep the momentum.",
     "Workout done. Victory in sight."
 ];
+// Fix encoding glitch and provide helper
+completionMessages[1] = 'Workout complete — stay relentless.';
+const getMotivationalMessage = () => completionMessages[Math.floor(Math.random() * completionMessages.length)];
 
 const baselinePhase = {
     phase: "Baseline Assessment",
@@ -775,6 +778,12 @@ const updateOverallProgress = () => {
 
 window.toggleDayCompletion = (dayId) => {
     completionStatus[dayId] = !completionStatus[dayId];
+    if (completionStatus[dayId]) {
+        if (!workoutDetails[dayId]) workoutDetails[dayId] = {};
+        workoutDetails[dayId].completionMessage = getMotivationalMessage();
+    } else {
+        if (workoutDetails[dayId]) delete workoutDetails[dayId].completionMessage;
+    }
     saveData();
 
     const card = document.querySelector(`[data-day-id="${dayId}"]`);
@@ -980,6 +989,7 @@ window.finishWorkout = (dayId = activeWorkoutDayId) => {
     workoutDetails[dayId].workoutStarted = false;
     workoutDetails[dayId].startTime = null;
     workoutDetails[dayId].endTime = new Date().toISOString();
+    workoutDetails[dayId].completionMessage = getMotivationalMessage();
     completionStatus[dayId] = true;
     
     // Clear workout timer
@@ -1296,6 +1306,7 @@ const renderProgram = () => {
                         const isToolsOpen = openTools.has(dayId);
                         const timerState = workoutDetails[dayId]?.timer || { time: 0, running: false, isStopwatch: true, initialTime: 0 };
                         const notes = workoutDetails[dayId]?.notes || '';
+                        const completionMsg = workoutDetails[dayId]?.completionMessage || getMotivationalMessage();
                         
                         const isWorkoutStarted = workoutDetails[dayId]?.workoutStarted || false;
                         
@@ -1324,7 +1335,7 @@ const renderProgram = () => {
                             </div>
                             
                             ${isCompleted ? `
-                                <div class="w-full p-4 bg-lime-600 text-black font-bold text-xl font-display rounded-lg text-center">✓</div>
+                                <div class="w-full p-4 bg-lime-600 text-black font-bold text-xl font-display rounded-lg text-center">${completionMsg}</div>
                             ` : (!isWorkoutStarted ? `
                                 <div class="text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">START WORKOUT</button>
