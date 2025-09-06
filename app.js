@@ -1341,7 +1341,7 @@ const renderProgram = () => {
                                         <div class="flex space-x-2">
                                             <button id="timer-start-${dayId}" onclick="startTimer('${dayId}', true)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors" ${timerState.running ? 'style="display: none"' : ''}><img src="icons/play.png" alt="" class="btn-icon"/>Start</button>
                                             <button id="timer-stop-${dayId}" onclick="stopTimer('${dayId}')" class="px-2 py-1 bg-transparent border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white rounded text-xs transition-colors" ${!timerState.running ? 'style="display: none"' : ''}><img src="icons/stop.png" alt="" class="btn-icon"/>Stop</button>
-                                            <button onclick="resetTimer('${dayId}', true)" class="px-2 py-1 bg-transparent border-2 border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white rounded text-xs transition-colors"><img src="icons/reset.png" alt="" class="btn-icon"/>Reset</button>
+                                            <button onclick="resetTimer('${dayId}', true)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-400 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors"><img src="icons/reset.png" alt="" class="btn-icon"/>Reset</button>
                                         </div>
                                     </div>
                                     <!-- Countdown -->
@@ -1351,7 +1351,7 @@ const renderProgram = () => {
                                         <div class="flex space-x-2">
                                             <button onclick="setCountdownTime('${dayId}')" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors"><img src="icons/countdown.png" alt="" class="btn-icon"/>Set</button>
                                             <button onclick="startTimer('${dayId}', false)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors"><img src="icons/play.png" alt="" class="btn-icon"/>Start</button>
-                                            <button onclick="resetTimer('${dayId}', false)" class="px-2 py-1 bg-transparent border-2 border-gray-500 text-gray-300 hover:bg-gray-500 hover:text-white rounded text-xs transition-colors"><img src="icons/reset.png" alt="" class="btn-icon"/>Reset</button>
+                                            <button onclick="resetTimer('${dayId}', false)" class="px-2 py-1 bg-transparent border-2 border-lime-500 text-lime-400 hover:bg-lime-500 hover:text-black rounded text-xs transition-colors"><img src="icons/reset.png" alt="" class="btn-icon"/>Reset</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1371,8 +1371,8 @@ const renderProgram = () => {
                                 <div>
                                     <h5 class="text-xs font-semibold text-gray-400 uppercase mb-2">Weight Unit</h5>
                                     <div class="flex space-x-2">
-                                        <button onclick="selectWeightUnit('lbs')" class="px-4 py-2 rounded text-xs transition-colors ${weightUnit === 'lbs' ? 'bg-lime-500 text-black' : 'bg-gray-600 text-white hover:bg-gray-700'}">LBS</button>
-                                        <button onclick="selectWeightUnit('kg')" class="px-4 py-2 rounded text-xs transition-colors ${weightUnit === 'kg' ? 'bg-lime-500 text-black' : 'bg-gray-600 text-white hover:bg-gray-700'}">KG</button>
+                                        <button onclick="selectWeightUnit('lbs')" class="px-4 py-2 rounded text-xs transition-colors ${weightUnit === 'lbs' ? 'bg-lime-500 text-black border-2 border-lime-500' : 'bg-transparent text-lime-400 border-2 border-lime-500 hover:bg-lime-500 hover:text-black'}">LBS</button>
+                                        <button onclick="selectWeightUnit('kg')" class="px-4 py-2 rounded text-xs transition-colors ${weightUnit === 'kg' ? 'bg-lime-500 text-black border-2 border-lime-500' : 'bg-transparent text-lime-400 border-2 border-lime-500 hover:bg-lime-500 hover:text-black'}">KG</button>
                                     </div>
                                 </div>
                             </div>
