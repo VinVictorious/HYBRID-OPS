@@ -162,22 +162,10 @@ const completionMessages = [
 completionMessages[1] = 'Workout complete — stay relentless.';
 const getMotivationalMessage = () => completionMessages[Math.floor(Math.random() * completionMessages.length)];
 
-const baselinePhase = {
-    phase: "Baseline Assessment",
-    weeks: [{
-        week: 0,
-        days: [{
-            day: "Start",
-            focus: "Baseline Fitness Test",
-            details: "This initial assessment establishes your starting fitness level. It provides a crucial benchmark to measure your progress against throughout the program. Give it your all.<br><br>Perform each test with max effort:<br>- Max Push-ups in 2 minutes<br>- Max Sit-ups in 2 minutes<br>- 1.5 Mile Run for time",
-            icon: "test"
-        }]
-    }]
-};
+// Baseline phase removed — assessments will be implemented separately.
 
 const hybridAthleteProgram = {
     getIntermediate: () => [
-        baselinePhase,
         { phase: "Mission 1: Foundation", weeks: [ { week: 1, days: [ { day: "Mon", focus: "Strength Push", details: "Bench Press: 5x5<br>Overhead Press (OHP): 4x6<br>Dips: 3x10-12<br>Lateral Raises: 3x15<br>Tricep Pushdowns: 3x12", icon: "strength" }, { day: "Tue", focus: "Run (Easy)", details: "3-5km conversational pace.", icon: "run" }, { day: "Wed", focus: "Strength Pull", details: "Deadlift: 5x5<br>Pull-ups: 4x8<br>Barbell Rows: 3x10<br>Face Pulls: 3x15<br>Bicep Curls: 3x12", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching, foam rolling.", icon: "mobility" }, { day: "Fri", focus: "Hybrid Circuit", details: "3 Rounds:<br>- 15 Push-ups<br>- 10 Burpees<br>- 20 Air Squats<br>- 60s Plank<br>- 50 Jumping Jacks", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "8-10km steady pace.", icon: "run" }, { day: "Sun", focus: "Active Recovery", details: "30-45 min walk.", icon: "recovery" } ] }, { week: 2, days: [ { day: "Mon", focus: "Strength Push", details: "Bench Press: 5x5<br>Overhead Press (OHP): 4x6<br>Dips: 3x12-15<br>Lateral Raises: 3x15<br>Tricep Pushdowns: 3x12", icon: "strength" }, { day: "Tue", focus: "Run (Easy)", details: "4-5km conversational pace.", icon: "run" }, { day: "Wed", focus: "Strength Pull", details: "Deadlift: 5x5<br>Pull-ups: 4x8-10<br>Barbell Rows: 3x10<br>Face Pulls: 3x15<br>Bicep Curls: 3x12", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching, foam rolling.", icon: "mobility" }, { day: "Fri", focus: "Hybrid Circuit", details: "3 Rounds (faster):<br>- 15 Push-ups<br>- 10 Burpees<br>- 20 Air Squats<br>- 60s Plank<br>- 50 Jumping Jacks", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "8-10km steady pace.", icon: "run" }, { day: "Sun", focus: "Active Recovery", details: "30-45 min walk.", icon: "recovery" } ] } ] },
         { phase: "Mission 2: Intensification", weeks: [ { week: 3, days: [ { day: "Mon", focus: "Strength Push", details: "Bench Press: 4x6-8<br>Incline DB Press: 4x8<br>OHP: 4x8<br>Cable Flyes: 3x12<br>Skull Crushers: 3x10", icon: "strength" }, { day: "Tue", focus: "Run (Intervals)", details: "1km Warm-up<br>6x400m sprints<br>1km Cool-down", icon: "run" }, { day: "Wed", focus: "Strength Pull", details: "Deadlift: 4x6-8<br>Weighted Pull-ups: 4x6<br>T-Bar Rows: 4x10<br>Lat Pulldowns: 3x12<br>Hammer Curls: 3x10", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Hybrid Circuit", details: "4 Rounds:<br>- 10 DB Thrusters<br>- 15 KB Swings<br>- 10 Box Jumps<br>- 40 Mountain Climbers<br>- 20 Russian Twists", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "10-12km steady pace.", icon: "run" }, { day: "Sun", focus: "Active Recovery", details: "30-45 min walk.", icon: "recovery" } ] }, { week: 4, days: [ { day: "Mon", focus: "Strength Push", details: "Bench Press: 4x6-8<br>Incline DB Press: 4x8<br>OHP: 4x8<br>Cable Flyes: 3x12<br>Skull Crushers: 3x10", icon: "strength" }, { day: "Tue", focus: "Run (Intervals)", details: "1km Warm-up<br>8x400m sprints<br>1km Cool-down", icon: "run" }, { day: "Wed", focus: "Strength Pull", details: "Deadlift: 4x6-8<br>Weighted Pull-ups: 4x6<br>T-Bar Rows: 4x10<br>Lat Pulldowns: 3x12<br>Hammer Curls: 3x10", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Hybrid Circuit", details: "4 Rounds (faster):<br>- 10 DB Thrusters<br>- 15 KB Swings<br>- 10 Box Jumps<br>- 40 Mountain Climbers<br>- 20 Russian Twists", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "10-12km steady pace.", icon: "run" }, { day: "Sun", focus: "Active Recovery", details: "30-45 min walk.", icon: "recovery" } ] } ] },
         { phase: "Mission 3: Performance", weeks: [ { week: 5, days: [ { day: "Mon", focus: "Strength Push", details: "Bench Press: 3x8-10<br>OHP: 3x10<br>DB Flyes: 3x12<br>Arnold Press: 3x12<br>Rope Tricep Extensions: 3x15", icon: "strength" }, { day: "Tue", focus: "Run (Tempo)", details: "1km Warm-up<br>3km Tempo<br>1km Cool-down", icon: "run" }, { day: "Wed", focus: "Strength Pull", details: "Deadlift: 3x8-10<br>Pull-ups: 3xMax<br>Seated Rows: 3x12<br>Single Arm DB Rows: 3x10/arm<br>Preacher Curls: 3x12", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Hybrid Circuit", details: "AMRAP 15 mins:<br>- 5 Burpees<br>- 10 Wall Balls<br>- 15 Sit-ups<br>- 20 Double Unders<br>- 250m Row", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "12-15km steady pace.", icon: "run" }, { day: "Sun", focus: "Active Recovery", details: "30-45 min walk.", icon: "recovery" } ] }, { week: 6, days: [ { day: "Mon", focus: "Strength Push", details: "Bench Press: 3x8-10<br>OHP: 3x10<br>DB Flyes: 3x12<br>Arnold Press: 3x12<br>Rope Tricep Extensions: 3x15", icon: "strength" }, { day: "Tue", focus: "Run (Tempo)", details: "1km Warm-up<br>4km Tempo<br>1km Cool-down", icon: "run" }, { day: "Wed", focus: "Strength Pull", details: "Deadlift: 3x8-10<br>Pull-ups: 3xMax<br>Seated Rows: 3x12<br>Single Arm DB Rows: 3x10/arm<br>Preacher Curls: 3x12", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Hybrid Circuit", details: "AMRAP 15 mins:<br>Beat last score!", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "12-15km steady pace.", icon: "run" }, { day: "Sun", focus: "Active Recovery", details: "30-45 min walk.", icon: "recovery" } ] } ] },
@@ -207,7 +195,6 @@ const hybridAthleteProgram = {
 
 const tacticalAthleteProgram = {
     getIntermediate: () => [
-        baselinePhase,
         // This will be a 12 week program
         { phase: "Phase 1: Foundational Strength", weeks: [ { week: 1, days: [ { day: "Mon", focus: "Strength", details: "Back Squat: 4x8<br>Shoulder Press: 4x8<br>Upright Row: 3x10", icon: "strength" }, { day: "Tue", focus: "Conditioning", details: "3km Run", icon: "run" }, { day: "Wed", focus: "Strength", details: "Deadlift: 4x8<br>Kettlebell Swing: 4x15<br>Rope Climb: 3 attempts", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Work Capacity", details: "Body Weight Squat: 3x20<br>Box Jumps: 3x10", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "5km Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] }, { week: 2, days: [ { day: "Mon", focus: "Strength", details: "Back Squat: 4x8<br>Shoulder Press: 4x8<br>Upright Row: 3x10", icon: "strength" }, { day: "Tue", focus: "Conditioning", details: "3km Run", icon: "run" }, { day: "Wed", focus: "Strength", details: "Deadlift: 4x8<br>Kettlebell Swing: 4x15<br>Rope Climb: 3 attempts", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Work Capacity", details: "Body Weight Squat: 3x25<br>Box Jumps: 3x12", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "5km Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] }, { week: 3, days: [ { day: "Mon", focus: "Strength", details: "Back Squat: 5x5<br>Shoulder Press: 5x5<br>Upright Row: 3x12", icon: "strength" }, { day: "Tue", focus: "Conditioning", details: "4km Run", icon: "run" }, { day: "Wed", focus: "Strength", details: "Deadlift: 5x5<br>Kettlebell Swing: 4x20<br>Rope Climb: 4 attempts", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Work Capacity", details: "Body Weight Squat: 3x30<br>Box Jumps: 3x15", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "6km Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] }, { week: 4, days: [ { day: "Mon", focus: "Strength", details: "Back Squat: 5x5<br>Shoulder Press: 5x5<br>Upright Row: 3x12", icon: "strength" }, { day: "Tue", focus: "Conditioning", details: "4km Run", icon: "run" }, { day: "Wed", focus: "Strength", details: "Deadlift: 5x5<br>Kettlebell Swing: 4x20<br>Rope Climb: 4 attempts", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "Work Capacity", details: "Body Weight Squat: 3xMax<br>Box Jumps: 3xMax", icon: "circuit" }, { day: "Sat", focus: "Long Run", details: "6km Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] } ] },
         { phase: "Phase 2: Strength & Power", weeks: [ { week: 5, days: [ { day: "Mon", focus: "Strength", details: "Front Squat: 4x6<br>Push Press: 4x6<br>Romanian Deadlift: 3x8", icon: "strength" }, { day: "Tue", focus: "Intervals", details: "8x400m sprints", icon: "run" }, { day: "Wed", focus: "Power", details: "Hang Clean High Pull: 5x3<br>Thruster: 4x8", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "SAQ", details: "Speed, Agility, Quickness Drills", icon: "circuit" }, { day: "Sat", focus: "Tempo Run", details: "4km Tempo Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] }, { week: 6, days: [ { day: "Mon", focus: "Strength", details: "Front Squat: 4x6<br>Push Press: 4x6<br>Romanian Deadlift: 3x8", icon: "strength" }, { day: "Tue", focus: "Intervals", details: "8x400m sprints", icon: "run" }, { day: "Wed", focus: "Power", details: "Hang Clean High Pull: 5x3<br>Thruster: 4x8", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "SAQ", details: "Speed, Agility, Quickness Drills", icon: "circuit" }, { day: "Sat", focus: "Tempo Run", details: "4km Tempo Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] }, { week: 7, days: [ { day: "Mon", focus: "Strength", details: "Front Squat: 5x4<br>Push Press: 5x4<br>Romanian Deadlift: 3x10", icon: "strength" }, { day: "Tue", focus: "Intervals", details: "10x400m sprints", icon: "run" }, { day: "Wed", focus: "Power", details: "Hang Clean High Pull: 5x3<br>Thruster: 4x10", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "SAQ", details: "Speed, Agility, Quickness Drills", icon: "circuit" }, { day: "Sat", focus: "Tempo Run", details: "5km Tempo Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] }, { week: 8, days: [ { day: "Mon", focus: "Strength", details: "Front Squat: 5x4<br>Push Press: 5x4<br>Romanian Deadlift: 3x10", icon: "strength" }, { day: "Tue", focus: "Intervals", details: "10x400m sprints", icon: "run" }, { day: "Wed", focus: "Power", details: "Hang Clean High Pull: 5x3<br>Thruster: 4x10", icon: "strength" }, { day: "Thu", focus: "Rest / Mobility", details: "Full body stretching.", icon: "mobility" }, { day: "Fri", focus: "SAQ", details: "Speed, Agility, Quickness Drills", icon: "circuit" }, { day: "Sat", focus: "Tempo Run", details: "5km Tempo Run", icon: "run" }, { day: "Sun", focus: "Recovery", details: "Active recovery walk.", icon: "recovery" } ] } ] },
@@ -237,7 +224,6 @@ const tacticalAthleteProgram = {
 
 const forceTestPrepProgram = {
     getIntermediate: () => [
-        baselinePhase,
         { phase: "Phase 1: Foundation Building", weeks: [ 
             { week: 1, days: [ 
                 { day: "Mon", focus: "20m Rushes Prep", details: "3 Rounds:<br>- 5 Hand Release Burpees<br>- 10 Mountain Lunges<br>- 10s Sprint / 20s Rest x3", icon: "circuit" }, 
@@ -871,15 +857,9 @@ const getPreviousWorkoutData = (currentDayId, exerciseName) => {
     const [weekNumStr, dayName] = currentDayId.split('_');
     const weekNum = parseInt(weekNumStr);
 
-    if (weekNum < 1) { // Baseline week is 0
-         return null;
-    }
-    if (weekNum === 1){ // First real week looks at baseline
-        const prevDayId = `0_Start`;
-        const prevWorkoutDetails = workoutDetails[prevDayId];
-        if (!prevWorkoutDetails || !prevWorkoutDetails.exercises) return null;
-        const prevExercise = prevWorkoutDetails.exercises.find(ex => ex.name === exerciseName);
-        return prevExercise ? prevExercise.sets : null;
+    // No previous data for week 1 (programs now start at week 1)
+    if (weekNum <= 1) { 
+        return null;
     }
 
 
@@ -1089,7 +1069,7 @@ const renderExercises = (dayId) => {
                 ${exercise.sets.map((set, setIndex) => {
                     const prevSetData = previousSets ? previousSets[setIndex] : null;
                     let prevText = '';
-                    if (weekNum > 0) { // Show previous data from baseline onwards
+                    if (weekNum > 1) { // Show previous data starting week 2
                         prevText = prevSetData && (prevSetData.weight || prevSetData.reps) ? `Previous: ${prevSetData.weight || ''} ${prevSetData.weight ? weightUnit : ''} × ${prevSetData.reps}` : '';
                     }
                     return `
@@ -1289,7 +1269,7 @@ const renderProgram = () => {
             html += `<div class="mb-4 bg-gray-800/50 rounded-lg border border-gray-700">
                 <button onclick="toggleWeekExpansion('${weekId}')" class="w-full p-4 text-left flex items-center justify-between hover:bg-gray-700/50 transition-colors rounded-lg">
                     <div>
-                        <h3 class="font-semibold text-lime-300 font-display text-lg">Week ${week.week === 0 ? 'Baseline' : week.week}</h3>
+                        <h3 class="font-semibold text-lime-300 font-display text-lg">Week ${week.week}</h3>
                         <div class="mt-2 w-full bg-gray-600 rounded-full h-2">
                             <div class="bg-lime-500 h-2 rounded-full transition-all duration-300" style="width: ${progressPercentage}%"></div>
                         </div>
@@ -1315,7 +1295,7 @@ const renderProgram = () => {
                                 <div class="flex items-center space-x-4">
                                     <div class="text-lime-400 flex-shrink-0">${icons[day.icon]}</div>
                                     <div>
-                                        ${week.week === 0 ? '' : `<h4 class="font-bold text-white font-display">${day.day.toUpperCase()}</h4>`}
+                                        <h4 class="font-bold text-white font-display">${day.day.toUpperCase()}</h4>
                                         <p class="text-sm text-lime-300 font-medium">${day.focus}</p>
                                     </div>
                                 </div>
@@ -1710,7 +1690,7 @@ const getChartData = (exerciseName) => {
         if (parseInt(weekA) !== parseInt(weekB)) {
             return parseInt(weekA) - parseInt(weekB);
         }
-        const dayOrder = ["Start", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const dayOrder = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         return dayOrder.indexOf(dayA) - dayOrder.indexOf(dayB);
     });
 
