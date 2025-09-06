@@ -1277,6 +1277,49 @@ const renderClickableExercises = (details) => {
      }).join('');
 };
 
+// Get the max logged weight for an exercise before a given week number
+const getMaxWeightBefore = (weekNum, exerciseName) => {
+    let max = 0;
+    try {
+        Object.entries(workoutDetails).forEach(([dayId, details]) => {
+            const [wStr] = dayId.split('_');
+            const w = parseInt(wStr);
+            if (w < weekNum && details && details.exercises) {
+                const ex = details.exercises.find(e => e.name === exerciseName && e.description !== 'Log your time/reps');
+                if (ex) {
+                    const m = ex.sets.reduce((mm, s) => {
+                        const wt = parseFloat(s.weight);
+                        return !isNaN(wt) && wt > mm ? wt : mm;
+                    }, 0);
+                    if (m > max) max = m;
+                }
+            }
+        });
+    } catch (_) {}
+    return max;
+};
+
+// Find next incomplete day across the program (earliest week/day order)
+const getNextIncompleteDayId = () => {
+    const dayOrder = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    for (const phase of currentProgramData) {
+        for (const week of phase.weeks) {
+            for (const dName of dayOrder) {
+                const d = week.days.find(x => x.day === dName);
+                if (!d) continue;
+                const id = `${week.week}_${d.day}`;
+                if (!completionStatus[id]) return id;
+            }
+        }
+    }
+    // Fallback: first day of last week
+    try {
+        const lastPhase = currentProgramData[currentProgramData.length - 1];
+        const lastWeek = lastPhase.weeks[lastPhase.weeks.length - 1];
+        return `${lastWeek.week}_${lastWeek.days[0].day}`;
+    } catch (_) { return null; }
+};
+
 const renderExercises = (dayId) => {
     const exercises = workoutDetails[dayId]?.exercises || [];
     if (!exercises.length) return '';
@@ -1285,12 +1328,18 @@ const renderExercises = (dayId) => {
         const previousSets = getPreviousWorkoutData(dayId, exercise.name);
         const [weekNumStr] = dayId.split('_');
         const weekNum = parseInt(weekNumStr);
+        const priorMax = getMaxWeightBefore(weekNum, exercise.name);
+        const currentMax = exercise.sets.reduce((m, s) => {
+            const w = parseFloat(s.weight);
+            return !isNaN(w) && w > m ? w : m;
+        }, 0);
+        const isPR = priorMax > 0 && currentMax > priorMax;
 
         return `
         <div class="bg-gray-800/50 rounded-lg p-3 mb-3">
             <div class="flex items-center justify-between mb-3">
                 <button onclick="openExerciseModal('${exercise.name}')" class="text-left">
-                     <h4 class="text-white font-semibold text-lg font-display hover:text-lime-400 transition-colors">${exercise.name}</h4>
+                     <h4 class="text-white font-semibold text-lg font-display hover:text-lime-400 transition-colors">${exercise.name} ${isPR ? '<span class=\'ml-2 text-[10px] px-2 py-0.5 rounded bg-lime-400 text-black font-bold\'>PR</span>' : ''}</h4>
                 </button>
             </div>
             
@@ -1304,7 +1353,7 @@ const renderExercises = (dayId) => {
                     }
                     return `
                     <div class="bg-gray-700/50 rounded-lg p-3">
-                        <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between mb-3 cursor-pointer" onclick="toggleSetCompletion('${dayId}', ${exerciseIndex}, ${setIndex})">
                             <div class="flex items-center space-x-3">
                                 <div class="w-8 h-8 ${set.completed ? 'bg-lime-600 text-black' : 'bg-gray-600 text-gray-300'} rounded-full flex items-center justify-center font-bold text-sm">
                                     ${setIndex + 1}
@@ -1314,7 +1363,7 @@ const renderExercises = (dayId) => {
                                 </div>
                             </div>
                             <button 
-                                onclick="toggleSetCompletion('${dayId}', ${exerciseIndex}, ${setIndex})"
+                                onclick="event.stopPropagation(); toggleSetCompletion('${dayId}', ${exerciseIndex}, ${setIndex})"
                                 class="w-10 h-10 rounded-full border-2 ${set.completed ? 'bg-lime-500 border-lime-500' : 'border-gray-500 hover:border-lime-500'} flex items-center justify-center transition-colors touch-manipulation"
                             >
                                 ${set.completed ? '<svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>' : ''}
@@ -1491,6 +1540,24 @@ const renderProgram = () => {
     }
 
     let html = '';
+
+    // Today CTA: Start next incomplete workout
+    const nextId = getNextIncompleteDayId();
+    if (nextId) {
+        const [wStr, dName] = nextId.split('_');
+        const nextDay = getCurrentDayData(nextId);
+        const focus = nextDay?.focus || '';
+        html += `<div class="mb-6 p-4 bg-gray-800/60 border border-lime-500 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-400">Up Next</p>
+                    <h3 class="text-white font-display font-bold">Week ${wStr} • ${dName}</h3>
+                    <p class="text-lime-300 text-sm">${focus}</p>
+                </div>
+                <button onclick="startWorkout('${nextId}')" class="px-4 py-2 bg-lime-500 hover:bg-lime-600 text-black border-2 border-lime-500 rounded font-display uppercase tracking-wider">Start</button>
+            </div>
+        </div>`;
+    }
     currentProgramData.forEach((phase, phaseIndex) => {
         html += `<section class="mb-8 bg-gray-900/50 p-4 rounded-lg border border-gray-700">
             <h2 class="text-2xl font-bold mb-4 text-lime-400 font-display uppercase tracking-wider text-glow">${phase.phase}</h2>`;
@@ -2279,6 +2346,7 @@ const showWeeklyDebrief = (weekNum) => {
     document.getElementById('debrief-distance').textContent = `${totalDistance.toFixed(1)} km`;
 
     document.getElementById('debrief-modal').classList.remove('hidden');
+    activateModalA11y('debrief-modal');
 };
 
 window.closeDebriefModal = () => {
@@ -2451,8 +2519,13 @@ function switchView(viewId) {
   });
 
   if (viewId === 'analytics') {
-    populateExerciseSelect();
-    renderWeeklyCharts();
+    ensureChartJs().then(() => {
+      populateExerciseSelect();
+      renderWeeklyCharts();
+    }).catch(() => {
+      // Fallback: try rendering with whatever is available
+      try { populateExerciseSelect(); renderWeeklyCharts(); } catch (_) {}
+    });
   } else if (viewId === 'home') {
     // Hide onboarding progress when landing on home
     showOnboardingProgress(false);
