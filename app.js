@@ -672,6 +672,188 @@ const exerciseLibrary = {
             'Using a weight that is too light to be challenging.',
             'Shrugging your shoulders.'
         ]
+    },
+    'Push-ups': {
+        description: 'Classic bodyweight push movement targeting chest, shoulders, and triceps.',
+        cues: [
+            'Hands under shoulders; body in a straight line.',
+            'Lower chest to floor with elbows ~45°.',
+            'Brace core and squeeze glutes; full lockout at top.'
+        ],
+        mistakes: [
+            'Sagging hips or flared elbows.',
+            'Partial range of motion.',
+            'Head jutting forward.'
+        ]
+    },
+    'Burpees': {
+        description: 'Full‑body conditioning move combining a squat, plank, and jump.',
+        cues: [
+            'Squat, hands down, jump feet back to plank.',
+            'Chest touches floor, then snap feet forward.',
+            'Explode upward with a soft, athletic landing.'
+        ],
+        mistakes: [
+            'Arched low back in plank.',
+            'Skipping full chest contact.',
+            'Landing stiff‑legged.'
+        ]
+    },
+    'Air Squats': {
+        description: 'Bodyweight squat emphasizing full depth and control.',
+        cues: [
+            'Feet shoulder‑width, toes slightly out.',
+            'Knees track over toes; chest tall.',
+            'Hips below knees, then drive through heels.'
+        ],
+        mistakes: [
+            'Knees cave in.',
+            'Heels lifting off the ground.',
+            'Rounding the back.'
+        ]
+    },
+    'Plank': {
+        description: 'Isometric core hold building anti‑extension strength.',
+        cues: [
+            'Elbows under shoulders; forearms parallel.',
+            'Ribs down, glutes squeezed; neutral neck.',
+            'Maintain a straight line from head to heels.'
+        ],
+        mistakes: [
+            'Sagging or piked hips.',
+            'Shrugged shoulders.',
+            'Holding breath.'
+        ]
+    },
+    'Jumping Jacks': {
+        description: 'Simple aerobic movement to elevate heart rate.',
+        cues: [
+            'Land softly on mid‑foot.',
+            'Arms move in rhythm with legs.',
+            'Keep posture tall and relaxed.'
+        ],
+        mistakes: [
+            'Heavy heel striking.',
+            'Arms too short of full range.',
+            'Forward head posture.'
+        ]
+    },
+    'DB Thrusters': {
+        description: 'Front squat into a powerful overhead press with dumbbells.',
+        cues: [
+            'Dumbbells at shoulders; full squat.',
+            'Drive with legs and finish with arms.',
+            'Lockout overhead with ribs down.'
+        ],
+        mistakes: [
+            'Pressing before finishing the leg drive.',
+            'Knees caving in.',
+            'Overarching the lower back overhead.'
+        ]
+    },
+    'KB Swings': {
+        description: 'Hip‑hinge power movement swinging a kettlebell to chest height.',
+        cues: [
+            'Hinge, not squat; load hamstrings.',
+            'Explosive hip extension; arms are hooks.',
+            'Let bell float; tight plank at top.'
+        ],
+        mistakes: [
+            'Squatting the swing.',
+            'Shoulder‑driven lift.',
+            'Overextending at the top.'
+        ]
+    },
+    'Box Jumps': {
+        description: 'Explosive plyometric jump onto a box or platform.',
+        cues: [
+            'Quarter squat preload; swing arms.',
+            'Jump and land softly with knees tracking.',
+            'Stand tall on the box before stepping down.'
+        ],
+        mistakes: [
+            'Landing with knees caving.',
+            'Rebounding off the box unsafely.',
+            'Jumping down instead of stepping down.'
+        ]
+    },
+    'Mountain Climbers': {
+        description: 'Dynamic plank driving knees toward chest for conditioning.',
+        cues: [
+            'Wrists under shoulders; strong plank.',
+            'Drive knees forward with hips level.',
+            'Maintain steady breathing and rhythm.'
+        ],
+        mistakes: [
+            'Hips bouncing up and down.',
+            'Hands too far forward.',
+            'Short, choppy range of motion.'
+        ]
+    },
+    'Russian Twists': {
+        description: 'Rotational core exercise performed seated with a lean‑back.',
+        cues: [
+            'Chest tall; brace; heels can be down.',
+            'Rotate from ribcage, not just arms.',
+            'Tap floor lightly and alternate sides.'
+        ],
+        mistakes: [
+            'Rounding the lower back.',
+            'Only moving the hands.',
+            'Holding breath.'
+        ]
+    },
+    'Wall Balls': {
+        description: 'Medicine‑ball squat to overhead throw against a wall target.',
+        cues: [
+            'Hold ball at chest; full squat.',
+            'Drive up and throw to target height.',
+            'Catch softly into next squat.'
+        ],
+        mistakes: [
+            'Dropping elbows causing ball to fall.',
+            'Shallow squats.',
+            'Inconsistent target height.'
+        ]
+    },
+    'Sit-ups': {
+        description: 'Abdominal flexion movement; can be anchored or unanchored.',
+        cues: [
+            'Feet anchored optional; knees bent.',
+            'Curl spine segment by segment; exhale up.',
+            'Lower under control; keep neck neutral.'
+        ],
+        mistakes: [
+            'Yanking the neck.',
+            'Using momentum only.',
+            'Hyperextending on the way down.'
+        ]
+    },
+    'Double Unders': {
+        description: 'Jump rope skill where the rope passes twice per jump.',
+        cues: [
+            'Small, quick jumps from mid‑foot.',
+            'Spin from wrists; elbows close.',
+            'Stay tall and relaxed; consistent cadence.'
+        ],
+        mistakes: [
+            'Big donkey kicks.',
+            'Shoulder‑driven spin.',
+            'Looking down and collapsing posture.'
+        ]
+    },
+    'Row': {
+        description: 'Cardio on a rowing machine emphasizing powerful leg drive.',
+        cues: [
+            'Order: legs → hips → arms on the drive.',
+            'Return: arms → hips → legs (control the slide).',
+            'Flat back; heels down; smooth tempo.'
+        ],
+        mistakes: [
+            'Early arm pull.',
+            'Overreaching at the catch.',
+            'Jerky return with collapsed posture.'
+        ]
     }
     
     // Add more exercises here as needed
@@ -1049,15 +1231,36 @@ const showWorkoutCompleteMessage = (message) => {
 
 const renderClickableExercises = (details) => {
      const lines = details.split('<br>');
-     return lines.map(line => {
-        const cleanLine = line.trim();
-        const colonIndex = cleanLine.indexOf(':');
-        if (colonIndex > 0) {
-            const name = cleanLine.substring(0, colonIndex).trim();
-            const setsReps = cleanLine.substring(colonIndex + 1).trim();
-            return `<p class="mb-1"><button type="button" onclick="openExerciseModal('${name}')" class="exercise-pill">${name}</button>: ${setsReps}</p>`;
+     return lines.map(raw => {
+        const cleanLine = (raw || '').trim();
+
+        // Header or instruction lines
+        if (/rounds?:/i.test(cleanLine) || /amrap/i.test(cleanLine) || /followed by/i.test(cleanLine) || /warm-?up|cool-?down/i.test(cleanLine)) {
+            return `<p class="mb-1">${cleanLine}</p>`;
         }
-        return `<p class="mb-1">${cleanLine}</p>`;
+
+        // Strip leading dash for bullet items
+        const noDash = cleanLine.replace(/^[-]\s*/, '');
+
+        const colonIndex = noDash.indexOf(':');
+        if (colonIndex > 0) {
+            const name = noDash.substring(0, colonIndex).trim();
+            const setsReps = noDash.substring(colonIndex + 1).trim();
+            const safeName = name.replace(/'/g, "\\'");
+            return `<p class=\"mb-1\"><button type=\"button\" onclick=\"openExerciseModal('${safeName}')\" class=\"exercise-pill\">${name}</button>: ${setsReps}</p>`;
+        }
+
+        // Pattern: "15 Push-ups", "60s Plank", "250m Row", "5 Burpees" etc.
+        const qtyMatch = noDash.match(/^([0-9]+[a-zA-Z]*)(?:\s+)(.+)$/);
+        if (qtyMatch) {
+            const qty = qtyMatch[1];
+            const name = qtyMatch[2].trim();
+            const safeName = name.replace(/'/g, "\\'");
+            return `<p class=\"mb-1\"><button type=\"button\" onclick=\"openExerciseModal('${safeName}')\" class=\"exercise-pill\">${name}</button>: ${qty}</p>`;
+        }
+
+        // Fallback: just show the line
+        return `<p class=\"mb-1\">${noDash}</p>`;
      }).join('');
 };
 
@@ -2089,6 +2292,41 @@ window.openExerciseModal = (exerciseName) => {
 
 window.closeExerciseModal = () => {
     document.getElementById('exercise-modal').classList.add('hidden');
+};
+
+// --- Enhanced Exercise Lookup (handles circuit items + synonyms) ---
+const __normalizeExerciseName = (s) => (s || '')
+  .toLowerCase()
+  .replace(/\(.*?\)/g, '')
+  .replace(/[^a-z0-9]+/g, ' ')
+  .trim();
+
+const __findExercise = (name) => {
+  if (exerciseLibrary[name]) return { key: name, value: exerciseLibrary[name] };
+  const n = __normalizeExerciseName(name);
+  let key = Object.keys(exerciseLibrary).find(k => __normalizeExerciseName(k) === n);
+  if (!key) key = Object.keys(exerciseLibrary).find(k => __normalizeExerciseName(k).includes(n) || n.includes(__normalizeExerciseName(k)));
+  return key ? { key, value: exerciseLibrary[key] } : null;
+};
+
+// Override modal opener to use fuzzy lookup
+window.openExerciseModal = (exerciseName) => {
+    const match = __findExercise(exerciseName);
+    const modalContent = document.getElementById('exercise-modal-content');
+    if (match) {
+        const { key, value: exercise } = match;
+        modalContent.innerHTML = `
+            <h2 class="text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">${key}</h2>
+            <p class="text-gray-400 mb-6">${exercise.description}</p>
+            <h3 class="font-bold text-lime-300 mb-2 font-display">Key Cues:</h3>
+            <ul class="text-gray-300 mb-6">${exercise.cues.map(cue => `<li>${cue}</li>`).join('')}</ul>
+            <h3 class="font-bold text-red-400 mb-2 font-display">Common Mistakes:</h3>
+            <ul class="text-gray-300">${exercise.mistakes.map(mistake => `<li>${mistake}</li>`).join('')}</ul>
+        `;
+    } else {
+        modalContent.innerHTML = `<h2 class="text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">${exerciseName}</h2> <p class="text-gray-400">No technique guide available for this exercise yet.</p>`;
+    }
+    document.getElementById('exercise-modal').classList.remove('hidden');
 };
 
 // --- PWA Install Prompt ---
