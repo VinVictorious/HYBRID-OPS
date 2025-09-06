@@ -531,8 +531,8 @@ body {
 
 /* Program day icons (cards) */
 .program-icon {
-    width: 36px;  /* was 32px; bump for readability */
-    height: 36px;
+    width: 44px;  /* increased for better visibility */
+    height: 44px;
     filter: drop-shadow(0 0 10px rgba(163,230,53,0.55));
 }
 
