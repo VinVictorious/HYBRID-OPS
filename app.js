@@ -874,6 +874,15 @@ let progressChart = null;
 let workoutsChart = null;
 let volumeChart = null;
 let distanceChart = null;
+let chartJsLoaded = false;
+const ensureChartJs = () => new Promise((resolve, reject) => {
+    if (chartJsLoaded || (typeof Chart !== 'undefined')) { chartJsLoaded = true; resolve(); return; }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    script.onload = () => { chartJsLoaded = true; resolve(); };
+    script.onerror = reject;
+    document.head.appendChild(script);
+});
 
 let completionStatus = {};
 let workoutDetails = {};
@@ -1021,6 +1030,7 @@ const openWorkoutSession = (dayId) => {
     if (exercisesEl) exercisesEl.innerHTML = renderExercises(dayId);
     modal.classList.remove('hidden');
     startWorkoutTimer(dayId);
+    activateModalA11y('workout-session');
 };
 
 window.closeWorkoutSession = () => {
@@ -1029,6 +1039,9 @@ window.closeWorkoutSession = () => {
     const timerEl = document.getElementById(`workout-timer-${activeWorkoutDayId}`);
     if (timerEl) timerEl.id = 'session-timer';
     activeWorkoutDayId = null;
+    const h = __modalKeyHandlers['workout-session'];
+    if (h) document.removeEventListener('keydown', h);
+    delete __modalKeyHandlers['workout-session'];
 };
 
 const refreshWorkoutSession = () => {
@@ -1472,6 +1485,11 @@ window.toggleToolsExpansion = (dayId) => {
 const renderProgram = () => {
     if (!currentProgramData.length) return;
     
+    // Auto-expand the most recent week if none expanded
+    if (openWeeks.size === 0) {
+        try { openWeeks.add(`w${getCurrentWeekNumber()}`); } catch (_) {}
+    }
+
     let html = '';
     currentProgramData.forEach((phase, phaseIndex) => {
         html += `<section class="mb-8 bg-gray-900/50 p-4 rounded-lg border border-gray-700">
@@ -2265,6 +2283,9 @@ const showWeeklyDebrief = (weekNum) => {
 
 window.closeDebriefModal = () => {
      document.getElementById('debrief-modal').classList.add('hidden');
+     const h = __modalKeyHandlers['debrief-modal'];
+     if (h) document.removeEventListener('keydown', h);
+     delete __modalKeyHandlers['debrief-modal'];
 };
 
 // --- Exercise Library Functions ---
@@ -2327,6 +2348,7 @@ window.openExerciseModal = (exerciseName) => {
         modalContent.innerHTML = `<h2 class="text-2xl font-bold text-lime-400 mb-4 font-display uppercase tracking-wider text-glow">${exerciseName}</h2> <p class="text-gray-400">No technique guide available for this exercise yet.</p>`;
     }
     document.getElementById('exercise-modal').classList.remove('hidden');
+    activateModalA11y('exercise-modal');
 };
 
 // --- PWA Install Prompt ---
