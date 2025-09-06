@@ -1,0 +1,6 @@
+{
+  "github.copilot.editor.enableCodeEdits": true,
+  "github.copilot.editor.promptForCodeEdits": false,
+  "codex.enableCodeEdits": true,
+  "codex.promptForCodeEdits": false
+}

@@ -1055,7 +1055,7 @@ const renderClickableExercises = (details) => {
         if (colonIndex > 0) {
             const name = cleanLine.substring(0, colonIndex).trim();
             const setsReps = cleanLine.substring(colonIndex + 1).trim();
-            return `<p class="mb-1"><button onclick="openExerciseModal('${name}')" class="text-left hover:text-lime-400 transition-colors underline">${name}</button>: ${setsReps}</p>`;
+            return `<p class="mb-1"><button type="button" onclick="openExerciseModal('${name}')" class="exercise-pill">${name}</button>: ${setsReps}</p>`;
         }
         return `<p class="mb-1">${cleanLine}</p>`;
      }).join('');
@@ -1331,7 +1331,7 @@ const renderProgram = () => {
                             ${isCompleted ? `
                                 <div class="w-full p-4 bg-lime-600 text-black font-bold text-xl font-display rounded-lg text-center">${completionMsg}</div>
                             ` : (!isWorkoutStarted ? `
-                                <div class="text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
+                                <div class="workout-details text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">START WORKOUT</button>
                             ` : `
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">RESUME WORKOUT</button>
