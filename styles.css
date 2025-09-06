@@ -510,6 +510,17 @@ body {
     filter: drop-shadow(0 0 10px rgba(163,230,53,0.60)) drop-shadow(0 0 18px rgba(163,230,53,0.35));
 }
 
+/* Bottom nav spacing and label sizing */
+#bottom-nav {
+    padding-top: 0.75rem;  /* ~py-3 */
+    padding-bottom: 0.75rem;
+}
+#bottom-nav button span {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.8rem; /* between xs and sm for readability */
+}
+
 /* Tap bounce animation for nav icons */
 .nav-img.nav-bounce {
     animation: nav-bounce 180ms ease-out;
