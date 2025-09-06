@@ -1301,7 +1301,7 @@ const renderProgram = () => {
                         
                         return `<div class="bg-gray-700/50 rounded-lg border-l-4 ${isCompleted ? 'border-lime-500 completed-card' : 'border-gray-600'} p-4 relative" data-day-id="${dayId}">
                             <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-4">
                                     <div class="text-lime-400 flex-shrink-0">${icons[day.icon]}</div>
                                     <div>
                                         ${week.week === 0 ? '' : `<h4 class="font-bold text-white font-display">${day.day.toUpperCase()}</h4>`}
@@ -1324,7 +1324,7 @@ const renderProgram = () => {
                             </div>
                             
                             ${isCompleted ? `
-                                <div class="w-full p-4 bg-lime-600 text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg text-center">COMPLETED</div>
+                                <div class="w-full p-4 bg-lime-600 text-black font-bold text-xl font-display rounded-lg text-center">✓</div>
                             ` : (!isWorkoutStarted ? `
                                 <div class="text-gray-300 text-sm font-mono mb-3 leading-relaxed">${renderClickableExercises(day.details)}</div>
                                 <button onclick="startWorkout('${dayId}')" class="w-full p-4 bg-transparent border-2 border-lime-500 text-lime-500 hover:bg-lime-500 hover:text-black font-bold text-xl font-display uppercase tracking-widest rounded-lg transition-colors">START WORKOUT</button>
