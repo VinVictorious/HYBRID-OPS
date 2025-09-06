@@ -499,8 +499,8 @@ body {
 
 /* Bottom nav PNG icons (active/inactive states) */
 .nav-img {
-    width: 28px; /* slightly larger for readability */
-    height: 28px;
+    width: 36px; /* increased for better tap targets */
+    height: 36px;
     opacity: 0.7;
     transition: opacity 160ms ease, filter 160ms ease, transform 160ms ease;
 }
