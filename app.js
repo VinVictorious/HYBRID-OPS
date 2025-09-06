@@ -1304,7 +1304,7 @@ const renderProgram = () => {
                                 <div class="flex items-center space-x-3">
                                     <div class="text-lime-400 flex-shrink-0">${icons[day.icon]}</div>
                                     <div>
-                                        <h4 class="font-bold text-white font-display">${day.day.toUpperCase()}</h4>
+                                        ${week.week === 0 ? '' : `<h4 class="font-bold text-white font-display">${day.day.toUpperCase()}</h4>`}
                                         <p class="text-sm text-lime-300 font-medium">${day.focus}</p>
                                     </div>
                                 </div>
