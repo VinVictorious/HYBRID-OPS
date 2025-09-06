@@ -1318,7 +1318,7 @@ const renderProgram = () => {
                                         </button>
                                     ` : ''}
                                     <button onclick="toggleDayCompletion('${dayId}')" class="px-3 py-1 rounded uppercase tracking-wider text-xs sm:text-sm font-display font-semibold transition-colors ${isCompleted ? 'border-2 border-lime-500 bg-lime-500 text-black hover:bg-lime-400' : 'border-2 border-lime-500 text-lime-400 hover:bg-lime-500 hover:text-black bg-transparent'}">
-                                        ${isCompleted ? '✓ COMPLETE' : 'MARK DONE'}
+                                        ${isCompleted ? '✓' : 'MARK DONE'}
                                     </button>
                                 </div>
                             </div>
