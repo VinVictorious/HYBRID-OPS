@@ -725,6 +725,20 @@ const loadData = () => {
     weightUnit = data?.unit || 'lbs';
 };
 
+// Remove legacy Baseline (week 0) entries from saved data
+const migrateLegacyBaselineData = () => {
+    let changed = false;
+    try {
+        Object.keys(workoutDetails || {}).forEach(k => {
+            if (k && /^0_/.test(k)) { delete workoutDetails[k]; changed = true; }
+        });
+        Object.keys(completionStatus || {}).forEach(k => {
+            if (k && /^0_/.test(k)) { delete completionStatus[k]; changed = true; }
+        });
+    } catch (_) { /* noop */ }
+    return changed;
+};
+
 window.selectDifficulty = (level) => {
     localStorage.setItem('hybridDifficulty', level);
     currentDifficulty = level;
@@ -1595,9 +1609,12 @@ const initializeApp = () => {
             currentProgramData = programs[currentGoal][difficultyMethod]();
             
             const programLength = currentProgramData.reduce((acc, phase) => acc + phase.weeks.length, 0);
-            document.getElementById('program-subtitle').textContent = `${programLength -1}-Week Training Program`; // Subtract 1 for baseline week
+            document.getElementById('program-subtitle').textContent = `${programLength}-Week Training Program`;
 
             loadData();
+            if (migrateLegacyBaselineData()) {
+                saveData();
+            }
             
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('goal-selection').classList.add('hidden');
