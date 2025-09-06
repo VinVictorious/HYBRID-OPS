@@ -639,6 +639,40 @@ body {
                 transform 160ms ease, box-shadow 160ms ease;
 }
 
+/* Ensure old anchor-based exercise links are not underlined and match pills */
+.workout-details a {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.6rem;
+    min-height: 28px;
+    border-radius: 9999px;
+    background: rgba(148, 163, 184, 0.15);
+    border: 1px solid #4B5563;
+    color: #E5E7EB;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none !important;
+    cursor: pointer;
+    user-select: none;
+    transition: background 160ms ease, border-color 160ms ease, color 160ms ease,
+                transform 160ms ease, box-shadow 160ms ease;
+}
+
+.workout-details a:hover,
+.workout-details a:focus-visible {
+    background: rgba(163, 230, 53, 0.15);
+    border-color: #A3E635;
+    color: #A3E635;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(163, 230, 53, 0.15);
+    outline: none;
+}
+
+.workout-details a:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
 .exercise-pill:hover,
 .exercise-pill:focus-visible {
     background: rgba(163, 230, 53, 0.15); /* lime-400/15 */
