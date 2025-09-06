@@ -1310,14 +1310,14 @@ const renderProgram = () => {
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     ${!isWorkoutStarted ? `
-                                        <button onclick="toggleToolsExpansion('${dayId}')" class="p-2 bg-gray-600/50 hover:bg-gray-500/50 rounded-lg transition-colors">
+                                        <button onclick="toggleToolsExpansion('${dayId}')" aria-label="Toggle tools" class="p-2 border-2 border-gray-600 text-gray-300 hover:border-lime-500 hover:text-lime-400 bg-transparent rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-lime-500/40">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                               <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
                                         </button>
                                     ` : ''}
-                                    <button onclick="toggleDayCompletion('${dayId}')" class="px-3 py-1 rounded text-sm font-medium transition-colors ${isCompleted ? 'bg-lime-600 text-black' : 'bg-gray-600 text-gray-200 hover:bg-lime-500 hover:text-black'}">
+                                    <button onclick="toggleDayCompletion('${dayId}')" class="px-3 py-1 rounded uppercase tracking-wider text-xs sm:text-sm font-display font-semibold transition-colors ${isCompleted ? 'border-2 border-lime-500 bg-lime-500 text-black hover:bg-lime-400' : 'border-2 border-lime-500 text-lime-400 hover:bg-lime-500 hover:text-black bg-transparent'}">
                                         ${isCompleted ? '✓ COMPLETE' : 'MARK DONE'}
                                     </button>
                                 </div>
